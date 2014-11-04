@@ -1,22 +1,16 @@
 package com.example.izual.studentftk;
 
-import android.app.Activity;
-
 import android.app.ActionBar;
+import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.content.Context;
-import android.os.Build;
 import android.os.Bundle;
-import android.view.Gravity;
+import android.support.v4.widget.DrawerLayout;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.support.v4.widget.DrawerLayout;
-import android.widget.ArrayAdapter;
-import android.widget.TextView;
 
 
 public class Profile extends Activity
@@ -32,10 +26,14 @@ public class Profile extends Activity
      */
     private CharSequence mTitle;
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
+
 
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getFragmentManager().findFragmentById(R.id.navigation_drawer);
@@ -57,7 +55,7 @@ public class Profile extends Activity
     }
 
     public void onSectionAttached(int number) {
-        switch (number) {
+       /* switch (number) {
             case 1:
                 mTitle = getString(R.string.title_section1);
                 break;
@@ -67,7 +65,7 @@ public class Profile extends Activity
             case 3:
                 mTitle = getString(R.string.title_section3);
                 break;
-        }
+        }*/
     }
 
     public void restoreActionBar() {

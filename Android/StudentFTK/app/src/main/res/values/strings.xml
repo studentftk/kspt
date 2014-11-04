@@ -2,12 +2,26 @@
 <resources>
 
     <string name="app_name">StudentFTK</string>
-    <string name="title_section1">Section 1</string>
-    <string name="title_section2">Section 2</string>
-    <string name="title_section3">Section 3</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="action_example">Example action</string>
     <string name="action_settings">Settings</string>
+
+    <array name="img">
+        <item>@drawable/ic_slice_profile</item>
+        <item>@drawable/ic_slice_message</item>
+        <item>@drawable/ic_slice_list</item>
+        <item>@drawable/ic_slice_settings</item>
+        <item>@drawable/ic_slice_friends</item>
+        <item>@drawable/ic_slice_about</item>
+    </array>
+    <string-array name="items">
+        <item>Мой профиль</item>
+        <item>Мои сообщения</item>
+        <item>Списки</item>
+        <item>Настройки</item>
+        <item>Мои друзья</item>
+        <item>О проекте</item>
+    </string-array>
 
 </resources>
