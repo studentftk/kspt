@@ -15,9 +15,5 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name="com.example.izual.studentftk.Settings"
-            android:label="@string/action_settings" >
-        </activity>
     </application>
 </manifest>
