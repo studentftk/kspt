@@ -2,7 +2,6 @@ package utils;
 
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.net.URI;
 import java.net.URLConnection;
 import java.security.KeyManagementException;
 import java.security.KeyStore;
@@ -11,11 +10,10 @@ import java.security.NoSuchAlgorithmException;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.KeyManagerFactory;
@@ -100,5 +98,7 @@ public final class NetworkUtils {
     
     public static String getServerURL(){
         return "https://studentspbstu.tk:8080";
-    }
+    }  
+    
+    
 }
