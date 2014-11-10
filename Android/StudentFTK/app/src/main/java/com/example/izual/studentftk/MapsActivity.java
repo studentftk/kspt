@@ -19,7 +19,7 @@ public class MapsActivity extends FragmentActivity {
         setUpMapIfNeeded();
     }
 
-    @Override
+    @Override1
     protected void onResume() {
         super.onResume();
         setUpMapIfNeeded();
