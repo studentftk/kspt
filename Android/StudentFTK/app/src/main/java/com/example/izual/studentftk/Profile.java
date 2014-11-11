@@ -4,11 +4,10 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -55,17 +54,20 @@ public class Profile extends Activity
     }
 
     public void onSectionAttached(int number) {
-       /* switch (number) {
+        switch (number) {
             case 1:
-                mTitle = getString(R.string.title_section1);
+                //mTitle = getString(R.string.title_section1);
                 break;
             case 2:
-                mTitle = getString(R.string.title_section2);
+                //mTitle = getString(R.string.title_section2);
                 break;
             case 3:
-                mTitle = getString(R.string.title_section3);
+                Intent intentMaps = new Intent(this, MapsActivity.class);
+                startActivity(intentMaps);
+
+                //mTitle = getString(R.string.title_section3);
                 break;
-        }*/
+        }
     }
 
     public void restoreActionBar() {
@@ -76,7 +78,7 @@ public class Profile extends Activity
     }
 
 
-    @Override
+    /*@Override
     public boolean onCreateOptionsMenu(Menu menu) {
         if (!mNavigationDrawerFragment.isDrawerOpen()) {
             // Only show items in the action bar relevant to this screen
@@ -102,7 +104,7 @@ public class Profile extends Activity
         }
 
         return super.onOptionsItemSelected(item);
-    }
+    }*/
 
     /**
      * A placeholder fragment containing a simple view.

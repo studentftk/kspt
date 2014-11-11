@@ -109,7 +109,7 @@ public class NavigationDrawerFragment extends Fragment {
         // массивы данных
         String[] items = getResources().getStringArray(R.array.items);
         int [] img = {R.drawable.ic_slice_profile, R.drawable.ic_slice_message,
-                R.drawable.ic_slice_list, R.drawable.ic_slice_list, R.drawable.ic_slice_settings,
+                R.drawable.ic_slice_map, R.drawable.ic_slice_list, R.drawable.ic_slice_settings,
                 R.drawable.ic_slice_friends, R.drawable.ic_slice_about};
 
         // упаковываем данные в понятную для адаптера структуру
