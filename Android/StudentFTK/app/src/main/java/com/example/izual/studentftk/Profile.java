@@ -10,6 +10,14 @@ import android.support.v4.widget.DrawerLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.SimpleAdapter;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class Profile extends Activity
@@ -25,7 +33,8 @@ public class Profile extends Activity
      */
     private CharSequence mTitle;
 
-
+    String[] Places = { "9-ый корпус вчера в 18:00", "Главное здание вчера в 13:00", "9-ый корпус 01.10 в 10:00", "9-ый корпус 01.09 в 12:00"};
+    ImageView m_Photo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +51,29 @@ public class Profile extends Activity
         mNavigationDrawerFragment.setUp(
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
+
+        ListView PlacesList = (ListView) findViewById(
+                R.id.list_place);
+        ArrayList<Map<String, Object>> data = new ArrayList<Map<String, Object>>(
+                Places.length);
+        Map<String, Object> tmp;
+        for (int i = 0; i < Places.length; i++) {
+            tmp = new HashMap<String, Object>();
+            tmp.put("Text", Places[i]);
+           // tmp.put("Image", R.drawable.places);
+            data.add(tmp);
+        }
+
+        String[] from = {/* "Image",*/"Text" };
+        int[] to = { /*R.id.imgPlaces,*/ R.id.TxtPlaces };
+        SimpleAdapter adapter = new SimpleAdapter(
+                getActionBar().getThemedContext(),
+                data,
+                R.layout.places_layout,from,to
+        );
+        PlacesList.setAdapter(adapter);
+        m_Photo = (ImageView)findViewById(R.id.photoJen);
+        m_Photo.setImageResource(R.drawable.photo);
     }
 
     @Override
