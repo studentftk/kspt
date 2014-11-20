@@ -1,22 +1,23 @@
 package com.example.izual.studentftk;
 
-import android.app.Activity;
-
 import android.app.ActionBar;
+import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.content.Context;
-import android.os.Build;
+import android.content.Intent;
 import android.os.Bundle;
-import android.view.Gravity;
+import android.support.v4.widget.DrawerLayout;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.support.v4.widget.DrawerLayout;
 import android.widget.ArrayAdapter;
-import android.widget.TextView;
+import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.SimpleAdapter;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class Profile extends Activity
@@ -32,10 +33,15 @@ public class Profile extends Activity
      */
     private CharSequence mTitle;
 
+    String[] Places = { "9-ый корпус вчера в 18:00", "Главное здание вчера в 13:00", "9-ый корпус 01.10 в 10:00", "9-ый корпус 01.09 в 12:00"};
+    ImageView m_Photo;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
+
 
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getFragmentManager().findFragmentById(R.id.navigation_drawer);
@@ -45,6 +51,29 @@ public class Profile extends Activity
         mNavigationDrawerFragment.setUp(
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
+
+        ListView PlacesList = (ListView) findViewById(
+                R.id.list_place);
+        ArrayList<Map<String, Object>> data = new ArrayList<Map<String, Object>>(
+                Places.length);
+        Map<String, Object> tmp;
+        for (int i = 0; i < Places.length; i++) {
+            tmp = new HashMap<String, Object>();
+            tmp.put("Text", Places[i]);
+           // tmp.put("Image", R.drawable.places);
+            data.add(tmp);
+        }
+
+        String[] from = {/* "Image",*/"Text" };
+        int[] to = { /*R.id.imgPlaces,*/ R.id.TxtPlaces };
+        SimpleAdapter adapter = new SimpleAdapter(
+                getActionBar().getThemedContext(),
+                data,
+                R.layout.places_layout,from,to
+        );
+        PlacesList.setAdapter(adapter);
+        m_Photo = (ImageView)findViewById(R.id.photoJen);
+        m_Photo.setImageResource(R.drawable.photo);
     }
 
     @Override
@@ -59,13 +88,16 @@ public class Profile extends Activity
     public void onSectionAttached(int number) {
         switch (number) {
             case 1:
-                mTitle = getString(R.string.title_section1);
+                //mTitle = getString(R.string.title_section1);
                 break;
             case 2:
-                mTitle = getString(R.string.title_section2);
+                //mTitle = getString(R.string.title_section2);
                 break;
             case 3:
-                mTitle = getString(R.string.title_section3);
+                Intent intentMaps = new Intent(this, MapsActivity.class);
+                startActivity(intentMaps);
+
+                //mTitle = getString(R.string.title_section3);
                 break;
         }
     }
@@ -78,7 +110,7 @@ public class Profile extends Activity
     }
 
 
-    @Override
+    /*@Override
     public boolean onCreateOptionsMenu(Menu menu) {
         if (!mNavigationDrawerFragment.isDrawerOpen()) {
             // Only show items in the action bar relevant to this screen
@@ -104,7 +136,7 @@ public class Profile extends Activity
         }
 
         return super.onOptionsItemSelected(item);
-    }
+    }*/
 
     /**
      * A placeholder fragment containing a simple view.
