@@ -18,16 +18,15 @@ public class QueryHelper {
                 .append(joinFields(record.keySet()))
                 .append(") VALUES (")
                 .append(joinValues(record.values()))
-                .append(");");
+                .append(")");
         return query.toString();
     }
     
     public static String mapToSQLUpdate(Map<String,Object> record, String tableName){
-        StringBuilder query = new StringBuilder("UPDATE ")
-                .append(tableName)
-                .append(" SET ")
-                .append(joinPairs(record))
-                .append(";");
+        StringBuilder query = new StringBuilder()
+                .append(mapToSQLInsert(record, tableName))
+                .append(" ON DUPLICATE KEY UPDATE ")
+                .append(joinPairs(record));
         return query.toString();
     }
     

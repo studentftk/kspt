@@ -97,7 +97,7 @@ public final class NetworkUtils {
     }
     
     public static String getServerURL(){
-        return "https://studentspbstu.tk:8080";
+        return "https://studentspbstu.tk";
     }  
     
     
