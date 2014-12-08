@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package server;
+package server.httpApi;
 
+import server.httpApi.VKApi;
 import java.util.Map;
 import java.util.Properties;
 import org.junit.After;
@@ -12,7 +13,9 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import server.DbConnectionFactory;
 import static org.junit.Assert.*;
+import server.logic.User;
 
 /**
  *
@@ -42,20 +45,19 @@ public class VKApiTest {
 
 
     /**
-     * Test of getUserData method, of class VKApi.
+     * Test of putUserDataFromJson method, of class VKApi.
      */
     @Test
     public void testGetUserData() throws Exception {
         System.out.println("getUserData");
-        DBManager db = new DBManager();
-        String id = "12099297";
-        SocialApi instance = new VKApi(db);
-        Map<String, String> result = instance.getUserData(id);
-        if (result.get("Name")==null
-             || result.get("Surname")== null
-             || result.get("Photo")==null)
-            fail();
-        System.out.println(result.get("Name")+":"+result.get("Surname")+":"+result.get("Photo"));
+        DbConnectionFactory db = new DbConnectionFactory();
+        int id = 12099297;
+        String token = "";
+        VKApi instance = new VKApi(db);
+        User result;
+        result = instance.getUserData(new VKApi.AuthInfo(id, token));
+        result.save(db);
+        System.out.println(result.asJSONObject().toJSONString());
     }
     
 }

@@ -5,7 +5,7 @@
  */
 package server;
 
-import java.util.Collection;
+import utils.QueryHelper;
 import java.util.HashMap;
 import java.util.Map;
 import org.junit.After;

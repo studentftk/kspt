@@ -1,4 +1,4 @@
-package server;
+package utils;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -58,6 +58,4 @@ public class QueryHelper {
         }
         return joined.substring(1);
     }
-    
-    
 }

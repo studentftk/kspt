@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package server;
+package server.httpApi;
 
+import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
 
 /**
@@ -12,5 +13,6 @@ import com.sun.net.httpserver.HttpServer;
  * @author llama
  */
 public interface HttpApiMethod {
-    public void assignToHttpServer(HttpServer server);
+    public HttpHandler getHandler();
+    public String getURI();
 }
