@@ -11,6 +11,7 @@ import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -61,22 +62,7 @@ public class MapsActivity extends FragmentActivity {
     }
 
     private void setUpMap() {
-        mMap.addMarker(new MarkerOptions().position(new LatLng(60.007340, 30.372820)).title("SPBPU"));
-        mMap.addMarker(new MarkerOptions().position(new LatLng(60.000745, 30.366520)).title("FTK"));
-        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        Criteria criteria = new Criteria();
-        Location location = locationManager.getLastKnownLocation(locationManager.getBestProvider(criteria, false));
-        double latitude=location.getLatitude();
-        double longitude=location.getLongitude();
-
-        //Фокусировка на текущем местоположении
-        CameraPosition cameraPosition = new CameraPosition.Builder()
-                .target(new LatLng(location.getLatitude(), location.getLongitude()))
-                .zoom(16)
-                .bearing(0)
-                .tilt(0)
-                .build();
-        CameraUpdate cameraUpdate = CameraUpdateFactory.newCameraPosition(cameraPosition);
-        mMap.animateCamera(cameraUpdate);
+        mMap.addMarker(new MarkerOptions().position(new LatLng(60.007340, 30.372820)).icon(BitmapDescriptorFactory.fromResource(R.drawable.gz)).title("Главное Здание СПБПУ"));
+        mMap.addMarker(new MarkerOptions().position(new LatLng(60.000745, 30.366520)).icon(BitmapDescriptorFactory.fromResource(R.drawable.cat)).title("9 Корпус СПБПУ Институт Информацонных Технологий и Управления"));
     }
 }
