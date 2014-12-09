@@ -9,6 +9,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLConnection;
+import java.sql.SQLException;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -21,11 +22,11 @@ import server.DbConnectionFactory;
 import server.logic.User;
 
 /* simple test
-https://oauth.vk.com/authorize?client_id=4601196&redirect_uri=https://studentspbstu.tk/vk/oauth&v=5.25&response_type=code
+https://oauth.vk.com/authorize?client_id=4601196&scope=offline&redirect_uri=https://studentspbstu.tk/vk/oauth&v=5.26&response_type=code
 */
 public class VKApi implements HttpApiMethod {
     public final String contextURI = "/vk/oauth";
-    public final String baseTokenQueryURI = "https://oauth.vk.com/access_token?client_id=4601196&client_secret=4FfKXAErEZYuC9G55RUK&v=5.25&redirect_uri="+NetworkUtils.getServerURL()+contextURI+"&code=";
+    public final String baseTokenQueryURI = "https://oauth.vk.com/access_token?client_id=4601196&client_secret=4FfKXAErEZYuC9G55RUK&v=5.26&redirect_uri="+NetworkUtils.getServerURL()+contextURI+"&code=";
     private final DbConnectionFactory dbConnectionfactory;
 
     public VKApi(DbConnectionFactory factory) {
@@ -66,7 +67,8 @@ public class VKApi implements HttpApiMethod {
         @Override
         public void handle(HttpExchange t) throws IOException {
             Map<String,String> query = NetworkUtils.parseURIQuery(t.getRequestURI().getQuery());
-            try (OutputStream out = t.getResponseBody()) {
+            OutputStream out = t.getResponseBody();
+            try {
                 if (query.containsKey("code")) {
                     AuthInfo authInfo = getToken(query.get("code"));
                     User user = getUserData(authInfo);
@@ -76,10 +78,18 @@ public class VKApi implements HttpApiMethod {
                 }
                 else {
                     t.sendResponseHeaders(200, 0);
-                    out.close();
                 }
+            } catch (IOException | ParseException e) {
+                JSONObject exception = new JSONObject();
+                exception.put("exception", "ioexception");
+                exception.put("message", e.getMessage());
+                String answer = exception.toJSONString();
+                t.sendResponseHeaders(500, answer.getBytes().length);
+                out.write(answer.getBytes());
             } catch (Exception ex) {
                 Logger.getLogger(VKApi.class.getName()).log(Level.SEVERE, null, ex);
+            } finally {
+                out.close();
             }
         }
     };
