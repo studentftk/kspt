@@ -14,8 +14,10 @@ import java.sql.SQLException;
 import java.util.concurrent.Executors;
 import javax.net.ssl.SSLContext;
 import org.json.simple.parser.ParseException;
+import server.httpApi.GetMessageApi;
 import server.httpApi.GetUserApi;
 import server.httpApi.HttpApiMethod;
+import server.httpApi.SendMessageApi;
 import utils.NetworkUtils;
 
 
@@ -30,6 +32,10 @@ public class main {
         HttpApiMethod api = new VKApi(db);
         server.createContext(api.getURI(), api.getHandler());
         api = new GetUserApi(db);
+        server.createContext(api.getURI(), api.getHandler());
+        api = new GetMessageApi(db);
+        server.createContext(api.getURI(), api.getHandler());
+        api = new SendMessageApi(db);
         server.createContext(api.getURI(), api.getHandler());
         server.setExecutor(Executors.newFixedThreadPool(4)); // creates a default executor
         server.start();

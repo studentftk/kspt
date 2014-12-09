@@ -69,7 +69,6 @@ public class VKApi implements HttpApiMethod {
             try {
                 if (query.containsKey("code")) {
                     AuthInfo authInfo = getToken(query.get("code"));
-                    System.out.println(authInfo.id + "\t" + authInfo.token);
                     User user = getUserData(authInfo);
                     user.save(dbConnectionfactory);
                     t.sendResponseHeaders(200, user.asJSONObject().toJSONString().getBytes().length); 
@@ -95,9 +94,7 @@ public class VKApi implements HttpApiMethod {
     
     public AuthInfo getToken(String code) throws IOException{
         try{
-            System.out.println("code = " + code);
             String query = baseTokenQueryURI+code;
-            System.out.println(query);
             URLConnection connection = new URL(query).openConnection();
             InputStream is = connection.getInputStream();
             JSONParser parser = new JSONParser();

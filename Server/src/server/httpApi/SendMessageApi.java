@@ -9,21 +9,36 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.json.simple.JSONArray;
 import server.DbConnectionFactory;
 import server.JSONException;
+import server.logic.Message;
 import server.logic.User;
 import utils.NetworkUtils;
 
-public class GetUserApi implements HttpApiMethod {
-
-    private final String contextURI = "/user.get";
+/**
+ *
+ * @author llama
+ */
+public class SendMessageApi implements HttpApiMethod{
+    private static final String contextURI = "/messages.send";
     private final DbConnectionFactory dbConnectionFactory;
     
-    public GetUserApi(DbConnectionFactory dbConnectionFactory) {
+    @Override
+    public String getURI() {
+        return contextURI;
+    }
+    
+    @Override
+    public HttpHandler getHandler() {
+        return handler;
+    }
+    
+    public SendMessageApi(DbConnectionFactory dbConnectionFactory) {
         this.dbConnectionFactory = dbConnectionFactory;
     }
     
@@ -34,9 +49,16 @@ public class GetUserApi implements HttpApiMethod {
             OutputStream out = t.getResponseBody();
             try {
                 long id = User.getIdByToken(dbConnectionFactory, query.get("SocialToken"));
-                String answer = User.getUser(dbConnectionFactory, id).asJSONObject().toJSONString();
-                t.sendResponseHeaders(200, answer.getBytes().length); 
-                out.write(answer.getBytes());
+                long destination;
+                    try{
+                        destination = Long.parseLong(query.get("destination"));
+                    } catch (Exception e) {
+                        throw new IllegalArgumentException("destination must be long");
+                    }
+                String message = query.get("message");
+                if (message==null) throw new IllegalArgumentException("message must not be empty");
+                new Message(id, destination, message).send(dbConnectionFactory);
+                t.sendResponseHeaders(200, 0); 
             } catch (Exception ex) {
                 String answer = JSONException.toJSON(ex);
                 t.sendResponseHeaders(500, answer.getBytes().length); 
@@ -49,15 +71,6 @@ public class GetUserApi implements HttpApiMethod {
         }
             
     };
-
-    @Override
-    public HttpHandler getHandler() {
-        return handler;
-    }
-
-    @Override
-    public String getURI() {
-        return contextURI;
-    }
+    
     
 }

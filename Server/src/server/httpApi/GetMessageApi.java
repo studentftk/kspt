@@ -9,21 +9,37 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.json.simple.JSONArray;
 import server.DbConnectionFactory;
 import server.JSONException;
+import server.logic.Message;
 import server.logic.User;
 import utils.NetworkUtils;
 
-public class GetUserApi implements HttpApiMethod {
+/**
+ *
+ * @author llama
+ */
+public class GetMessageApi implements HttpApiMethod{
 
-    private final String contextURI = "/user.get";
+    private static final String contextURI = "/messages.get";
     private final DbConnectionFactory dbConnectionFactory;
     
-    public GetUserApi(DbConnectionFactory dbConnectionFactory) {
+    @Override
+    public HttpHandler getHandler() {
+        return handler;
+    }
+
+    @Override
+    public String getURI() {
+        return contextURI;
+    }
+    
+    public GetMessageApi(DbConnectionFactory dbConnectionFactory){
         this.dbConnectionFactory = dbConnectionFactory;
     }
     
@@ -34,7 +50,16 @@ public class GetUserApi implements HttpApiMethod {
             OutputStream out = t.getResponseBody();
             try {
                 long id = User.getIdByToken(dbConnectionFactory, query.get("SocialToken"));
-                String answer = User.getUser(dbConnectionFactory, id).asJSONObject().toJSONString();
+                Timestamp from = query.get("from")==null ? new Timestamp(0) : Timestamp.valueOf(query.get("from"));
+                JSONArray json;
+                if ("send".equals(query.get("type"))) {
+                    json = Message.getSourceMessages(dbConnectionFactory, id, from);
+                } else if ("receive".equals(query.get("type"))){
+                    json = Message.getDestinationMessages(dbConnectionFactory, id, from);
+                } else {
+                    json = Message.getAllMessages(dbConnectionFactory, id, from);
+                }
+                String answer = json.toJSONString();
                 t.sendResponseHeaders(200, answer.getBytes().length); 
                 out.write(answer.getBytes());
             } catch (Exception ex) {
@@ -49,15 +74,5 @@ public class GetUserApi implements HttpApiMethod {
         }
             
     };
-
-    @Override
-    public HttpHandler getHandler() {
-        return handler;
-    }
-
-    @Override
-    public String getURI() {
-        return contextURI;
-    }
     
 }

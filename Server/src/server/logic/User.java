@@ -5,10 +5,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.NoSuchElementException;
 import org.json.simple.JSONObject;
 import server.DbConnectionFactory;
 import utils.QueryHelper;
-import server.exceptions.NoElementException;
 
 
 public class User {
@@ -30,7 +30,7 @@ public class User {
     }
     
     private User(ResultSet answer) throws SQLException{
-        if (!answer.next()) throw new NoElementException("SQL: No user found!");
+        if (!answer.next()) throw new NoSuchElementException("SQL: No user found!");
         id = answer.getLong("ID");
         name = answer.getString("name");
         surname = answer.getString("surname");
@@ -74,7 +74,7 @@ public class User {
            PreparedStatement statement = connection.prepareStatement(sql);
            statement.setString(1, token);
            ResultSet answer = statement.executeQuery();
-           if (!answer.next()) throw new NoElementException("SQL: There are no user with token: "+token);
+           if (!answer.next()) throw new NoSuchElementException("SQL: There are no user with token: "+token);
            return answer.getInt("ID");
         }
     }
@@ -86,7 +86,7 @@ public class User {
            statement.setLong(1, socialId);
            statement.setString(2, socialType);
            ResultSet answer = statement.executeQuery();
-           answer.next();
+           if (!answer.next()) throw new NoSuchElementException("SQL: There are no user with socialId: "+socialId+" socialType: "+socialType);
            return answer.getLong("ID");
         }
     }
@@ -97,7 +97,7 @@ public class User {
             id = User.getIdBySocial(connectionFactory, socialId, socialType);
             Statement statement = connection.createStatement();
             statement.execute(QueryHelper.mapToSQLUpdate(asJSONObject(), table));
-        } catch (NoElementException e){
+        } catch (NoSuchElementException e){
             Statement statement = connection.createStatement();
             statement.execute(QueryHelper.mapToSQLInsert(asJSONObject(), table));
         } finally {
