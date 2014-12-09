@@ -33,7 +33,7 @@ public class GetUserApi implements HttpApiMethod {
             Map<String,String> query = NetworkUtils.parseURIQuery(t.getRequestURI().getQuery());
             OutputStream out = t.getResponseBody();
             try {
-                int id = User.getIdByToken(dbConnectionFactory, query.get("SocialToken"));
+                long id = User.getIdByToken(dbConnectionFactory, query.get("SocialToken"));
                 String answer = User.getUser(dbConnectionFactory, id).asJSONObject().toJSONString();
                 t.sendResponseHeaders(200, answer.getBytes().length); 
                 out.write(answer.getBytes());

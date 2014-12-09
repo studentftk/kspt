@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package server.logic;
 
 import java.sql.Connection;
@@ -19,7 +14,7 @@ import server.exceptions.NoElementException;
 public class User {
     static private final String table="users";
     
-    public Integer id = null;
+    public Long id = null;
     public String name = null;
     public String surname = null;
     public String photo = null;
@@ -28,7 +23,7 @@ public class User {
     public String about = null;
     public String group = null;
     public Integer instituteId = null;
-    public Integer socialId = null;
+    public Long socialId = null;
     
     public User(){
         
@@ -36,7 +31,7 @@ public class User {
     
     private User(ResultSet answer) throws SQLException{
         if (!answer.next()) throw new NoElementException("SQL: No user found!");
-        id = answer.getInt("ID");
+        id = answer.getLong("ID");
         name = answer.getString("name");
         surname = answer.getString("surname");
         photo = answer.getString("photo");
@@ -45,7 +40,7 @@ public class User {
         about = answer.getString("about");
         group = answer.getString("group");
         instituteId = answer.getInt("instituteId");
-        socialId = answer.getInt("socialId"); 
+        socialId = answer.getLong("socialId"); 
     }
     
     public JSONObject asJSONObject(){
@@ -63,11 +58,11 @@ public class User {
         return json;
     }
     
-    public static User getUser(DbConnectionFactory connectionFactory, int id) throws SQLException {
+    public static User getUser(DbConnectionFactory connectionFactory, Long id) throws SQLException {
        try (Connection connection = connectionFactory.getConnection()) {
            String sql = "SELECT * from "+table+" WHERE ID=?";
            PreparedStatement statement = connection.prepareStatement(sql);
-           statement.setInt(1, id);
+           statement.setLong(1, id);
            ResultSet answer = statement.executeQuery();
            return new User(answer);
         }
@@ -84,22 +79,22 @@ public class User {
         }
     }
     
-    public static int getIdBySocial(DbConnectionFactory connectionFactory, int socialId, String socialType) throws SQLException{
+    public static Long getIdBySocial(DbConnectionFactory connectionFactory, Long socialId, String socialType) throws SQLException{
        try (Connection connection = connectionFactory.getConnection()) {
            String sql = "SELECT ID from "+table+" WHERE socialId=? AND socialType=?";
            PreparedStatement statement = connection.prepareStatement(sql);
-           statement.setInt(1, socialId);
+           statement.setLong(1, socialId);
            statement.setString(2, socialType);
            ResultSet answer = statement.executeQuery();
            answer.next();
-           return answer.getInt("ID");
+           return answer.getLong("ID");
         }
     }
     
     public void save(DbConnectionFactory connectionFactory) throws SQLException{
         Connection connection = connectionFactory.getConnection();
         try{
-            id = User.getUser(connectionFactory, id).id;
+            id = User.getIdBySocial(connectionFactory, socialId, socialType);
             Statement statement = connection.createStatement();
             statement.execute(QueryHelper.mapToSQLUpdate(asJSONObject(), table));
         } catch (NoElementException e){

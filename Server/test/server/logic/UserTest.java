@@ -48,7 +48,7 @@ public class UserTest {
     public void testGetUser() throws Exception {
         System.out.println("getUser");
         DbConnectionFactory factory = new DbConnectionFactory();
-        Integer id = 736881;
+        long id = 736881L;
         User result = User.getUser(factory, id);
         System.out.println(result.asJSONObject().toJSONString());
     }
@@ -77,8 +77,8 @@ public class UserTest {
         System.out.println("save");
         DbConnectionFactory factory = new DbConnectionFactory();
         User user = new User();
-        user.id = 45;
-        user.socialId = 5644;
+        user.id = 45L;
+        user.socialId = 5644L;
         user.socialType ="vko";
         user.socialToken = "adsfa";
         System.out.println(QueryHelper.mapToSQLInsert(user.asJSONObject(), "users"));
@@ -93,10 +93,10 @@ public class UserTest {
     public void testGetIdBySocial() throws Exception {
         System.out.println("getIdBySocial");
         DbConnectionFactory factory = new DbConnectionFactory();
-        int socialId = 12099297;
+        long socialId = 12099297L;
         String socialType = "vk";
-        int expResult = 736881;
-        int result = User.getIdBySocial(factory, socialId, socialType);
+        long expResult = 736881L;
+        long result = User.getIdBySocial(factory, socialId, socialType);
         System.out.println(result);
         assertEquals(expResult, result);
     }

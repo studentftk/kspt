@@ -2,14 +2,12 @@ package server.httpApi;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
-import com.sun.net.httpserver.HttpServer;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLConnection;
-import java.sql.SQLException;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -22,11 +20,11 @@ import server.DbConnectionFactory;
 import server.logic.User;
 
 /* simple test
-https://oauth.vk.com/authorize?client_id=4601196&scope=offline&redirect_uri=https://studentspbstu.tk/vk/oauth&v=5.26&response_type=code
+https://oauth.vk.com/authorize?client_id=4601196&scope=offline&redirect_uri=https://studentspbstu.tk/vk/oauth&v=5.25&response_type=code
 */
 public class VKApi implements HttpApiMethod {
     public final String contextURI = "/vk/oauth";
-    public final String baseTokenQueryURI = "https://oauth.vk.com/access_token?client_id=4601196&client_secret=4FfKXAErEZYuC9G55RUK&v=5.26&redirect_uri="+NetworkUtils.getServerURL()+contextURI+"&code=";
+    public final String baseTokenQueryURI = "https://oauth.vk.com/access_token?client_id=4601196&client_secret=4FfKXAErEZYuC9G55RUK&v=5.25&redirect_uri="+NetworkUtils.getServerURL()+contextURI+"&code=";
     private final DbConnectionFactory dbConnectionfactory;
 
     public VKApi(DbConnectionFactory factory) {
@@ -71,6 +69,7 @@ public class VKApi implements HttpApiMethod {
             try {
                 if (query.containsKey("code")) {
                     AuthInfo authInfo = getToken(query.get("code"));
+                    System.out.println(authInfo.id + "\t" + authInfo.token);
                     User user = getUserData(authInfo);
                     user.save(dbConnectionfactory);
                     t.sendResponseHeaders(200, user.asJSONObject().toJSONString().getBytes().length); 
@@ -104,8 +103,8 @@ public class VKApi implements HttpApiMethod {
             JSONParser parser = new JSONParser();
             JSONObject json = (JSONObject)parser.parse(new InputStreamReader(is));
             return new AuthInfo(
-                    (int) json.get("access_token"), 
-                    (String) json.get("user_id")
+                    (long) json.get("user_id"),
+                    (String) json.get("access_token")                    
             );  
         } catch (IOException | ParseException e) {
             throw new IOException(e);
@@ -113,10 +112,10 @@ public class VKApi implements HttpApiMethod {
     }
     
     protected static class AuthInfo {
-        public final int id;
+        public final long id;
         public final String token;
     
-        public AuthInfo(int id, String token) {
+        public AuthInfo(long id, String token) {
             this.id = id;
             this.token = token;
         }
