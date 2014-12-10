@@ -5,41 +5,43 @@
  */
 package server;
 
-import server.httpApi.VKApi;
 import com.sun.net.httpserver.HttpsConfigurator;
 import com.sun.net.httpserver.HttpsServer;
+import org.json.simple.parser.ParseException;
+import server.httpApi.GetMessageApi;
+import server.httpApi.HttpApiMethod;
+import server.httpApi.SendMessageApi;
+import server.httpApi.VKApi;
+import utils.NetworkUtils;
+
+import javax.net.ssl.SSLContext;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.sql.SQLException;
 import java.util.concurrent.Executors;
-import javax.net.ssl.SSLContext;
-import org.json.simple.parser.ParseException;
-import server.httpApi.GetMessageApi;
-import server.httpApi.GetUserApi;
-import server.httpApi.HttpApiMethod;
-import server.httpApi.SendMessageApi;
-import utils.NetworkUtils;
 
 
 public class main {
-    
-    public static void main(String[] args) throws IOException, SQLException, ParseException{
+
+    private static final int threadSizePool = 4;
+
+    public static void main(String[] args) throws IOException, SQLException, ParseException {
         SSLContext sslContext = NetworkUtils.createSSLContext("keystore.jks", "123456", "123456");
         HttpsServer server = HttpsServer.create(new InetSocketAddress(443), 0);
         server.setHttpsConfigurator(new HttpsConfigurator(sslContext));
-        
+
         DbConnectionFactory db = new DbConnectionFactory();
-        HttpApiMethod api = new VKApi(db);
-        server.createContext(api.getURI(), api.getHandler());
-        api = new GetUserApi(db);
-        server.createContext(api.getURI(), api.getHandler());
-        api = new GetMessageApi(db);
-        server.createContext(api.getURI(), api.getHandler());
-        api = new SendMessageApi(db);
-        server.createContext(api.getURI(), api.getHandler());
-        server.setExecutor(Executors.newFixedThreadPool(4)); // creates a default executor
+
+        addContext(server, new VKApi(db));
+        addContext(server, new SendMessageApi(db));
+        addContext(server, new GetMessageApi(db));
+        addContext(server, new SendMessageApi(db));
+
+        server.setExecutor(Executors.newFixedThreadPool(threadSizePool)); // creates a default executor
         server.start();
     }
-    
-    
+
+    private static void addContext(HttpsServer server, HttpApiMethod api) {
+        server.createContext(api.getURI(), api.getHandler());
+    }
 }
