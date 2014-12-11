@@ -8,10 +8,7 @@ package server;
 import com.sun.net.httpserver.HttpsConfigurator;
 import com.sun.net.httpserver.HttpsServer;
 import org.json.simple.parser.ParseException;
-import server.httpApi.GetMessageApi;
-import server.httpApi.HttpApiMethod;
-import server.httpApi.SendMessageApi;
-import server.httpApi.VKApi;
+import server.httpApi.*;
 import utils.NetworkUtils;
 
 import javax.net.ssl.SSLContext;
@@ -36,6 +33,7 @@ public class main {
         addContext(server, new SendMessageApi(db));
         addContext(server, new GetMessageApi(db));
         addContext(server, new SendMessageApi(db));
+        addContext(server, new GetPlacesApi(db));
 
         server.setExecutor(Executors.newFixedThreadPool(threadSizePool)); // creates a default executor
         server.start();
