@@ -64,8 +64,8 @@ public class VkontakteActivity extends Activity {
 
                     //Строим данные
                     Intent intent = new Intent();
-                    intent.putExtra("token", auth[0]);
-                    intent.putExtra("uid", auth[1]);
+                    intent.putExtra("token", auth[1]);
+                    intent.putExtra("uid", auth[0]);
 
                     //Возвращаем данные
                     setResult(Activity.RESULT_OK, intent);
