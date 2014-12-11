@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <ListView
+        android:id="@+id/listView1"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" />
+
+    <LinearLayout
+        android:id="@+id/layout_bottom_bar"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="#222222"
+        android:clickable="true"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:padding="5dip" >
+
+        <EditText
+            android:id="@+id/editText1"
+            android:layout_width="230dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:background="#000000"
+            android:gravity="center"
+            android:padding="5dip"
+            android:hint="Введите сообщение..."
+            android:textColor="#FFFFFF" />
+
+        <Button
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:text="Отпр."/>
+
+    </LinearLayout>
+
+</RelativeLayout>

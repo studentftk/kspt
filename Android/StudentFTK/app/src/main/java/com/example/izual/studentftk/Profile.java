@@ -4,6 +4,7 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
@@ -27,53 +28,47 @@ public class Profile extends Activity
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
      */
     private NavigationDrawerFragment mNavigationDrawerFragment;
-
+    static final int AUTHVK = 1;
     /**
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
      */
     private CharSequence mTitle;
 
-    String[] Places = { "9-ый корпус вчера в 18:00", "Главное здание вчера в 13:00", "9-ый корпус 01.10 в 10:00", "9-ый корпус 01.09 в 12:00"};
-    ImageView m_Photo;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_profile);
 
+        //super.onCreate(savedInstanceState);
+        super.onCreate(savedInstanceState);
+        startActivityForResult(new Intent(this, VkontakteActivity.class),AUTHVK);
+        //StartLogin();
+        setContentView(R.layout.activity_profile);
 
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getFragmentManager().findFragmentById(R.id.navigation_drawer);
         mTitle = getTitle();
-
         // Set up the drawer.
         mNavigationDrawerFragment.setUp(
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
+    }
 
-        ListView PlacesList = (ListView) findViewById(
-                R.id.list_place);
-        ArrayList<Map<String, Object>> data = new ArrayList<Map<String, Object>>(
-                Places.length);
-        Map<String, Object> tmp;
-        for (int i = 0; i < Places.length; i++) {
-            tmp = new HashMap<String, Object>();
-            tmp.put("Text", Places[i]);
-           // tmp.put("Image", R.drawable.places);
-            data.add(tmp);
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch( requestCode ) {
+            case AUTHVK:
+                if( resultCode == Activity.RESULT_OK ) {
+                    //todo какое то действие
+                }
+                break;
         }
+    }
 
-        String[] from = {/* "Image",*/"Text" };
-        int[] to = { /*R.id.imgPlaces,*/ R.id.TxtPlaces };
-        SimpleAdapter adapter = new SimpleAdapter(
-                getActionBar().getThemedContext(),
-                data,
-                R.layout.places_layout,from,to
-        );
-        PlacesList.setAdapter(adapter);
-        m_Photo = (ImageView)findViewById(R.id.photoJen);
-        m_Photo.setImageResource(R.drawable.photo);
+    private void StartLogin()
+    {
+       // Intent i = new Intent(Profile.this,Log_Act.class); // Your list's Intent
+       // i.setFlags(i.getFlags() | Intent.FLAG_ACTIVITY_NO_HISTORY); // Adds the FLAG_ACTIVITY_NO_HISTORY flag
+       // startActivity(i);
     }
 
     @Override
@@ -86,12 +81,32 @@ public class Profile extends Activity
     }
 
     public void onSectionAttached(int number) {
+        FragmentManager fragmentManager = getFragmentManager();
+        FragmentProfile fragmentProfile;
+        FragmentMessages fragmentMessages;
+
+        Bundle args;
+        FragmentTransaction ft = fragmentManager.beginTransaction();
         switch (number) {
             case 1:
-                //mTitle = getString(R.string.title_section1);
+                fragmentProfile = new FragmentProfile();
+                args = new Bundle();
+                args.putInt("2", 2);
+                fragmentProfile.setArguments(args);
+                ft.replace(R.id.container, fragmentProfile, "fraProfile");
+                //ft.addToBackStack(null);
+                ft.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);
+                ft.commit();
                 break;
             case 2:
-                //mTitle = getString(R.string.title_section2);
+                fragmentMessages = new FragmentMessages();
+                args = new Bundle();
+                args.putInt("2", 2);
+                fragmentMessages.setArguments(args);
+                ft.replace(R.id.container, fragmentMessages, "fragmentMessages");
+                //ft.addToBackStack(null);
+                ft.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);
+                ft.commit();
                 break;
             case 3:
                 Intent intentMaps = new Intent(this, MapsActivity.class);

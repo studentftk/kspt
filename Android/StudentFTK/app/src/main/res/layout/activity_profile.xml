@@ -7,120 +7,11 @@
     android:layout_height="match_parent"
     tools:context=".Profile">
 
-    <!-- As the main content view, the view below consumes the entire
-         space available using match_parent in both dimensions. -->
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-   <LinearLayout
+    <FrameLayout
         android:id="@+id/container"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-       android:background="#495a4a">
-       <FrameLayout
-           android:id="@+id/photocont"
-           android:layout_alignParentLeft="true"
-           android:layout_alignParentTop="true"
-           android:layout_width="wrap_content"
-           android:layout_height="match_parent">
+        android:layout_height="match_parent" />
 
-    <ImageView
-        android:id="@+id/photoJen"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        />
-       </FrameLayout>
-       <LinearLayout
-           android:orientation="vertical"
-           android:layout_width="match_parent"
-           android:layout_height="wrap_content"
-           android:layout_gravity="right">
-
-    <TextView
-        android:textColor="#FFFFFF"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:textSize="@dimen/activity_horizontal_margin"
-
-        android:text="Дженифер Лоуренc"
-        android:gravity="center_horizontal"/>
-
-    <TextView
-        android:textColor="#FFFFFF"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="ИИТУ КСПТ"
-        android:textSize="@dimen/activity_horizontal_margin"
-        android:gravity="center_horizontal"/>
-    <TextView
-        android:textColor="#FFFFFF"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Студентка группы 53501/3"
-        android:textSize="@dimen/activity_horizontal_margin"
-        android:gravity="center_horizontal"/>
-    <Button
-        android:textColor="#FFFFFF"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Любит"
-        android:gravity="center_horizontal"
-        android:layout_gravity="center_horizontal"
-        />
-    <Button
-               android:textColor="#FFFFFF"
-               android:layout_width="match_parent"
-               android:layout_height="match_parent"
-               android:text="Друзья"
-        android:layout_gravity="center_horizontal"
-        android:gravity="center_horizontal"
-
-               />
-       </LinearLayout>
-  </LinearLayout>
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-            <TextView
-                android:id="@+id/noteven"
-                android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="@dimen/activity_horizontal_margin"
-                android:text="Недавние места"/>
-            </RelativeLayout>
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-            <ListView
-                android:id="@+id/list_place"
-                android:layout_alignTop="@+id/noteven"
-
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                >
-
-                </ListView>
-            </LinearLayout>
-            </LinearLayout>
-    </LinearLayout>
-
-
-    <!-- android:layout_gravity="start" tells DrawerLayout to treat
-         this as a sliding drawer on the left side for left-to-right
-         languages and on the right side for right-to-left languages.
-         If you're not building against API 17 or higher, use
-         android:layout_gravity="left" instead. -->
-    <!-- The drawer is given a fixed width in dp and extends the full height of
-         the container. -->
     <fragment
         android:id="@+id/navigation_drawer"
         android:layout_width="@dimen/navigation_drawer_width"
@@ -128,10 +19,5 @@
         android:layout_gravity="start"
         android:name="com.example.izual.studentftk.NavigationDrawerFragment"
         tools:layout="@layout/fragment_navigation_drawer" />
-
-
-
-
-
 
 </android.support.v4.widget.DrawerLayout>
