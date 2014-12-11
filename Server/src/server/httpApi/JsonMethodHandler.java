@@ -47,5 +47,5 @@ public abstract class JsonMethodHandler implements HttpHandler, HttpApiMethod {
         }
     }
 
-    public  abstract JSONObject execute(Map<String, String> arguments);
+    public  abstract JSONObject execute(Map<String, String> arguments) throws Exception;
 }
