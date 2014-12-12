@@ -86,6 +86,8 @@ public class Profile extends Activity
         FragmentMessages fragmentMessages;
         FragmentPlaces fragmentPlaces;
         FragmentFriendsList fragmentFriendsList;
+        FragmentAbout fragmentAbout;
+        FragmentSettings fragmentSettings;
 
         Bundle args;
         FragmentTransaction ft = fragmentManager.beginTransaction();
@@ -127,6 +129,14 @@ public class Profile extends Activity
                 ft.commit();
                 break;
             case 5:
+                fragmentSettings = new FragmentSettings();
+                args = new Bundle();
+                args.putInt("2", 2);
+                fragmentSettings.setArguments(args);
+                ft.replace(R.id.container, fragmentSettings, "fragmentSettings");
+                //ft.addToBackStack(null);
+                ft.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);
+                ft.commit();
                 break;
             case 6:
                 fragmentFriendsList = new FragmentFriendsList();
@@ -134,6 +144,16 @@ public class Profile extends Activity
                 args.putInt("2", 2);
                 fragmentFriendsList.setArguments(args);
                 ft.replace(R.id.container, fragmentFriendsList, "fragmentFriendsList");
+                //ft.addToBackStack(null);
+                ft.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);
+                ft.commit();
+                break;
+            case 7:
+                fragmentAbout = new FragmentAbout();
+                args = new Bundle();
+                args.putInt("2", 2);
+                fragmentAbout.setArguments(args);
+                ft.replace(R.id.container, fragmentAbout, "fragmentAbout");
                 //ft.addToBackStack(null);
                 ft.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);
                 ft.commit();

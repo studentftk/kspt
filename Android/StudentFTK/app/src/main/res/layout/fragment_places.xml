@@ -3,10 +3,11 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <EditText
+    <TextView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
+        android:layout_height="25dp"
+        android:gravity="center_horizontal|center_vertical"
+        android:textSize="20dp"
         android:text="Списки мест"/>
     <ListView
         android:id="@+id/list_places"

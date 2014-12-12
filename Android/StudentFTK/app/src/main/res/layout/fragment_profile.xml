@@ -61,6 +61,8 @@
                     android:layout_height="match_parent"
                     android:text="Любит"
                     android:gravity="center_horizontal"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
                     android:layout_gravity="center_horizontal"/>
 
                 <Button
@@ -69,6 +71,8 @@
                     android:layout_height="match_parent"
                     android:text="Друзья"
                     android:layout_gravity="center_horizontal"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
                     android:gravity="center_horizontal"/>
             </LinearLayout>
         </LinearLayout>
