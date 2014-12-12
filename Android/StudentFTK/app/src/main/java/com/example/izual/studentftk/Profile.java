@@ -84,6 +84,7 @@ public class Profile extends Activity
         FragmentManager fragmentManager = getFragmentManager();
         FragmentProfile fragmentProfile;
         FragmentMessages fragmentMessages;
+        FragmentPlaces fragmentPlaces;
 
         Bundle args;
         FragmentTransaction ft = fragmentManager.beginTransaction();
@@ -113,6 +114,16 @@ public class Profile extends Activity
                 startActivity(intentMaps);
 
                 //mTitle = getString(R.string.title_section3);
+                break;
+            case 4:
+                fragmentPlaces = new FragmentPlaces();
+                args = new Bundle();
+                args.putInt("2", 2);
+                fragmentPlaces.setArguments(args);
+                ft.replace(R.id.container, fragmentPlaces, "fragmentPlaces");
+                //ft.addToBackStack(null);
+                ft.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);
+                ft.commit();
                 break;
         }
     }
