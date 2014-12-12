@@ -26,6 +26,16 @@
         <item>Другое</item>
     </string-array>
 
+    <string-array name="items_fragment">
+        <item>Абрамов Антон</item>
+        <item>Бусаров Влад</item>
+        <item>Гиганова Вероника</item>
+        <item>Косолапов Семен</item>
+        <item>Грушко Иван</item>
+        <item>Сухинин Александр</item>
+        <item>Улитин Александр</item>
+    </string-array>
+    items_fragment
     <string name="title_activity_maps">Map</string>
 
 </resources>

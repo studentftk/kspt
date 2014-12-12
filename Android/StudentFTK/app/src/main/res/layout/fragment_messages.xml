@@ -3,12 +3,17 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical" >
-
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:gravity="center_horizontal|center_vertical"
+        android:text="Сообщения"/>
     <ListView
         android:id="@+id/listMessages"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="60dp"/>
+        android:layout_marginBottom="60dp"
+        android:layout_marginTop="40dp"/>
 
     <FrameLayout
         android:id="@+id/layout_bottom_bar"
