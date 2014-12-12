@@ -34,10 +34,13 @@ public class FragmentMessages extends Fragment {
         View viewMessages = inflater.inflate(R.layout.fragment_messages, container, false);
 
         // массивы данных
-        String[] texts = { "sometsdfdsometsdfdddddsfdsdsfext 1sometsdfdddddsfdsdsfext 1sometsdfdddddsfdsdsfext 1ddddsfdsdsfext 1", "sometext 2", "sometext 3",
-                "sometext 4", "sometext 5" };
+        String[] texts = { "Политехнический университет - многофункциональное государственное высшее учебное заведение.",
+                " В 2010 году он получил статус национального исследовательского университета, что явилось признанием его роли и возможностей как в области подготовки кадров, так и в мультидисциплинарных научных исследованиях и разработках.",
+                "В рейтинге технических университетов России Политехнический неизменно занимает ведущие позиции.",
+                "Университет готовит бакалавров и магистров по 49 направлениям науки и техники,",
+                "специалистов (инженеров, экономистов, менеджеров) по 9 специальностям" };
         String[] times = { "20:00", "20:11",  "20:12",  "20:13",  "20:14" };
-        int img = R.drawable.ic_launcher;
+        int img = R.drawable.ic_friends;
 
         // упаковываем данные в понятную для адаптера структуру
         ArrayList<Map<String, Object>> data = new ArrayList<Map<String, Object>>(
@@ -66,12 +69,4 @@ public class FragmentMessages extends Fragment {
         listMessages.setAdapter(sAdapter);
         return viewMessages;
     }
-
-    /**
-     * Send message
-     */
-    public void btnSendMessageClick(View view){
-
-    }
-
 }
