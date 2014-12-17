@@ -5,11 +5,13 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -21,7 +23,6 @@ import com.example.izual.studentftk.MsgControl;
  */
 
 public class FragmentMessages extends Fragment {
-
     private ListView listMessages;
     private Button btnSendMessage;
     private EditText txtMessageEdit;
@@ -32,8 +33,6 @@ public class FragmentMessages extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
-        // return super.onCreateView(inflater, container, savedInstanceState);
 
         final View viewMessages = inflater.inflate(R.layout.fragment_messages, container, false);
         listMessages = (ListView) viewMessages.findViewById(R.id.listMessages);
@@ -63,9 +62,19 @@ public class FragmentMessages extends Fragment {
                 }
                 txtMessageEdit.setText("");
                 listMessages.smoothScrollByOffset(listMessages.getMaxScrollAmount());
+                if(txtMessageEdit.hasFocus()){
+                    HideSoftInput(getActivity());
+                }
             }
         });
 
         return viewMessages;
     }
+
+    private void HideSoftInput(Activity activity){
+        InputMethodManager inputMethodManager = (InputMethodManager)
+                        getActivity().getSystemService(Activity.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
+    }
+
 }
