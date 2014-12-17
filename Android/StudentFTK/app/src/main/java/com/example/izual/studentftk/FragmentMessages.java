@@ -1,6 +1,7 @@
 package com.example.izual.studentftk;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -9,8 +10,11 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import com.example.izual.studentftk.MsgControl;
 
 /**
  * Created by Антон on 12.12.2014.
@@ -19,11 +23,10 @@ import android.widget.SimpleAdapter;
 public class FragmentMessages extends Fragment {
 
     private ListView listMessages;
+    private Button btnSendMessage;
 
-    // имена атрибутов для Map
-    final String ATTRIBUTE_NAME_TEXT = "text";
-    final String ATTRIBUTE_NAME_TIME = "time";
-    final String ATTRIBUTE_NAME_IMAGE = "image";
+    // структура, содержащая сообщения в удобном виде
+    private static ArrayList<Map<String, Object>> msgList;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -31,42 +34,55 @@ public class FragmentMessages extends Fragment {
         // TODO Auto-generated method stub
         // return super.onCreateView(inflater, container, savedInstanceState);
 
-        View viewMessages = inflater.inflate(R.layout.fragment_messages, container, false);
+        final View viewMessages = inflater.inflate(R.layout.fragment_messages, container, false);
+        listMessages = (ListView) viewMessages.findViewById(R.id.listMessages);
+        btnSendMessage = (Button)viewMessages.findViewById(R.id.btnSendMessage);
+
+        // инициализируем структуру, содержащую сообщения
+        msgList = new ArrayList<Map<String, Object>>();
 
         // массивы данных
-        String[] texts = { "Политехнический университет - многофункциональное государственное высшее учебное заведение.",
-                " В 2010 году он получил статус национального исследовательского университета, что явилось признанием его роли и возможностей как в области подготовки кадров, так и в мультидисциплинарных научных исследованиях и разработках.",
-                "В рейтинге технических университетов России Политехнический неизменно занимает ведущие позиции.",
-                "Университет готовит бакалавров и магистров по 49 направлениям науки и техники,",
-                "специалистов (инженеров, экономистов, менеджеров) по 9 специальностям" };
-        String[] times = { "20:00", "20:11",  "20:12",  "20:13",  "20:14" };
-        int img = R.drawable.ic_friends;
+        ArrayList<String> msg_text = new ArrayList<String>();
+        ArrayList<String> msg_time = new ArrayList<String>();
 
-        // упаковываем данные в понятную для адаптера структуру
-        ArrayList<Map<String, Object>> data = new ArrayList<Map<String, Object>>(
-                texts.length);
-        Map<String, Object> m;
-        for (int i = 0; i < texts.length; i++) {
-            m = new HashMap<String, Object>();
-            m.put(ATTRIBUTE_NAME_TEXT, texts[i]);
-            m.put(ATTRIBUTE_NAME_TIME, times[i]);
-            m.put(ATTRIBUTE_NAME_IMAGE, img);
-            data.add(m);
+        //BEGIN_STUB
+        String[] builtInMessagesStub =
+                {"Политехнический университет - многофункциональное государственное высшее учебное заведение.",
+                 "В 2010 году он получил статус национального исследовательского университета, что явилось признанием его роли и возможностей как в области подготовки кадров, так и в мультидисциплинарных научных исследованиях и разработках.",
+                 "В рейтинге технических университетов России Политехнический неизменно занимает ведущие позиции.",
+                 "Университет готовит бакалавров и магистров по 49 направлениям науки и техники,",
+                 "специалистов (инженеров, экономистов, менеджеров) по 9 специальностям" };
+
+        String[] timesStub = { "20:00", "20:11",  "20:12",  "20:13",  "20:14" };
+
+        for(String element: builtInMessagesStub){
+            msg_text.add(element);
         }
 
-        // массив имен атрибутов, из которых будут читаться данные
-        String[] from = { ATTRIBUTE_NAME_TEXT, ATTRIBUTE_NAME_TIME,
-                ATTRIBUTE_NAME_IMAGE };
-        // массив ID View-компонентов, в которые будут вставлять данные
-        int[] to = { R.id.tvText, R.id.tvText1, R.id.ivImg };
+        for(String element: timesStub){
+            msg_time.add(element);
+        }
+        //END_STUB
 
-        // создаем адаптер
-        SimpleAdapter sAdapter = new SimpleAdapter( getActivity(),//getActionBar().getThemedContext(),
-         data, R.layout.item_message,from, to);
-
-        // определяем список и присваиваем ему адаптер
-        listMessages = (ListView) viewMessages.findViewById(R.id.listMessages);
+        // создаём адаптер и привязываем его к списку
+        SimpleAdapter sAdapter = MsgControl.InitFramework(msgList, getActivity(),
+                msg_text, msg_time);
         listMessages.setAdapter(sAdapter);
+
+        // обработчик нажатия на кнопку отправления
+        btnSendMessage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                EditText txtMessageEdit = (EditText)viewMessages.findViewById(R.id.txtMessageEdit);
+                String textOfMessage = txtMessageEdit.getText().toString();
+                String time = MsgControl.FormatDate(MsgControl.DATE_DAY_AND_TIME);
+                if(msgList != null){
+                    MsgControl.AddMessageToList(msgList, textOfMessage, time);
+                }
+                listMessages.smoothScrollByOffset(listMessages.getMaxScrollAmount());
+            }
+        });
+
         return viewMessages;
     }
 }
