@@ -17,6 +17,7 @@ public class MsgControl {
     public final static String ATTRIBUTE_NAME_TEXT = "text";
     public final static String ATTRIBUTE_NAME_TIME = "time";
     public final static String ATTRIBUTE_NAME_IMAGE = "image";
+    public final static String ATTRIBUTE_NAME_NAME = "name";
 
     public final static int DATE_ALL = 0;
     public final static int DATE_TIME = 1;
@@ -24,12 +25,13 @@ public class MsgControl {
     public final static int DATE_DAY_AND_TIME = 3;
 
     // упаковывает сообщение в нужную структуру
-    private static Map<String, Object> PackMessage(String msg_text, String msg_time){
+    private static Map<String, Object> PackMessage(String msg_text, String msg_time, String msg_name){
         int img = R.drawable.ic_friends;
         Map<String, Object> msg_pack = new HashMap<String, Object>();
         msg_pack.put(ATTRIBUTE_NAME_TEXT, msg_text);
         msg_pack.put(ATTRIBUTE_NAME_TIME, msg_time);
         msg_pack.put(ATTRIBUTE_NAME_IMAGE, img);
+        msg_pack.put(ATTRIBUTE_NAME_NAME, msg_name);
         return msg_pack;
     }
 
@@ -40,8 +42,8 @@ public class MsgControl {
      * @param msg_time время отправки сообщения
      */
     public static void AddMessageToList(ArrayList<Map<String, Object>> msgList,
-                                    String msg_text, String msg_time){
-        msgList.add(PackMessage(msg_text, msg_time));
+                                    String msg_text, String msg_time, String msg_name){
+        msgList.add(PackMessage(msg_text, msg_time, msg_name));
     }
 
     /**
@@ -54,9 +56,9 @@ public class MsgControl {
                                                                                 Activity activity){
         // массив имен атрибутов, из которых будут читаться данные
         String[] from = { ATTRIBUTE_NAME_TEXT, ATTRIBUTE_NAME_TIME,
-                ATTRIBUTE_NAME_IMAGE };
+                ATTRIBUTE_NAME_IMAGE, ATTRIBUTE_NAME_NAME};
         // массив ID View-компонентов, в которые будут вставлять данные
-        int[] to = { R.id.tvText, R.id.tvText1, R.id.ivImg };
+        int[] to = { R.id.tvMessage, R.id.tvDate, R.id.ivImg , R.id.tvName};
 
         return new SimpleAdapter( activity, msgList, R.layout.item_message, from, to);
     }
@@ -70,12 +72,13 @@ public class MsgControl {
      * @return адаптер
      */
     public static SimpleAdapter InitFramework(ArrayList<Map<String, Object>> msgList,
-                       Activity activity, ArrayList<String> msg_text, ArrayList<String> msg_time){
+                       Activity activity, ArrayList<String> msg_text,
+                            ArrayList<String> msg_time, ArrayList<String> msg_name){
         if(msgList == null){
             return null;
         }
         for (int i = 0; i < msg_text.size(); i++) {
-            AddMessageToList(msgList, msg_text.get(i), msg_time.get(i));
+            AddMessageToList(msgList, msg_text.get(i), msg_time.get(i), msg_name.get(i));
         }
 
         return CreateAdapter(msgList, activity);

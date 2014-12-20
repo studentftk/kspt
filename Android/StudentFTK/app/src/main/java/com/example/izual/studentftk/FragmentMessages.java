@@ -26,6 +26,7 @@ public class FragmentMessages extends Fragment {
     private ListView listMessages;
     private Button btnSendMessage;
     private EditText txtMessageEdit;
+    private String current_name = "Admin";
 
     // структура, содержащая сообщения в удобном виде
     private static ArrayList<Map<String, Object>> msgList;
@@ -45,10 +46,11 @@ public class FragmentMessages extends Fragment {
         // массивы данных
         ArrayList<String> msg_text = new ArrayList<String>();
         ArrayList<String> msg_time = new ArrayList<String>();
+        ArrayList<String> msg_name = new ArrayList<String>();
 
         // создаём адаптер и привязываем его к списку
         SimpleAdapter sAdapter = MsgControl.InitFramework(msgList, getActivity(),
-                msg_text, msg_time);
+                msg_text, msg_time, msg_name);
         listMessages.setAdapter(sAdapter);
 
         // обработчик нажатия на кнопку отправления
@@ -56,19 +58,47 @@ public class FragmentMessages extends Fragment {
             @Override
             public void onClick(View v) {
                 String textOfMessage = txtMessageEdit.getText().toString();
-                String time = MsgControl.FormatDate(MsgControl.DATE_DAY_AND_TIME);
-                if(msgList != null){
-                    MsgControl.AddMessageToList(msgList, textOfMessage, time);
-                }
                 txtMessageEdit.setText("");
-                listMessages.smoothScrollByOffset(listMessages.getMaxScrollAmount());
                 if(txtMessageEdit.hasFocus()){
                     HideSoftInput(getActivity());
                 }
+                String newName = "";
+                if((newName = ChangeNameAttempt(textOfMessage)) != ""){
+                    current_name = newName;
+                    return;
+                }
+                String time = MsgControl.FormatDate(MsgControl.DATE_DAY_AND_TIME);
+                if(msgList != null){
+                    MsgControl.AddMessageToList(msgList, textOfMessage, time, current_name);
+                }
+                listMessages.smoothScrollByOffset(listMessages.getMaxScrollAmount());
             }
         });
 
         return viewMessages;
+    }
+
+    private final String ChangeNameAttempt(final String textOfMessage){
+        final String name_change_seq = "$newnick";
+        final int first_space = textOfMessage.indexOf(' ');
+        if(first_space == -1){
+            return "";
+        }
+        final String command = textOfMessage.substring(0, first_space);
+        String newName = "";
+        if(command.compareTo(name_change_seq) == 0){
+            newName = textOfMessage.substring(name_change_seq.length() + 1);
+            final int max_length_name = 16;
+            if(newName.length() > max_length_name) {
+                final int second_space = newName.indexOf(' ');
+                if (second_space != -1 && second_space < max_length_name) {
+                    newName = newName.substring(0, second_space);
+                } else {
+                    newName = newName.substring(0, max_length_name);
+                }
+            }
+        }
+        return newName;
     }
 
     private void HideSoftInput(Activity activity){
