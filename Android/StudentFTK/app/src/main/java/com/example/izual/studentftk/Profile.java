@@ -6,19 +6,29 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.SimpleAdapter;
+import android.widget.TextView;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeoutException;
 
 
 public class Profile extends Activity
@@ -28,21 +38,21 @@ public class Profile extends Activity
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
      */
     private NavigationDrawerFragment mNavigationDrawerFragment;
-    static final int AUTHVK = 1;
+
     /**
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
      */
     private CharSequence mTitle;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        //super.onCreate(savedInstanceState);
-        super.onCreate(savedInstanceState);
-        startActivityForResult(new Intent(this, VkontakteActivity.class),AUTHVK);
-        //StartLogin();
-        setContentView(R.layout.activity_profile);
 
+        super.onCreate(savedInstanceState);
+
+
+        setContentView(R.layout.activity_profile);
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getFragmentManager().findFragmentById(R.id.navigation_drawer);
         mTitle = getTitle();
@@ -52,24 +62,7 @@ public class Profile extends Activity
                 (DrawerLayout) findViewById(R.id.drawer_layout));
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        switch( requestCode ) {
-            case AUTHVK:
-                if( resultCode == Activity.RESULT_OK ) {
-                    //todo какое то действие
-                }
-                break;
-        }
-    }
 
-    private void StartLogin()
-    {
-       // Intent i = new Intent(Profile.this,Log_Act.class); // Your list's Intent
-       // i.setFlags(i.getFlags() | Intent.FLAG_ACTIVITY_NO_HISTORY); // Adds the FLAG_ACTIVITY_NO_HISTORY flag
-       // startActivity(i);
-    }
 
     @Override
     public void onNavigationDrawerItemSelected(int position) {
@@ -236,5 +229,4 @@ public class Profile extends Activity
                     getArguments().getInt(ARG_SECTION_NUMBER));
         }
     }
-
 }
