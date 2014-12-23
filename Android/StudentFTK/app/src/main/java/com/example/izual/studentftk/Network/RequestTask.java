@@ -1,29 +1,15 @@
 package com.example.izual.studentftk.Network;
 
-import com.example.izual.studentftk.NetworkUtils;
-
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.conn.ClientConnectionManager;
-import org.apache.http.conn.scheme.Scheme;
-import org.apache.http.conn.scheme.SchemeRegistry;
-import org.apache.http.conn.ssl.AllowAllHostnameVerifier;
-import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 
 import java.io.BufferedReader;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URI;
-import java.net.URLConnection;
-import java.security.KeyManagementException;
-import java.security.SecureRandom;
-import java.security.cert.X509Certificate;
+import java.net.URL;
 
-import javax.net.SocketFactory;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSocketFactory;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
+import javax.net.ssl.HttpsURLConnection;
 
 /**
  * Created by oglandx on 22.12.2014.
@@ -31,7 +17,7 @@ import javax.net.ssl.X509TrustManager;
 public class RequestTask implements Runnable {
     private URI uri;
     private boolean dataReady = false;
-    private String data;
+    private JSONObject data;
 
     private boolean isError = false;
     private String errorReason;
@@ -44,7 +30,7 @@ public class RequestTask implements Runnable {
         return dataReady;
     }
 
-    public final String getData(){
+    public final JSONObject getData(){
         return data;
     }
 
@@ -58,20 +44,31 @@ public class RequestTask implements Runnable {
 
     @Override
     public void run(){
+        HttpsURLConnection connection = null;
         try {
-            //SSLSocketFactory socketFactory = new SSLSocketFactory(new TrustStrategy)
-            //??? how to do this certificate trusted?
-            /*HttpGet httpGet = new HttpGet(uri);
-            HttpClient client = new DefaultHttpClient();
-            HttpResponse response = client.execute(httpGet);
-            BufferedReader input =
-                    new BufferedReader(new InputStreamReader(response.getEntity().getContent()));*/
-            data = new GetMethodEx().getInternetData(uri);
+            URL url = new URL(uri.toString());
+            connection = (HttpsURLConnection)url.openConnection();
+
+            NetworkUtils.setAllTrusted(connection);
+            connection.setConnectTimeout(20);
+            connection.connect();
+
+            InputStream inputStream = connection.getInputStream();
+            InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+
+            JSONParser parser = new JSONParser();
+
+            data = (JSONObject) parser.parse(inputStreamReader);
             dataReady = true;
         }
         catch(Exception e){
             isError = true;
             errorReason = e.toString();
+        }
+        finally{
+            if(connection != null) {
+                connection.disconnect();
+            }
         }
     }
 }

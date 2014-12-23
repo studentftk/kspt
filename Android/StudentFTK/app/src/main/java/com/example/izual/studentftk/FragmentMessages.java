@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import android.app.Activity;
 import android.app.Fragment;
@@ -20,6 +22,8 @@ import android.widget.SimpleAdapter;
 import com.example.izual.studentftk.MsgControl;
 import com.example.izual.studentftk.Network.MessageRequest;
 import com.example.izual.studentftk.Network.RequestTask;
+
+import org.json.simple.JSONObject;
 
 /**
  * Created by Антон on 12.12.2014.
@@ -87,27 +91,33 @@ public class FragmentMessages extends Fragment {
         });
     }
 
+
     private void InitNetwork(){
-        URI uri = MessageRequest.BuildRequestGet("asd",
+        URI uri = MessageRequest.BuildRequestGet(AllProfileInform.socialToken,
                 "2012-12-09%2007:27:39", MessageRequest.Types.Send);
         RequestTask requestTask = new RequestTask(uri);
-        Thread execRequest = new Thread(requestTask);
+        final Thread execRequest = new Thread(requestTask);
+        execRequest.setPriority(Thread.MAX_PRIORITY);
         execRequest.start();
+
         try{
             execRequest.join();
         }
-        catch (Exception e){
-            Utils.ShowError(getActivity(), requestTask.getData());
-        }
-        if(requestTask.isError()){
+        catch(Exception e){
             Utils.ShowError(getActivity(), requestTask.getErrorReason());
         }
+
+        if(requestTask.isError()){
+            Utils.ShowError(getActivity(), requestTask.getErrorReason());
+            return;
+        }
+
+        if(!requestTask.isDataReady()) {
+            Utils.ShowError(getActivity(), "Не могу загрузить сообщения. Это странно.");
+        }
         else {
-            if (requestTask.isDataReady()) {
-                Utils.ShowError(getActivity(), requestTask.getData());
-            } else {
-                Utils.ShowError(getActivity(), "Данные не готовы. Это странно.");
-            }
+            JSONObject jsonObject = requestTask.getData();
+            //String str = jsonObject.toString();
         }
     }
 
