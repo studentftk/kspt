@@ -86,7 +86,7 @@ public class FragmentProfile extends Fragment {
         );
         PlacesList.setAdapter(adapter);
         m_Photo = (ImageView)viewProfile.findViewById(R.id.photoJen);
-        m_Photo.setImageResource(R.drawable.photo);
+        //m_Photo.setImageResource(R.drawable.photo);
         return viewProfile;
     }
 

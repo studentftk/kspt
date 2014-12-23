@@ -21,7 +21,7 @@
                 android:layout_height="165dp">
 
                 <ImageView
-                    android:id="@+id/photoJen"
+                    android:id="@+id/photoPlace"
                     android:layout_width="150dp"
                     android:layout_height="150dp"
                     android:layout_marginTop="10dp"
@@ -36,33 +36,35 @@
                 android:layout_gravity="right">
 
                 <TextView
-                    android:id="@+id/personname"
+                    android:id="@+id/placename"
                     android:textColor="#FFFFFF"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:textSize="@dimen/activity_horizontal_margin"
+                    android:textSize="25sp"
+                    android:text="9й Корпус ИИТУ"
                     android:gravity="center_horizontal"/>
 
                 <TextView
                     android:textColor="#FFFFFF"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:text="ИИТУ КСПТ"
-                    android:textSize="@dimen/activity_horizontal_margin"
-                    android:gravity="center_horizontal"/>
+                    android:text="Учебный корпус"
+                    android:textSize="18sp"
+                    android:layout_marginLeft="10dp"/>
 
                 <TextView
                     android:textColor="#FFFFFF"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:text="Студент группы 53501/3"
+                    android:text="ул. Политехническая, 21"
                     android:textSize="@dimen/activity_horizontal_margin"
-                    android:gravity="center_horizontal"/>
+                    android:layout_marginLeft="10dp"/>
+
                 <Button
                     android:textColor="#FFFFFF"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:text="Любит"
+                    android:text="Чекин"
                     android:gravity="center_horizontal"
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp"
@@ -72,7 +74,7 @@
                     android:textColor="#FFFFFF"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:text="Друзья"
+                    android:text="Маршрут"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp"
@@ -94,7 +96,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="@dimen/activity_horizontal_margin"
-                    android:text="Недавние места"/>
+                    android:text="Недавно были"/>
             </RelativeLayout>
             <LinearLayout
                 android:orientation="vertical"
