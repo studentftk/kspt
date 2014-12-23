@@ -1,4 +1,4 @@
-package com.example.izual.studentftk;
+package com.example.izual.studentftk.Network;
 
 import java.io.FileInputStream;
 import java.io.IOException;
