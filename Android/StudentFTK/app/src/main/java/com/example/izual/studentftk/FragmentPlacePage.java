@@ -27,6 +27,10 @@ public class FragmentPlacePage extends Fragment {
     View viewPlacePage;
     TextView PlaceName;
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

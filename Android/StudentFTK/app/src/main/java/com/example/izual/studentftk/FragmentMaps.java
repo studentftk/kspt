@@ -23,9 +23,14 @@ public class FragmentMaps extends Fragment {
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
     MapFragment mapFragment;
 
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View viewMaps = inflater.inflate(R.layout.activity_maps, container, false);
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
+
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        View viewMaps = inflater.inflate(R.layout.activity_maps, container, false);
         setUpMapIfNeeded();
         return viewMaps;
     }
