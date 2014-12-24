@@ -82,6 +82,7 @@ public class Profile extends Activity
         FragmentAbout fragmentAbout;
         FragmentSettings fragmentSettings;
         FragmentPlacePage fragmentPlacePage;
+        FragmentMaps fragmentMaps;
 
         Bundle args;
         FragmentTransaction ft = fragmentManager.beginTransaction();
@@ -107,10 +108,16 @@ public class Profile extends Activity
                 ft.commit();
                 break;
             case 3:
-                Intent intentMaps = new Intent(this, MapsActivity.class);
-                startActivity(intentMaps);
-
-                //mTitle = getString(R.string.title_section3);
+                //Intent intentMaps = new Intent(this, MapsActivity.class);
+                //startActivity(intentMaps);
+                fragmentMaps = new FragmentMaps();
+                args = new Bundle();
+                args.putInt("2", 2);
+                fragmentMaps.setArguments(args);
+                ft.replace(R.id.container, fragmentMaps, "fragmentMaps");
+                //ft.addToBackStack(null);
+                ft.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);
+                ft.commit();
                 break;
             case 4:
                 fragmentPlaces = new FragmentPlaces();
