@@ -5,41 +5,41 @@
  */
 package server;
 
-import com.sun.net.httpserver.HttpsConfigurator;
-import com.sun.net.httpserver.HttpsServer;
-import org.json.simple.parser.ParseException;
-import server.httpApi.*;
-import utils.NetworkUtils;
-
-import javax.net.ssl.SSLContext;
+import com.cedarsoftware.util.io.JsonWriter;
 import java.io.IOException;
-import java.net.InetSocketAddress;
-import java.sql.SQLException;
-import java.util.concurrent.Executors;
-
+import java.sql.Timestamp;
+import java.util.List;
+import org.hibernate.Session;
+import server.entity.Message;
+import server.logic.MessageDAO;
 
 public class main {
 
     private static final int threadSizePool = 4;
 
-    public static void main(String[] args) throws IOException, SQLException, ParseException {
-        SSLContext sslContext = NetworkUtils.createSSLContext("keystore.jks", "123456", "123456");
-        HttpsServer server = HttpsServer.create(new InetSocketAddress(443), 0);
-        server.setHttpsConfigurator(new HttpsConfigurator(sslContext));
-
-        DbConnectionFactory db = new DbConnectionFactory();
-
-        addContext(server, new VKApi(db));
-        addContext(server, new SendMessageApi(db));
-        addContext(server, new GetMessageApi(db));
-        addContext(server, new SendMessageApi(db));
-        addContext(server, new GetPlacesApi(db));
-
-        server.setExecutor(Executors.newFixedThreadPool(threadSizePool)); // creates a default executor
-        server.start();
+    public static void main(String[] args) throws IOException{
+//        SSLContext sslContext = NetworkUtils.createSSLContext("keystore.jks", "123456", "123456");
+//        Server s = new Server(sslContext, 4);
+//        s.start();
+        
+        Message mes2 = new Message();
+        mes2.setMessage("Azazaz!");
+        mes2.setSender(45L);
+        mes2.setDesination(45L);
+        
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        session.beginTransaction();
+        session.save(mes2);
+        Message mes = (Message) session.load(Message.class, 19l);
+        System.out.println(mes.getMessage());
+        session.getTransaction().commit();
+        session.close();
+        
+        List<Message> messages = MessageDAO.getMessage(45L, Timestamp.valueOf("2014-01-08 22:27:36"));
+        for (Message message : messages) {
+            System.out.println(message.getMessage());
+        }
+        
     }
 
-    private static void addContext(HttpsServer server, HttpApiMethod api) {
-        server.createContext(api.getURI(), api.getHandler());
-    }
 }

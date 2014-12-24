@@ -11,7 +11,7 @@ import java.sql.SQLException;
 public class DbConnectionFactory {
     
     /* DB info */
-    private final String location = "jdbc:mysql://192.168.1.161:3306/student?characterEncoding=utf8";
+    private final String location = "jdbc:mysql://studentspbstu.tk:3306/student?characterEncoding=utf8";
     private final String user = "root";
     private final String password = "mine11235813";
     
@@ -26,5 +26,6 @@ public class DbConnectionFactory {
     public Connection getConnection() throws SQLException{
         return DriverManager.getConnection(location,user, password);
     }
-      
+    
+    
 }
