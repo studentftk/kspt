@@ -6,6 +6,7 @@ import java.util.Map;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,7 +16,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+
+import com.example.izual.studentftk.Messages.MessageStruct;
 import com.example.izual.studentftk.Messages.MsgControl;
+import com.example.izual.studentftk.Messages.ParseMessages;
 import com.example.izual.studentftk.Network.MessageRequest;
 import com.example.izual.studentftk.Network.RequestTask;
 
@@ -46,11 +50,22 @@ public class FragmentMessages extends Fragment {
         btnSendMessage = (Button)viewMessages.findViewById(R.id.btnSendMessage);
         txtMessageEdit = (EditText)viewMessages.findViewById(R.id.txtMessageEdit);
 
+        Intent intent = new Intent(getActivity(), ChooseFriendToChat.class);
+        startActivityForResult(intent, 1);
+
         InitMessages();
 
-        InitNetwork();
-
         return viewMessages;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(data == null){
+            return;
+        }
+        String friend = data.getStringExtra("ChoosenFriend");
+        InitNetwork();
     }
 
     private void InitMessages(){
@@ -59,7 +74,7 @@ public class FragmentMessages extends Fragment {
 
         // массивы данных
         ArrayList<String> msg_text = new ArrayList<String>();
-        ArrayList<String> msg_time = new ArrayList<String>();
+        final ArrayList<String> msg_time = new ArrayList<String>();
         ArrayList<String> msg_name = new ArrayList<String>();
 
         // создаём адаптер и привязываем его к списку
@@ -82,12 +97,17 @@ public class FragmentMessages extends Fragment {
                     return;
                 }
                 String time = MsgControl.FormatDate(MsgControl.DATE_DAY_AND_TIME);
-                if(msgList != null){
-                    MsgControl.AddMessageToList(msgList, textOfMessage, time, current_name);
-                }
-                listMessages.smoothScrollByOffset(listMessages.getMaxScrollAmount());
+                AddMessage(msgList, textOfMessage, time, current_name);
             }
         });
+    }
+
+    private void AddMessage(ArrayList<Map<String, Object>> msgList,
+                            String msg_text, String msg_time, String msg_name){
+        if(msgList != null){
+            MsgControl.AddMessageToList(msgList, msg_text, msg_time, msg_name);
+        }
+        listMessages.smoothScrollByOffset(listMessages.getMaxScrollAmount());
     }
 
 
@@ -119,8 +139,20 @@ public class FragmentMessages extends Fragment {
         }
         else {
             String data = requestTask.getData();
-            txtMessageEdit.setText(data);
-            btnSendMessage.callOnClick();
+            ArrayList<MessageStruct> parsed = null;
+            try {
+                parsed = ParseMessages.Parse(data);
+            }
+            catch(Exception e){
+                Utils.ShowError(getActivity(), e.toString());
+                String time = MsgControl.FormatDate(MsgControl.DATE_DAY_AND_TIME);
+                AddMessage(msgList, data, time, "System");
+            }
+            if(parsed != null) {
+                for (MessageStruct msg : parsed) {
+
+                }
+            }
         }
     }
 
