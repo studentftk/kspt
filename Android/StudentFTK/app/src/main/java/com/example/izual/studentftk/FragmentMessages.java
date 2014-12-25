@@ -32,6 +32,8 @@ public class FragmentMessages extends Fragment {
     private Button btnSendMessage;
     private EditText txtMessageEdit;
     private String current_name = "Admin";
+    final int connectionTimeout = 1000;
+    final int REQUEST_CODE_FRIENDS = 1;
 
     // структура, содержащая сообщения в удобном виде
     private static ArrayList<Map<String, Object>> msgList;
@@ -44,29 +46,31 @@ public class FragmentMessages extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
         final View viewMessages = inflater.inflate(R.layout.fragment_messages, container, false);
         listMessages = (ListView) viewMessages.findViewById(R.id.listMessages);
         btnSendMessage = (Button)viewMessages.findViewById(R.id.btnSendMessage);
         txtMessageEdit = (EditText)viewMessages.findViewById(R.id.txtMessageEdit);
 
-        Intent intent = new Intent(getActivity(), ChooseFriendToChat.class);
-        startActivityForResult(intent, 1);
+        /* Отображение списка друзей */
+        //Intent intent = new Intent(getActivity(), ChooseFriendToChat.class);
+        //startActivityForResult(intent, REQUEST_CODE_FRIENDS);
 
         InitMessages();
+
+        InitNetwork();
 
         return viewMessages;
     }
 
-    @Override
+ /*   @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(data == null){
+        if(requestCode != REQUEST_CODE_FRIENDS || data == null){
             return;
         }
         String friend = data.getStringExtra("ChoosenFriend");
         InitNetwork();
-    }
+    }*/
 
     private void InitMessages(){
         // инициализируем структуру, содержащую сообщения
@@ -98,6 +102,7 @@ public class FragmentMessages extends Fragment {
                 }
                 String time = MsgControl.FormatDate(MsgControl.DATE_DAY_AND_TIME);
                 AddMessage(msgList, textOfMessage, time, current_name);
+                SendMessage(AllProfileInform.socialToken, "1", textOfMessage);
             }
         });
     }
@@ -110,13 +115,31 @@ public class FragmentMessages extends Fragment {
         listMessages.smoothScrollByOffset(listMessages.getMaxScrollAmount());
     }
 
+    private void SendMessage(final String socialToken,
+                                   final String destination, final String message){
+        URI uri = MessageRequest.BuildRequestSend(socialToken, destination, message);
+        RequestTask requestTask = new RequestTask(uri, connectionTimeout);
+        final Thread execRequest = new Thread(requestTask);
+        execRequest.setPriority(Thread.MAX_PRIORITY);
+        execRequest.start();
+        try{
+            execRequest.join();
+        }
+        catch(Exception e){
+            Utils.ShowError(getActivity(), requestTask.getErrorReason());
+        }
+
+        if(requestTask.isError()){
+            Utils.ShowError(getActivity(), requestTask.getErrorReason());
+            return;
+        }
+    }
 
     private void InitNetwork(){
-        final int connectionTimeout = 1000;
-        //URI uri = MessageRequest.BuildRequestGet(AllProfileInform.socialToken,
-        //        "2012-12-09%2007:27:39", MessageRequest.Types.Send);
-        URI uri = MessageRequest.BuildRequestGet("asd",
-                        "2012-12-09%2007:27:39", MessageRequest.Types.Send);
+        URI uri = MessageRequest.BuildRequestGet("d757146a03cc4a2e69c573acbd00c1e259de9782089b67",
+                "2012-12-09%2007:27:39", MessageRequest.Types.Receive);
+        //URI uri = MessageRequest.BuildRequestGet("asd",
+        //                "2012-12-09%2007:27:39", MessageRequest.Types.Send);
         RequestTask requestTask = new RequestTask(uri, connectionTimeout);
         final Thread execRequest = new Thread(requestTask);
         execRequest.setPriority(Thread.MAX_PRIORITY);
@@ -148,9 +171,10 @@ public class FragmentMessages extends Fragment {
                 String time = MsgControl.FormatDate(MsgControl.DATE_DAY_AND_TIME);
                 AddMessage(msgList, data, time, "System");
             }
+            String time = MsgControl.FormatDate(MsgControl.DATE_DAY_AND_TIME);
             if(parsed != null) {
                 for (MessageStruct msg : parsed) {
-
+                    AddMessage(msgList, msg.Message, msg.SendTime, msg.Source);
                 }
             }
         }
