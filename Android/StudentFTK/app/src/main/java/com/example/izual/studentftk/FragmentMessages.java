@@ -57,7 +57,6 @@ public class FragmentMessages extends Fragment {
 
         InitMessages();
         InitNetwork();
-        listMessages.smoothScrollByOffset(listMessages.getMaxScrollAmount());
 
         return viewMessages;
     }
@@ -117,7 +116,8 @@ public class FragmentMessages extends Fragment {
 
     private void SendMessage(final String socialToken,
                                    final String destination, final String message){
-        URI uri = MessageRequest.BuildRequestSend(socialToken, destination, message);
+        URI uri = MessageRequest.BuildRequestSend(socialToken,
+                destination, MsgControl.SpacesToWebSpaces(message));
         RequestTask requestTask = new RequestTask(uri, connectionTimeout);
         final Thread execRequest = new Thread(requestTask);
         execRequest.setPriority(Thread.MAX_PRIORITY);
@@ -173,7 +173,7 @@ public class FragmentMessages extends Fragment {
             }
             String time = MsgControl.FormatDate(MsgControl.DATE_DAY_AND_TIME);
             if(parsed != null) {
-                for (MessageStruct msg : parsed) {
+                for (MessageStruct msg : parsed){
                     AddMessage(msgList, msg.Message, msg.SendTime, msg.Source);
                 }
             }
