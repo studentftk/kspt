@@ -1,16 +1,19 @@
 package server.api;
 
 import java.sql.Timestamp;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.json.simple.JSONArray;
 import server.DbConnectionFactory;
 import utils.JSONException;
 import server.core.ApiMethod;
 import server.core.HttpCode;
-import server.logic.Message;
-import server.logic.User;
+import server.entity.Message;
+import server.entity.User;
+import server.io.JSONHelper;
+import server.logic.MessageDAO;
+import server.logic.UserDAO;
 
 public class GetMessageApi implements ApiMethod{
 
@@ -23,17 +26,17 @@ public class GetMessageApi implements ApiMethod{
     @Override
     public ApiAnswer execute(Map<String, String> params) {
         try {
-            long id = User.getIdByToken(dbConnectionFactory, params.get("SocialToken"));
+            User user = UserDAO.getUserByToken(params.get("SocialToken"));
             Timestamp from = params.get("from")==null ? new Timestamp(0) : Timestamp.valueOf(params.get("from"));
-            JSONArray json;
+            List<Message> messages;
             if ("send".equals(params.get("type"))) {
-                json = Message.getSourceMessages(dbConnectionFactory, id, from);
+                messages = MessageDAO.getSendedMessages(user.getId(), from);
             } else if ("receive".equals(params.get("type"))){
-                json = Message.getDestinationMessages(dbConnectionFactory, id, from);
+                messages = MessageDAO.getReceivedMessages(user.getId(), from);
             } else {
-                json = Message.getAllMessages(dbConnectionFactory, id, from);
+                messages = MessageDAO.getAllMessages(user.getId(), from);
             }
-            String answer = json.toJSONString();
+            String answer = JSONHelper.toJSON(messages);
             return new ApiAnswer(HttpCode.OK, answer);
         } catch (Exception ex) {
             String answer = JSONException.toJSON(ex);

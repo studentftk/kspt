@@ -7,7 +7,10 @@ import server.DbConnectionFactory;
 import utils.JSONException;
 import server.core.ApiMethod;
 import server.core.HttpCode;
-import server.logic.User;
+import server.entity.Message;
+import server.entity.User;
+import server.logic.MessageDAO;
+import server.logic.UserDAO;
 
 public class SendMessageApi implements ApiMethod{
     private final DbConnectionFactory dbConnectionFactory;
@@ -19,15 +22,19 @@ public class SendMessageApi implements ApiMethod{
     @Override
     public ApiAnswer execute(Map<String, String> params) {
        try {
-            long id = User.getIdByToken(dbConnectionFactory, params.get("SocialToken"));
+            User user = UserDAO.getUserByToken(params.get("SocialToken"));
             long destination;
                 try{
                     destination = Long.parseLong(params.get("destination"));
                 } catch (Exception e) {
                     throw new IllegalArgumentException("destination must be long");
                 }
-            String message = params.get("message");
-            if (message==null) throw new IllegalArgumentException("message must not be empty");
+            if (params.get("message")==null) throw new IllegalArgumentException("message must not be empty");
+            Message message = new Message()
+                    .setDesination(destination)
+                    .setSender(user.getId())
+                    .setMessage(params.get("message"));
+            MessageDAO.sendMessage(message);
             return new ApiAnswer(HttpCode.OK, "");
         } catch (Exception ex) {
             String answer = JSONException.toJSON(ex);

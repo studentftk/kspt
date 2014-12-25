@@ -16,7 +16,8 @@ import server.DbConnectionFactory;
 import utils.JSONException;
 import server.core.ApiMethod;
 import server.core.HttpCode;
-import server.logic.User;
+import server.entity.User;
+import server.logic.UserDAO;
 
 /* simple test
 https://oauth.vk.com/authorize?client_id=4601196&scope=offline&redirect_uri=https://studentspbstu.tk/vk/oauth&v=5.25&response_type=code
@@ -40,13 +41,13 @@ public class VKApi implements ApiMethod {
         JSONArray responseValue = (JSONArray)response.get("response");
         Map<String,String> json = (Map<String,String>)responseValue.get(0);
         
-        User user = new User();
-        user.name = json.get("first_name");
-        user.surname = json.get("last_name");
-        user.photo = (String) json.get("photo_50");
-        user.socialId = authInfo.id;
-        user.socialType = "vk";
-        user.socialToken = authInfo.token;
+        User user = new User()
+                .setName(json.get("first_name"))
+                .setSurname(json.get("last_name"))
+                .setPhoto((String) json.get("photo_200"))
+                .setSocialId(authInfo.id)
+                .setSocialType("vk")
+                .setSocialToken(authInfo.token);
         return user;
     }
     
@@ -72,8 +73,8 @@ public class VKApi implements ApiMethod {
             if (params.containsKey("code")) {
                 AuthInfo authInfo = getToken(params.get("code"));
                 User user = getUserData(authInfo);
-                user.save(dbConnectionfactory);
-                String answer = user.asJSONObject().toJSONString();
+                UserDAO.seve(user);
+                String answer = user.asJSON().toJSONString();
                 return new ApiAnswer(HttpCode.OK, answer);
             }
             else {
