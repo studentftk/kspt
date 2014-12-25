@@ -6,19 +6,29 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.SimpleAdapter;
+import android.widget.TextView;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeoutException;
 
 
 public class Profile extends Activity
@@ -28,48 +38,31 @@ public class Profile extends Activity
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
      */
     private NavigationDrawerFragment mNavigationDrawerFragment;
-    static final int AUTHVK = 1;
+
     /**
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
      */
     private CharSequence mTitle;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        //super.onCreate(savedInstanceState);
+
         super.onCreate(savedInstanceState);
-        startActivityForResult(new Intent(this, VkontakteActivity.class),AUTHVK);
-        //StartLogin();
-        setContentView(R.layout.activity_profile);
 
-        mNavigationDrawerFragment = (NavigationDrawerFragment)
-                getFragmentManager().findFragmentById(R.id.navigation_drawer);
-        mTitle = getTitle();
-        // Set up the drawer.
-        mNavigationDrawerFragment.setUp(
-                R.id.navigation_drawer,
-                (DrawerLayout) findViewById(R.id.drawer_layout));
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        switch( requestCode ) {
-            case AUTHVK:
-                if( resultCode == Activity.RESULT_OK ) {
-                    //todo какое то действие
-                }
-                break;
+        if (savedInstanceState == null) {
+            setContentView(R.layout.activity_profile);
+            mNavigationDrawerFragment = (NavigationDrawerFragment)
+                    getFragmentManager().findFragmentById(R.id.navigation_drawer);
+            mTitle = getTitle();
+            // Set up the drawer.
+            mNavigationDrawerFragment.setUp(
+                    R.id.navigation_drawer,
+                    (DrawerLayout) findViewById(R.id.drawer_layout));
         }
     }
 
-    private void StartLogin()
-    {
-       // Intent i = new Intent(Profile.this,Log_Act.class); // Your list's Intent
-       // i.setFlags(i.getFlags() | Intent.FLAG_ACTIVITY_NO_HISTORY); // Adds the FLAG_ACTIVITY_NO_HISTORY flag
-       // startActivity(i);
-    }
 
     @Override
     public void onNavigationDrawerItemSelected(int position) {
@@ -88,6 +81,8 @@ public class Profile extends Activity
         FragmentFriendsList fragmentFriendsList;
         FragmentAbout fragmentAbout;
         FragmentSettings fragmentSettings;
+        FragmentPlacePage fragmentPlacePage;
+        FragmentMaps fragmentMaps;
 
         Bundle args;
         FragmentTransaction ft = fragmentManager.beginTransaction();
@@ -113,10 +108,16 @@ public class Profile extends Activity
                 ft.commit();
                 break;
             case 3:
-                Intent intentMaps = new Intent(this, MapsActivity.class);
-                startActivity(intentMaps);
-
-                //mTitle = getString(R.string.title_section3);
+                //Intent intentMaps = new Intent(this, MapsActivity.class);
+                //startActivity(intentMaps);
+                fragmentMaps = new FragmentMaps();
+                args = new Bundle();
+                args.putInt("2", 2);
+                fragmentMaps.setArguments(args);
+                ft.replace(R.id.container, fragmentMaps, "fragmentMaps");
+                //ft.addToBackStack(null);
+                ft.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);
+                ft.commit();
                 break;
             case 4:
                 fragmentPlaces = new FragmentPlaces();
@@ -149,11 +150,11 @@ public class Profile extends Activity
                 ft.commit();
                 break;
             case 7:
-                fragmentAbout = new FragmentAbout();
+                fragmentPlacePage = new FragmentPlacePage();
                 args = new Bundle();
                 args.putInt("2", 2);
-                fragmentAbout.setArguments(args);
-                ft.replace(R.id.container, fragmentAbout, "fragmentAbout");
+                fragmentPlacePage.setArguments(args);
+                ft.replace(R.id.container, fragmentPlacePage, "fragmentAbout");
                 //ft.addToBackStack(null);
                 ft.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);
                 ft.commit();
@@ -236,5 +237,4 @@ public class Profile extends Activity
                     getArguments().getInt(ARG_SECTION_NUMBER));
         }
     }
-
 }

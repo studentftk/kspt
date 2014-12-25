@@ -44,8 +44,7 @@
             android:id="@+id/btnSendMessage"
             android:text="Отпр."
             android:layout_gravity="right|center_vertical"
-            android:layout_marginRight="5dp"
-            android:onClick="btnSendMessageClick"/>
+            android:layout_marginRight="5dp"/>
 
     </FrameLayout>
 

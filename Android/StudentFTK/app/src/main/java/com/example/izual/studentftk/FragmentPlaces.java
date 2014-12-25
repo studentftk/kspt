@@ -24,6 +24,11 @@ public class FragmentPlaces extends Fragment {
     private ListView listPlaces;
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View viewPlaces = inflater.inflate(R.layout.fragment_places, container, false);
