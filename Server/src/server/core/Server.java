@@ -9,6 +9,7 @@ import javax.net.ssl.SSLContext;
 import server.api.CheckinApi;
 import server.api.GetCheckinsApi;
 import server.api.GetMessageApi;
+import server.api.GetPlaceApi;
 import server.api.GetUserApi;
 import server.api.SendMessageApi;
 import server.api.VKApi;
@@ -42,7 +43,7 @@ public class Server {
                 new VKApi(NetworkUtils.getServerURL()+"/vk/oauth"),
                 "/vk/oauth");
         
-        HttpApiMehodImpl getCheckins = new HttpApiMehodImpl(
+        HttpApiMehodImpl getCheckinsApi = new HttpApiMehodImpl(
                 new GetCheckinsApi(),
                 "/checkins.get");
         
@@ -50,12 +51,17 @@ public class Server {
                 new CheckinApi(),
                 "/checkin");
         
+        HttpApiMehodImpl getPlacesApi = new HttpApiMehodImpl(
+                new GetPlaceApi(),
+                "/places.get");
+        
         addMethod(getMessages);
         addMethod(getUser);
         addMethod(sendMessage);
         addMethod(vkApi);
-        addMethod(getCheckins);
+        addMethod(getCheckinsApi);
         addMethod(checkinApi);
+        addMethod(getPlacesApi);
     }
     
     private void addMethod(HttpApiMethod method){
