@@ -39,15 +39,60 @@ public class UserDAOTest {
     }
 
     /**
-     * Test of getUserById method, of class UserDAO.
+     * Test of getById method, of class UserDAO.
      */
     @Test
     public void testGetUserById() {
         System.out.println("getUserById");
         long id = 45L;
         User expResult = null;
-        User result = UserDAO.getUserById(id);
+        User result = UserDAO.getById(id);
         System.out.println(result.asJSON().toJSONString());
+    }
+
+    /**
+     * Test of getByToken method, of class UserDAO.
+     */
+    @Test
+    public void testGetUserByToken() {
+        System.out.println("getUserByToken");
+        String token = "";
+        User expResult = null;
+        User result = UserDAO.getByToken(token);
+        assertEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of getBySocial method, of class UserDAO.
+     */
+    @Test
+    public void testGetUserBySocial() {
+        System.out.println("getUserBySocial");
+        String socialType = "";
+        long socialId = 0L;
+        User expResult = null;
+        User result = UserDAO.getBySocial(socialType, socialId);
+        assertEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of save method, of class UserDAO.
+     */
+    @Test
+    public void testSeve() {
+        System.out.println("save");
+        User user = new User()
+                .setName("Test_ref")
+                .setSocialId(1L)
+                .setSocialType("vk")
+                .setSocialToken("123");
+        UserDAO.save(user);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
     }
     
 }

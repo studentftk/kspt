@@ -38,7 +38,7 @@ public class User implements Serializable, JSONAble {
     @Column(name="about")
     private String about;
     
-    @Column(name="group")
+    @Column(name="groupname")
     private String group;
     
     @Column(name="instituteId")

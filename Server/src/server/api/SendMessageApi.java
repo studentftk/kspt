@@ -17,7 +17,7 @@ public class SendMessageApi implements ApiMethod{
     @Override
     public ApiAnswer execute(Map<String, String> params) {
        try {
-            User user = UserDAO.getUserByToken(params.get("SocialToken"));
+            User user = UserDAO.getByToken(params.get("SocialToken"));
             long destination;
                 try{
                     destination = Long.parseLong(params.get("destination"));

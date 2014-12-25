@@ -14,7 +14,7 @@ public class GetUserApi implements ApiMethod {
     @Override
     public ApiAnswer execute(Map<String, String> params) {
         try {
-            User user = UserDAO.getUserByToken(params.get("SocialToken"));
+            User user = UserDAO.getByToken(params.get("SocialToken"));
             String answer = user.asJSON().toJSONString();
             return new ApiAnswer(HttpCode.OK, answer);
         } catch (Exception ex) {

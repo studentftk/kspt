@@ -30,7 +30,7 @@ public class VKApi implements ApiMethod {
     }
 
     protected User getUserData(AuthInfo authInfo) throws IOException, ParseException {
-        String query = "https://api.vk.com/method/users.get?fields=photo_50,first_name,last_name,universities,about&name_case=Nom&v=5.26&user_id="+authInfo.id+" ";
+        String query = "https://api.vk.com/method/users.get?fields=photo_200,first_name,last_name,universities,about&name_case=Nom&v=5.26&user_id="+authInfo.id+" ";
         URLConnection connection = new URL(query).openConnection();
         InputStream is = connection.getInputStream();
         JSONParser parser = new JSONParser();
@@ -70,7 +70,7 @@ public class VKApi implements ApiMethod {
             if (params.containsKey("code")) {
                 AuthInfo authInfo = getToken(params.get("code"));
                 User user = getUserData(authInfo);
-                UserDAO.seve(user);
+                UserDAO.save(user);
                 String answer = user.asJSON().toJSONString();
                 return new ApiAnswer(HttpCode.OK, answer);
             }

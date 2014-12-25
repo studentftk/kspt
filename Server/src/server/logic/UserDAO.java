@@ -7,7 +7,7 @@ import server.entity.User;
 
 
 public class UserDAO {
-    public static User getUserById(long id){
+    public static User getById(long id){
         Session session = HibernateUtil.getSessionFactory().openSession();
         User user;
         try {
@@ -20,7 +20,7 @@ public class UserDAO {
         return user;
     }
     
-    public static User getUserByToken(String token){
+    public static User getByToken(String token){
         Session session = HibernateUtil.getSessionFactory().openSession();
         User user;
         try {
@@ -33,7 +33,7 @@ public class UserDAO {
         return user;
     }
     
-    public static User getUserBySocial(String socialType, long socialId){
+    public static User getBySocial(String socialType, long socialId){
         Session session = HibernateUtil.getSessionFactory().openSession();
         User user;
         try {
@@ -47,7 +47,7 @@ public class UserDAO {
         return user;
     }
     
-    public static void seve(User user){
+    public static void save(User user){
         Session session = HibernateUtil.getSessionFactory().openSession();
         try {
             session.beginTransaction();
