@@ -1,7 +1,9 @@
-package com.example.izual.studentftk;
+package com.example.izual.studentftk.Messages;
 
 import android.app.Activity;
 import android.widget.SimpleAdapter;
+
+import com.example.izual.studentftk.R;
 
 import java.util.ArrayList;
 import java.util.Calendar;

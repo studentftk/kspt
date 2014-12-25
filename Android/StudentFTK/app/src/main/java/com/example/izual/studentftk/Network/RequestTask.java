@@ -1,5 +1,6 @@
 package com.example.izual.studentftk.Network;
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
@@ -17,20 +18,22 @@ import javax.net.ssl.HttpsURLConnection;
 public class RequestTask implements Runnable {
     private URI uri;
     private boolean dataReady = false;
-    private JSONObject data;
+    private String data;
+    private int timeout;
 
     private boolean isError = false;
     private String errorReason;
 
-    public RequestTask(final URI uri){
+    public RequestTask(final URI uri, int timeout){
         this.uri = uri;
+        this.timeout = timeout;
     }
 
     public boolean isDataReady(){
         return dataReady;
     }
 
-    public final JSONObject getData(){
+    public final String getData(){
         return data;
     }
 
@@ -50,15 +53,13 @@ public class RequestTask implements Runnable {
             connection = (HttpsURLConnection)url.openConnection();
 
             NetworkUtils.setAllTrusted(connection);
-            connection.setConnectTimeout(20);
+            connection.setConnectTimeout(timeout);
             connection.connect();
 
             InputStream inputStream = connection.getInputStream();
             InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
-
-            JSONParser parser = new JSONParser();
-
-            data = (JSONObject) parser.parse(inputStreamReader);
+            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+            data = bufferedReader.readLine();
             dataReady = true;
         }
         catch(Exception e){

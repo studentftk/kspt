@@ -2,11 +2,7 @@ package com.example.izual.studentftk;
 
 import java.net.URI;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.HashMap;
 import java.util.Map;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import android.app.Activity;
 import android.app.Fragment;
@@ -19,11 +15,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
-import com.example.izual.studentftk.MsgControl;
+import com.example.izual.studentftk.Messages.MsgControl;
 import com.example.izual.studentftk.Network.MessageRequest;
 import com.example.izual.studentftk.Network.RequestTask;
-
-import org.json.simple.JSONObject;
 
 /**
  * Created by Антон on 12.12.2014.
@@ -98,9 +92,12 @@ public class FragmentMessages extends Fragment {
 
 
     private void InitNetwork(){
-        URI uri = MessageRequest.BuildRequestGet(AllProfileInform.socialToken,
-                "2012-12-09%2007:27:39", MessageRequest.Types.Send);
-        RequestTask requestTask = new RequestTask(uri);
+        final int connectionTimeout = 1000;
+        //URI uri = MessageRequest.BuildRequestGet(AllProfileInform.socialToken,
+        //        "2012-12-09%2007:27:39", MessageRequest.Types.Send);
+        URI uri = MessageRequest.BuildRequestGet("asd",
+                        "2012-12-09%2007:27:39", MessageRequest.Types.Send);
+        RequestTask requestTask = new RequestTask(uri, connectionTimeout);
         final Thread execRequest = new Thread(requestTask);
         execRequest.setPriority(Thread.MAX_PRIORITY);
         execRequest.start();
@@ -121,8 +118,9 @@ public class FragmentMessages extends Fragment {
             Utils.ShowError(getActivity(), "Не могу загрузить сообщения. Это странно.");
         }
         else {
-            JSONObject jsonObject = requestTask.getData();
-            //String str = jsonObject.toString();
+            String data = requestTask.getData();
+            txtMessageEdit.setText(data);
+            btnSendMessage.callOnClick();
         }
     }
 
