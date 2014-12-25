@@ -10,5 +10,6 @@
     
     <mapping class="server.entity.Message" />
     <mapping class="server.entity.User" />
+    <mapping class="server.entity.Checkin" />
   </session-factory>
 </hibernate-configuration>
