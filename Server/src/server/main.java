@@ -18,8 +18,6 @@ public class main {
         SSLContext sslContext = NetworkUtils.createSSLContext("keystore.jks", "123456", "123456");
         Server s = new Server(sslContext, 4);
         s.start();
-
- 
     }
 
 }

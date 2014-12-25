@@ -45,7 +45,7 @@ public class Message implements Serializable, JSONAble {
         JSONObject result = new JSONObject();
         result.put("source", source);
         result.put("destination", destination);
-        result.put("sendTime", "\""+time+"\"");
+        result.put("sendTime", time.toString());
         result.put("message", message);
         return  result;
     }
