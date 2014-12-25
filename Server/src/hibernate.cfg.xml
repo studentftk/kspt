@@ -4,13 +4,12 @@
   <session-factory>
     <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
     <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
-    <property name="hibernate.connection.url">jdbc:mysql://studentspbstu.tk:3306/student?zeroDateTimeBehavior=convertToNull</property>
+    <property name="hibernate.connection.url">jdbc:mysql://studentspbstu.tk:3306/student?zeroDateTimeBehavior=convertToNull&amp;characterEncoding=utf8</property>
     <property name="hibernate.connection.username">root</property>
     <property name="hibernate.connection.password">mine11235813</property>
-    
-    <mapping class="server.entity.Message" />
-    <mapping class="server.entity.User" />
-    <mapping class="server.entity.Checkin" />
-    <mapping class="server.entity.Place" />
+    <mapping class="server.entity.Message"/>
+    <mapping class="server.entity.User"/>
+    <mapping class="server.entity.Checkin"/>
+    <mapping class="server.entity.Place"/>
   </session-factory>
 </hibernate-configuration>
