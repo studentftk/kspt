@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.concurrent.Executors;
 import javax.net.ssl.SSLContext;
+import server.api.CheckinApi;
+import server.api.GetCheckinsApi;
 import server.api.GetMessageApi;
 import server.api.GetUserApi;
 import server.api.SendMessageApi;
@@ -40,10 +42,20 @@ public class Server {
                 new VKApi(NetworkUtils.getServerURL()+"/vk/oauth"),
                 "/vk/oauth");
         
+        HttpApiMehodImpl getCheckins = new HttpApiMehodImpl(
+                new GetCheckinsApi(),
+                "/checkins.get");
+        
+        HttpApiMehodImpl checkinApi = new HttpApiMehodImpl(
+                new CheckinApi(),
+                "/checkin");
+        
         addMethod(getMessages);
         addMethod(getUser);
         addMethod(sendMessage);
         addMethod(vkApi);
+        addMethod(getCheckins);
+        addMethod(checkinApi);
     }
     
     private void addMethod(HttpApiMethod method){
