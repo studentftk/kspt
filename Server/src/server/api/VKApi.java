@@ -12,7 +12,6 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import server.DbConnectionFactory;
 import utils.JSONException;
 import server.core.ApiMethod;
 import server.core.HttpCode;
@@ -25,10 +24,8 @@ https://oauth.vk.com/authorize?client_id=4601196&scope=offline&redirect_uri=http
 
 public class VKApi implements ApiMethod {
     public final String baseTokenQueryURI;
-    private final DbConnectionFactory dbConnectionfactory;
 
-    public VKApi(DbConnectionFactory factory, String redirectURI) {
-        this.dbConnectionfactory = factory;
+    public VKApi(String redirectURI) {
         baseTokenQueryURI = "https://oauth.vk.com/access_token?client_id=4601196&client_secret=4FfKXAErEZYuC9G55RUK&v=5.25&redirect_uri="+redirectURI+"&code=";
     }
 

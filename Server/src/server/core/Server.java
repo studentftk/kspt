@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.concurrent.Executors;
 import javax.net.ssl.SSLContext;
-import server.DbConnectionFactory;
 import server.api.GetMessageApi;
 import server.api.GetUserApi;
 import server.api.SendMessageApi;
@@ -16,31 +15,29 @@ import utils.NetworkUtils;
 public class Server {
     
     private final HttpsServer server;
-    private final DbConnectionFactory dbConnctionFactory;
 
     public Server(SSLContext sslContext, int threads) throws IOException {
         server = HttpsServer.create(new InetSocketAddress(443), 0);
         server.setHttpsConfigurator(new HttpsConfigurator(sslContext));
         server.setExecutor(Executors.newFixedThreadPool(threads)); // creates a default executor
-        dbConnctionFactory = new DbConnectionFactory();
         initialize();      
     }
     
     private void initialize(){
         HttpApiMehodImpl getMessages = new HttpApiMehodImpl(
-                new GetMessageApi(dbConnctionFactory),
+                new GetMessageApi(),
                 "/messages.get");
         
         HttpApiMehodImpl getUser = new HttpApiMehodImpl(
-                new GetUserApi(dbConnctionFactory),
+                new GetUserApi(),
                 "/user.get");
         
         HttpApiMehodImpl sendMessage = new HttpApiMehodImpl(
-                new SendMessageApi(dbConnctionFactory),
+                new SendMessageApi(),
                 "/messages.send");
         
         HttpApiMehodImpl vkApi = new HttpApiMehodImpl(
-                new VKApi(dbConnctionFactory, NetworkUtils.getServerURL()+"/vk/oauth"),
+                new VKApi(NetworkUtils.getServerURL()+"/vk/oauth"),
                 "/vk/oauth");
         
         addMethod(getMessages);

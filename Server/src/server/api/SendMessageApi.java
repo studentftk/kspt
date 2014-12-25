@@ -3,7 +3,6 @@ package server.api;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import server.DbConnectionFactory;
 import utils.JSONException;
 import server.core.ApiMethod;
 import server.core.HttpCode;
@@ -13,11 +12,7 @@ import server.logic.MessageDAO;
 import server.logic.UserDAO;
 
 public class SendMessageApi implements ApiMethod{
-    private final DbConnectionFactory dbConnectionFactory;
     
-    public SendMessageApi(DbConnectionFactory dbConnectionFactory) {
-        this.dbConnectionFactory = dbConnectionFactory;
-    }
 
     @Override
     public ApiAnswer execute(Map<String, String> params) {

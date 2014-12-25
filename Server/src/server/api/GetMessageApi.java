@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import server.DbConnectionFactory;
 import utils.JSONException;
 import server.core.ApiMethod;
 import server.core.HttpCode;
@@ -16,12 +15,6 @@ import server.logic.MessageDAO;
 import server.logic.UserDAO;
 
 public class GetMessageApi implements ApiMethod{
-
-    DbConnectionFactory dbConnectionFactory;
-    
-    public GetMessageApi(DbConnectionFactory dbConnectionFactory){
-        this.dbConnectionFactory = dbConnectionFactory;
-    }
     
     @Override
     public ApiAnswer execute(Map<String, String> params) {

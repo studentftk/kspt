@@ -1,7 +1,6 @@
 package server.logic;
 
 import java.sql.Timestamp;
-import server.DbConnectionFactory;
 
 public class Visited {
     
@@ -13,7 +12,4 @@ public class Visited {
         this.timeVisited = timeVisited;
     }
     
-    public static void checkIn(DbConnectionFactory dbConnectionFactory, String token){
-        
-    }
 }
