@@ -12,10 +12,10 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import utils.JSONException;
 import server.core.ApiMethod;
 import server.core.HttpCode;
 import server.entity.User;
+import server.io.JSONHelper;
 import server.logic.UserDAO;
 
 /* simple test
@@ -78,7 +78,7 @@ public class VKApi implements ApiMethod {
                 return new ApiAnswer(HttpCode.OK, "");
             }
         } catch (Exception e) {
-            String answer = JSONException.toJSON(e);
+            String answer = JSONHelper.toJSON(e);
             Logger.getLogger(VKApi.class.getName()).log(Level.SEVERE, null, e);
             return new ApiAnswer(HttpCode.ERROR, answer);
         }    

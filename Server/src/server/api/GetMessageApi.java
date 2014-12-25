@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import utils.JSONException;
 import server.core.ApiMethod;
 import server.core.HttpCode;
 import server.entity.Message;
@@ -32,7 +31,7 @@ public class GetMessageApi implements ApiMethod{
             String answer = JSONHelper.toJSON(messages);
             return new ApiAnswer(HttpCode.OK, answer);
         } catch (Exception ex) {
-            String answer = JSONException.toJSON(ex);
+            String answer = JSONHelper.toJSON(ex);
             Logger.getLogger(VKApi.class.getName()).log(Level.SEVERE, null, ex);
             return new ApiAnswer(HttpCode.ERROR, answer);
         }

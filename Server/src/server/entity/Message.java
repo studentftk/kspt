@@ -65,7 +65,6 @@ public class Message implements Serializable, JSONAble {
         return this;
     }
 
-
     public long getSender() {
         return source;
     }

@@ -3,11 +3,11 @@ package server.api;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import utils.JSONException;
 import server.core.ApiMethod;
 import server.core.HttpCode;
 import server.entity.Message;
 import server.entity.User;
+import server.io.JSONHelper;
 import server.logic.MessageDAO;
 import server.logic.UserDAO;
 
@@ -32,7 +32,7 @@ public class SendMessageApi implements ApiMethod{
             MessageDAO.sendMessage(message);
             return new ApiAnswer(HttpCode.OK, "");
         } catch (Exception ex) {
-            String answer = JSONException.toJSON(ex);
+            String answer = JSONHelper.toJSON(ex);
             Logger.getLogger(VKApi.class.getName()).log(Level.SEVERE, null, ex);
             return new ApiAnswer(HttpCode.ERROR, answer);
         }
