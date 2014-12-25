@@ -56,8 +56,8 @@ public class FragmentMessages extends Fragment {
         //startActivityForResult(intent, REQUEST_CODE_FRIENDS);
 
         InitMessages();
-
         InitNetwork();
+        listMessages.smoothScrollByOffset(listMessages.getMaxScrollAmount());
 
         return viewMessages;
     }

@@ -6,8 +6,8 @@ import java.net.URI;
  * Created by oglandx on 22.12.2014.
  */
 public class RequestBuilder {
-    public static final URI BuildRequest(String nameOfSite,
-                                    String page, String method, String[] params, String[] values){
+    public static URI BuildRequest(final String nameOfSite, final String page,
+                                final String method, final String[] params, final String[] values){
         if(params.length != values.length){
             return null;
         }
