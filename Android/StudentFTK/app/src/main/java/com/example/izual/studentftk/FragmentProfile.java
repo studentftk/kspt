@@ -42,7 +42,7 @@ public class FragmentProfile extends Fragment {
     ListView PlacesList;
     View viewProfile;
     TextView PersonName;
-
+    Bitmap resizedBitmap;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,47 +52,55 @@ public class FragmentProfile extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        if (getActivity().getIntent().getStringExtra("url")!=null) {
-            try {
+        viewProfile = inflater.inflate(R.layout.fragment_profile, container, false);
+        if(AllProfileInform.Photo == null && AllProfileInform.Name == null) {
+            if (getActivity().getIntent().getStringExtra("url") != null) {
+                try {
 
-                getProfileFromServer(getActivity().getIntent().getStringExtra("url"));
+                    getProfileFromServer(getActivity().getIntent().getStringExtra("url"));
 
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            } catch (ExecutionException e) {
-                e.printStackTrace();
-            } catch (TimeoutException e) {
-                e.printStackTrace();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                } catch (TimeoutException e) {
+                    e.printStackTrace();
+                }
+
+            } else {
+                StartLogin();
+            }
+        }
+        else
+        {
+            PersonName = (TextView)viewProfile.findViewById(R.id.personname);
+            PersonName.setText(AllProfileInform.Surname + " " + AllProfileInform.Name);
+            m_Photo = (ImageView)viewProfile.findViewById(R.id.photoJen);
+            m_Photo.setImageBitmap(AllProfileInform.Photo);
+        }
+
+        if((AllProfileInform.Photo != null && AllProfileInform.Name != null)||getActivity().getIntent().getStringExtra("url")!=null)
+        {
+            ListView PlacesList = (ListView) viewProfile.findViewById(R.id.list_place);
+            ArrayList<Map<String, Object>> data = new ArrayList<Map<String, Object>>(
+                    Places.length);
+            Map<String, Object> tmp;
+            for (int i = 0; i < Places.length; i++) {
+                tmp = new HashMap<String, Object>();
+                tmp.put("Text", Places[i]);
+                // tmp.put("Image", R.drawable.places);
+                data.add(tmp);
             }
 
+            String[] from = {/* "Image",*/"Text"};
+            int[] to = { /*R.id.imgPlaces,*/ R.id.TxtPlaces};
+            SimpleAdapter adapter = new SimpleAdapter(
+                    getActivity(),//getActionBar().getThemedContext(),
+                    data,
+                    R.layout.places_layout, from, to
+            );
+            PlacesList.setAdapter(adapter);
         }
-        else{
-            StartLogin();
-        }
-
-        viewProfile = inflater.inflate(R.layout.fragment_profile, container, false);
-
-        ListView PlacesList = (ListView) viewProfile.findViewById(R.id.list_place);
-        ArrayList<Map<String, Object>> data = new ArrayList<Map<String, Object>>(
-                Places.length);
-        Map<String, Object> tmp;
-        for (int i = 0; i < Places.length; i++) {
-            tmp = new HashMap<String, Object>();
-            tmp.put("Text", Places[i]);
-            // tmp.put("Image", R.drawable.places);
-            data.add(tmp);
-        }
-
-        String[] from = {/* "Image",*/"Text" };
-        int[] to = { /*R.id.imgPlaces,*/ R.id.TxtPlaces };
-        SimpleAdapter adapter = new SimpleAdapter(
-                getActivity(),//getActionBar().getThemedContext(),
-                data,
-                R.layout.places_layout,from,to
-        );
-        PlacesList.setAdapter(adapter);
-        m_Photo = (ImageView)viewProfile.findViewById(R.id.photoJen);
-        //m_Photo.setImageResource(R.drawable.photo);
         return viewProfile;
     }
 
@@ -162,10 +170,12 @@ public class FragmentProfile extends Fragment {
         protected void onPostExecute(String jsonObject) {
             super.onPostExecute(jsonObject);
 
-
-            PersonName = (TextView)viewProfile.findViewById(R.id.personname);
-            PersonName.setText(AllProfileInform.Surname + " " + AllProfileInform.Name);
-            m_Photo.setImageBitmap(AllProfileInform.Photo);
+            if(AllProfileInform.Name !=null && AllProfileInform.Photo != null) {
+                PersonName = (TextView) viewProfile.findViewById(R.id.personname);
+                PersonName.setText(AllProfileInform.Surname + " " + AllProfileInform.Name);
+                m_Photo = (ImageView)viewProfile.findViewById(R.id.photoJen);
+                m_Photo.setImageBitmap(AllProfileInform.Photo);
+            }
         }
     }
 
@@ -178,9 +188,9 @@ public class FragmentProfile extends Fragment {
             connection.connect();
             InputStream input = connection.getInputStream();
             Bitmap myBitmap = BitmapFactory.decodeStream(input);
-            Bitmap resizedbitmap = Bitmap.createScaledBitmap(myBitmap, 200, 200, true);
+            resizedBitmap = Bitmap.createScaledBitmap(myBitmap, 200, 200, true);
 
-            AllProfileInform.Photo = resizedbitmap;
+            AllProfileInform.Photo = resizedBitmap;
 
         } catch (IOException e) {
             e.printStackTrace();
