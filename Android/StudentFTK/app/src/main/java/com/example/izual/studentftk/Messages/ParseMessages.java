@@ -13,7 +13,7 @@ import java.util.ArrayList;
 public class ParseMessages {
     private ParseMessages(){}
 
-    public static ArrayList<MessageStruct> Parse(String receivedData)
+    public static ArrayList<MessageStruct> Parse(final String receivedData)
                     throws ParseException{
         ArrayList<MessageStruct> messages = new ArrayList<MessageStruct>();
 

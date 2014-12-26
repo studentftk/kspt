@@ -5,19 +5,9 @@ import java.net.URI;
 /**
  * Created by oglandx on 22.12.2014.
  */
-public class MessageRequest {
-    public static final String NameOfSite = "https://studentspbstu.tk/";
+public class MessageRequest extends Request{
 
-    public static final class Pages{
-        public static final String Messages = "messages";
-    }
-
-    public static final class Methods{
-        public static final String Get = "get";
-        public static final String Send = "send";
-    }
-
-    public static final class Params{
+   public static final class Params{
         public static final String SocialToken = "SocialToken";
         public static final String From = "from";
         public static final String Type = "type";
