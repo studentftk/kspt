@@ -31,15 +31,16 @@ public class MessageRequest {
         public static final String Receive = "receive";
     }
 
-    public static final URI BuildRequestGet(String socialToken, String fromDate, String type){
+    public static URI BuildRequestGet(final String socialToken,
+                                      final String fromDate, final String type){
         String[] params = {Params.SocialToken, Params.From, Params.Type};
         String[] values = {socialToken, fromDate, type};
         return RequestBuilder.BuildRequest(NameOfSite,
                             Pages.Messages, Methods.Get, params, values);
     }
 
-    public static final URI BuildRequestSend(String socialToken,
-                                                        String destination, String message){
+    public static URI BuildRequestSend(final String socialToken,
+                                       final String destination, final String message){
         String[] params = {Params.SocialToken, Params.Destination, Params.Message};
         String[] values = {socialToken, destination, message};
         return RequestBuilder.BuildRequest(NameOfSite,

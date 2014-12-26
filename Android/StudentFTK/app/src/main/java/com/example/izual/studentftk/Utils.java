@@ -11,4 +11,14 @@ public class Utils {
         Toast toast = Toast.makeText(activity.getApplicationContext(), message, Toast.LENGTH_LONG);
         toast.show();
     }
+
+    /**
+     * First format: 2014-12-08 22:27:39.0
+     * Return format: Thu Dec 25 22:32:39
+     * @param date
+     * @return
+     */
+    public static String TranslateDateToSer(final String date){
+        return "";
+    }
 }

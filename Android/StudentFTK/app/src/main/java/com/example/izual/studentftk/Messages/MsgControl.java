@@ -86,6 +86,33 @@ public class MsgControl {
         return CreateAdapter(msgList, activity);
     }
 
+    public static String SpacesToWebSpaces(final String message){
+        StringBuilder builder = new StringBuilder(message);
+        int space = 0;
+
+        while(builder.toString().contains(" ")){
+            space = builder.indexOf(" ");
+            builder.replace(space, space + 1, "%20");
+        }
+
+        return builder.toString();
+    }
+
+    public static String PackToBrackets(final String message){
+        return "\"" + message + "\"";
+    }
+
+    public static String UnpackFromBrackets(final String message){
+        final int FirstAfterBracket = 1;
+        final int LastBeforeBracket = message.length() - 1;
+
+        if(message.charAt(FirstAfterBracket) != '\"' ||
+                message.charAt(LastBeforeBracket) != '\"'){
+            return message;
+        }
+        return message.substring(FirstAfterBracket, LastBeforeBracket);
+    }
+
     public static String FormatDate(int mode){
         Calendar calendar = Calendar.getInstance();
         String time = calendar.getTime().toString();

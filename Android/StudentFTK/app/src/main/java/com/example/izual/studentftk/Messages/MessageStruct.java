@@ -11,22 +11,24 @@ import org.json.simple.JSONObject;
  */
 public class MessageStruct {
     public final String Message;
-    public final String Id;
     public final String Source;
     public final String SendTime;
     public final String Destination;
 
-    public final static int OBJECTS_COUNT = 5;
-    public final static String[] KEYS = {"message", "id", "source", "sendTime", "destination"};
+    @Deprecated
+    public final String Id = "";
+
+
+    public final static String[] KEYS = {"message", "source", "sendTime", "destination"};
+    public final static int OBJECTS_COUNT = KEYS.length;
 
     public MessageStruct(JSONObject jsonObject){
         final String[] data = ParseObject(jsonObject);
 
         Message = data[0];
-        Id = data[1];
-        Source = data[2];
-        SendTime = data[3];
-        Destination = data[4];
+        Source = data[1];
+        SendTime = data[2];
+        Destination = data[3];
     }
 
     /**
@@ -34,12 +36,12 @@ public class MessageStruct {
      * @param jsonObject объект JSON
      * @return массив строк значений
      */
-    private final String[] ParseObject(JSONObject jsonObject){
+    private String[] ParseObject(JSONObject jsonObject){
         String stringObjects[] = new String[MessageStruct.OBJECTS_COUNT];
         String keys[] = MessageStruct.KEYS;
 
         for(int i = 0; i < MessageStruct.OBJECTS_COUNT; i++){
-            stringObjects[i] = (String)jsonObject.get(keys[i]);
+            stringObjects[i] = jsonObject.get(keys[i]).toString();
         }
         return stringObjects;
     }
