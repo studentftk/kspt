@@ -1,7 +1,9 @@
 package com.example.izual.studentftk;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 import android.app.Activity;
@@ -21,7 +23,12 @@ import com.example.izual.studentftk.Messages.MessageStruct;
 import com.example.izual.studentftk.Messages.MsgControl;
 import com.example.izual.studentftk.Messages.ParseMessages;
 import com.example.izual.studentftk.Network.MessageRequest;
+import com.example.izual.studentftk.Network.RequestExecutor;
 import com.example.izual.studentftk.Network.RequestTask;
+import com.example.izual.studentftk.Network.UserRequest;
+import com.example.izual.studentftk.Users.ParseUsers;
+import com.example.izual.studentftk.Users.UserStruct;
+import com.example.izual.studentftk.Users.Users;
 
 /**
  * Created by Антон on 12.12.2014.
@@ -54,6 +61,8 @@ public class FragmentMessages extends Fragment {
         /* Отображение списка друзей */
         //Intent intent = new Intent(getActivity(), ChooseFriendToChat.class);
         //startActivityForResult(intent, REQUEST_CODE_FRIENDS);
+
+        Users.Init();
 
         InitMessages();
         InitNetwork();
@@ -174,9 +183,45 @@ public class FragmentMessages extends Fragment {
             String time = MsgControl.FormatDate(MsgControl.DATE_DAY_AND_TIME);
             if(parsed != null) {
                 for (MessageStruct msg : parsed){
-                    AddMessage(msgList, msg.Message, msg.SendTime, msg.Source);
+                    UserStruct user = GetUserInformation(msg.Source);
+                    AddMessage(msgList, msg.Message, msg.SendTime, user.Name);
                 }
             }
+        }
+    }
+
+
+    private UserStruct GetUserInformation(final String ID){
+        if(Users.List.containsKey(ID)){
+            return Users.List.get(ID);
+        }
+        else{
+            UserStruct userStruct = LoadUserInformation(ID);
+            if(userStruct != null){
+                Users.List.put(ID, userStruct);
+            }
+            return userStruct;
+        }
+    }
+
+    private UserStruct LoadUserInformation(final String ID){
+        URI uri = UserRequest.BuildUserRequest(ID);
+        RequestExecutor executor = new RequestExecutor(uri, connectionTimeout);
+        if(executor.isError()){
+            Utils.ShowError(getActivity(), executor.getErrorReason());
+            return null;
+        }
+        if(executor.isDataReady()){
+            try {
+                return ParseUsers.Parse(executor.getData());
+            }
+            catch(Exception e){
+                Utils.ShowError(getActivity(), e.toString());
+                return null;
+            }
+        }
+        else{
+            return null;
         }
     }
 

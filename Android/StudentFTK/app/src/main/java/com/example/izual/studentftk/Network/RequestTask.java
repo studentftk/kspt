@@ -49,7 +49,8 @@ public class RequestTask implements Runnable {
     public void run(){
         HttpsURLConnection connection = null;
         try {
-            URL url = new URL(uri.toString());
+            final String request = new String(uri.toString().getBytes(), "utf-8");
+            URL url = new URL(request);
             connection = (HttpsURLConnection)url.openConnection();
 
             NetworkUtils.setAllTrusted(connection);
@@ -57,7 +58,7 @@ public class RequestTask implements Runnable {
             connection.connect();
 
             InputStream inputStream = connection.getInputStream();
-            InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+            InputStreamReader inputStreamReader = new InputStreamReader(inputStream, "utf-8");
             BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
             data = bufferedReader.readLine();
             dataReady = true;

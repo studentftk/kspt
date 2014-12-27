@@ -8,16 +8,16 @@ import org.json.simple.JSONObject;
  * Created by oglandx on 27.12.2014.
  */
 public class UserStruct {
-    final String ID;
-    final String InstituteID;
-    final String SocialToken;
-    final String Name;
-    final String About;
-    final String SocialType;
-    final String Surname;
-    final String SocialID;
-    final String Group;
-    final String Photo;
+    public final String ID;
+    public final String InstituteID;
+    public final String SocialToken;
+    public final String Name;
+    public final String About;
+    public final String SocialType;
+    public final String Surname;
+    public final String SocialID;
+    public final String Group;
+    public final String Photo;
 
     public final static String[] KEYS = {"id", "instituteId", "socialToken",
             "name", "about", "socialType", "surname", "socialId", "group", "photo"};
@@ -39,11 +39,17 @@ public class UserStruct {
     }
 
     private String[] ParseObject(JSONObject jsonObject){
-        String stringObjects[] = new String[MessageStruct.OBJECTS_COUNT];
-        String keys[] = MessageStruct.KEYS;
+        String stringObjects[] = new String[UserStruct.OBJECTS_COUNT];
+        String keys[] = UserStruct.KEYS;
 
-        for(int i = 0; i < MessageStruct.OBJECTS_COUNT; i++){
-            stringObjects[i] = jsonObject.get(keys[i]).toString();
+        for(int i = 0; i < UserStruct.OBJECTS_COUNT; i++){
+            Object parsedObject = jsonObject.get(keys[i]);
+            if(parsedObject == null){
+                stringObjects[i] = "null";
+            }
+            else {
+                stringObjects[i] = parsedObject.toString();
+            }
         }
         return stringObjects;
     }
