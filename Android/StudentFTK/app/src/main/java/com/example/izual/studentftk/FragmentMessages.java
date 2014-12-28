@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -63,9 +64,8 @@ public class FragmentMessages extends Fragment {
         //startActivityForResult(intent, REQUEST_CODE_FRIENDS);
 
         Users.Init();
-
         InitMessages();
-        InitNetwork();
+        InitNetwork(MsgControl.SpacesToWebSpaces("2012-12-27 00:00:00"));
 
         return viewMessages;
     }
@@ -98,6 +98,7 @@ public class FragmentMessages extends Fragment {
         btnSendMessage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                final String CommonChatID = "1";
                 String textOfMessage = txtMessageEdit.getText().toString();
                 txtMessageEdit.setText("");
                 if(txtMessageEdit.hasFocus()){
@@ -110,7 +111,13 @@ public class FragmentMessages extends Fragment {
                 }
                 String time = MsgControl.FormatDate(MsgControl.DATE_DAY_AND_TIME);
                 AddMessage(msgList, textOfMessage, time, current_name);
-                SendMessage(AllProfileInform.socialToken, "1", textOfMessage);
+                SendMessage(AllProfileInform.socialToken, CommonChatID, textOfMessage);
+            }
+        });
+        listMessages.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                listMessages.smoothScrollByOffset(listMessages.getMaxScrollAmount());
             }
         });
     }
@@ -144,11 +151,11 @@ public class FragmentMessages extends Fragment {
         }
     }
 
-    private void InitNetwork(){
-        URI uri = MessageRequest.BuildRequestGet("d757146a03cc4a2e69c573acbd00c1e259de9782089b67",
-                "2012-12-09%2007:27:39", MessageRequest.Types.Receive);
-        //URI uri = MessageRequest.BuildRequestGet("asd",
-        //                "2012-12-09%2007:27:39", MessageRequest.Types.Send);
+    private void InitNetwork(final String date){
+        final String CommonChatToken = "d757146a03cc4a2e69c573acbd00c1e259de9782089b67";
+        URI uri = MessageRequest.BuildRequestGet(CommonChatToken,
+                        date, MessageRequest.Types.Receive);
+
         RequestTask requestTask = new RequestTask(uri, connectionTimeout);
         final Thread execRequest = new Thread(requestTask);
         execRequest.setPriority(Thread.MAX_PRIORITY);
