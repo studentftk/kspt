@@ -83,7 +83,8 @@ public class FragmentMessages extends Fragment {
         return viewMessages;
     }
 
- /*   @Override
+    /* В случае личного чата - при выборе друзей получаем результат */
+  /*@Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode != REQUEST_CODE_FRIENDS || data == null){
@@ -94,10 +95,10 @@ public class FragmentMessages extends Fragment {
     }*/
 
     private void InitMessages(){
-        // инициализируем структуру, содержащую сообщения
+        /* Инициализируем структуру, содержащую сообщения */
         msgList = new ArrayList<Map<String, Object>>();
 
-        // массивы данных
+        /* Массивы данных */
         ArrayList<String> msg_text = new ArrayList<String>();
         final ArrayList<String> msg_time = new ArrayList<String>();
         ArrayList<String> msg_name = new ArrayList<String>();
@@ -106,19 +107,19 @@ public class FragmentMessages extends Fragment {
             current_name = AllProfileInform.Name;
         }
 
-        // создаём адаптер и привязываем его к списку
+        /* Создаём адаптер и привязываем его к списку */
         sAdapter = MsgControl.InitFramework(msgList, getActivity(),
                 msg_text, msg_time, msg_name);
         listMessages.setAdapter(sAdapter);
 
-        // обработчик нажатия на кнопку отправления
+        /* Обработчик нажатия на кнопку отправления */
         btnSendMessage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String textOfMessage = txtMessageEdit.getText().toString();
                 txtMessageEdit.setText("");
                 if(txtMessageEdit.hasFocus()){
-                    HideSoftInput(getActivity());
+                    Utils.HideSoftInput(getActivity());
                 }
                 String newName = "";
                 if((newName = ChangeNameAttempt(textOfMessage)) != ""){
@@ -132,7 +133,7 @@ public class FragmentMessages extends Fragment {
             }
         });
 
-        // обработчик нажатия на экран
+        /* Обработчик нажатия на сообщения */
         listMessages.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -141,6 +142,7 @@ public class FragmentMessages extends Fragment {
         });
     }
 
+    /* Добавляет сообщение в список сообщений */
     private void AddMessage(ArrayList<Map<String, Object>> msgList,
                             String msg_text, String msg_time, String msg_name){
         if(msgList != null){
@@ -151,6 +153,7 @@ public class FragmentMessages extends Fragment {
         listMessages.smoothScrollByOffset(listMessages.getMaxScrollAmount());
     }
 
+    /* Посылает сообщение серверу */
     private void SendMessage(final String socialToken,
                                    final String destination, final String message){
         URI uri = MessageRequest.BuildRequestSend(socialToken,
@@ -158,6 +161,7 @@ public class FragmentMessages extends Fragment {
         RequestExecutor executor = new RequestExecutor(getActivity(), uri, connectionTimeout);
     }
 
+    /* Инициализация обновления сообщений */
     private void ReinitUpdater(long delay){
         if(updateTimer != null){
             updateTimer.cancel();
@@ -166,6 +170,7 @@ public class FragmentMessages extends Fragment {
         updateTimer.schedule(new Updater(), delay);
     }
 
+    /* Класс, производящий в отдельном потоке обновление сообщений */
     private class Updater extends TimerTask {
         final String CommonChatToken = "d757146a03cc4a2e69c573acbd00c1e259de9782089b67";
         final Activity activity = getActivity();
@@ -193,7 +198,7 @@ public class FragmentMessages extends Fragment {
                     try {
                         parsed = ParseMessages.Parse(data);
                         for(MessageStruct msg: parsed){
-                            // Загружаем в структуру, отобразить в этом потоке нельзя
+                            // Загружаем в структуру, отобразить её в этом потоке нельзя
                             GetUserInformation(msg.Source);
                         }
                     } catch (Exception e) {
@@ -211,6 +216,7 @@ public class FragmentMessages extends Fragment {
             UpdateUI(isError, errorReason, parsed);
         }
 
+        /* Updater.UpdateUI() Производит обновление пользовательского интерфейса*/
         private void UpdateUI(final boolean isError, final String errorReason,
                               final ArrayList<MessageStruct> parsed){
             FragmentMessages.this.getActivity().runOnUiThread(new Runnable() {
@@ -237,6 +243,7 @@ public class FragmentMessages extends Fragment {
             });
         }
 
+        /*Получает информацию о пользователях из чата*/
         private UserStruct GetUserInformation(final String ID){
             if(!Users.List.containsKey(ID)){
                 LoadUserInformation(ID);
@@ -244,6 +251,7 @@ public class FragmentMessages extends Fragment {
             return Users.List.get(ID);
         }
 
+        /*Загружает информацию о пользователях из чата*/
         private void LoadUserInformation(final String ID) {
             boolean isError = false;
             String errorReason = "";
@@ -253,7 +261,8 @@ public class FragmentMessages extends Fragment {
                         uri, connectionTimeout);
                 try {
                     executor.GetThread().join();
-                } catch (InterruptedException e) {
+                }
+                catch (InterruptedException e) {
                     isError = true;
                     errorReason = e.toString();
                     break;
@@ -274,7 +283,7 @@ public class FragmentMessages extends Fragment {
                     break;
                 } else {
                     isError = true;
-                    errorReason = "Data is not ready yet";
+                    errorReason = "Данные ещё не готовы";
                     break;
                 }
             }
@@ -304,6 +313,7 @@ public class FragmentMessages extends Fragment {
     }
 
 
+    /* Рудиментарное изменение ника */
     private final String ChangeNameAttempt(final String textOfMessage){
         final String name_change_seq = "$newnick";
         final int first_space = textOfMessage.indexOf(' ');
@@ -326,11 +336,4 @@ public class FragmentMessages extends Fragment {
         }
         return newName;
     }
-
-    private void HideSoftInput(Activity activity){
-        InputMethodManager inputMethodManager = (InputMethodManager)
-                        getActivity().getSystemService(Activity.INPUT_METHOD_SERVICE);
-        inputMethodManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
-    }
-
 }

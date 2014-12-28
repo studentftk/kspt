@@ -1,6 +1,7 @@
 package com.example.izual.studentftk;
 
 import android.app.Activity;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 /**
@@ -20,5 +21,12 @@ public class Utils {
      */
     public static String TranslateDateToSer(final String date){
         return "";
+    }
+
+    /* Сокрытие активной клавиатуры */
+    public static void HideSoftInput(Activity activity){
+        InputMethodManager inputMethodManager = (InputMethodManager)
+                activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
     }
 }
