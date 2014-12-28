@@ -5,10 +5,14 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.Semaphore;
 
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,6 +34,9 @@ import com.example.izual.studentftk.Network.UserRequest;
 import com.example.izual.studentftk.Users.ParseUsers;
 import com.example.izual.studentftk.Users.UserStruct;
 import com.example.izual.studentftk.Users.Users;
+import com.google.android.gms.games.multiplayer.realtime.RealTimeMessageReceivedListener;
+
+import org.json.simple.JSONObject;
 
 /**
  * Created by Антон on 12.12.2014.
@@ -40,8 +47,12 @@ public class FragmentMessages extends Fragment {
     private Button btnSendMessage;
     private EditText txtMessageEdit;
     private String current_name = "Admin";
-    final int connectionTimeout = 1000;
-    final int REQUEST_CODE_FRIENDS = 1;
+    private final int connectionTimeout = 1000;
+    private final int REQUEST_CODE_FRIENDS = 1;
+    private long updatePeriod = 10000;
+    private Timer updateTimer;
+    private SimpleAdapter sAdapter = null;
+    private long updaterReinitDelay = 200;
 
     // структура, содержащая сообщения в удобном виде
     private static ArrayList<Map<String, Object>> msgList;
@@ -65,12 +76,15 @@ public class FragmentMessages extends Fragment {
 
         Users.Init();
         InitMessages();
-        InitNetwork(MsgControl.SpacesToWebSpaces("2012-12-27 00:00:00"));
+        ReinitUpdater(0);
+
+        Utils.ShowError(getActivity(), "Загрузка сообщений...");
 
         return viewMessages;
     }
 
- /*   @Override
+    /* В случае личного чата - при выборе друзей получаем результат */
+  /*@Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode != REQUEST_CODE_FRIENDS || data == null){
@@ -81,28 +95,31 @@ public class FragmentMessages extends Fragment {
     }*/
 
     private void InitMessages(){
-        // инициализируем структуру, содержащую сообщения
+        /* Инициализируем структуру, содержащую сообщения */
         msgList = new ArrayList<Map<String, Object>>();
 
-        // массивы данных
+        /* Массивы данных */
         ArrayList<String> msg_text = new ArrayList<String>();
         final ArrayList<String> msg_time = new ArrayList<String>();
         ArrayList<String> msg_name = new ArrayList<String>();
 
-        // создаём адаптер и привязываем его к списку
-        SimpleAdapter sAdapter = MsgControl.InitFramework(msgList, getActivity(),
+        if(AllProfileInform.Name != null){
+            current_name = AllProfileInform.Name;
+        }
+
+        /* Создаём адаптер и привязываем его к списку */
+        sAdapter = MsgControl.InitFramework(msgList, getActivity(),
                 msg_text, msg_time, msg_name);
         listMessages.setAdapter(sAdapter);
 
-        // обработчик нажатия на кнопку отправления
+        /* Обработчик нажатия на кнопку отправления */
         btnSendMessage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final String CommonChatID = "1";
                 String textOfMessage = txtMessageEdit.getText().toString();
                 txtMessageEdit.setText("");
                 if(txtMessageEdit.hasFocus()){
-                    HideSoftInput(getActivity());
+                    Utils.HideSoftInput(getActivity());
                 }
                 String newName = "";
                 if((newName = ChangeNameAttempt(textOfMessage)) != ""){
@@ -110,10 +127,13 @@ public class FragmentMessages extends Fragment {
                     return;
                 }
                 String time = MsgControl.FormatDate(MsgControl.DATE_DAY_AND_TIME);
-                AddMessage(msgList, textOfMessage, time, current_name);
-                SendMessage(AllProfileInform.socialToken, CommonChatID, textOfMessage);
+                //AddMessage(msgList, textOfMessage, time, current_name);
+                SendMessage(AllProfileInform.socialToken, "1", textOfMessage);
+                ReinitUpdater(updaterReinitDelay);
             }
         });
+
+        /* Обработчик нажатия на сообщения */
         listMessages.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -122,116 +142,178 @@ public class FragmentMessages extends Fragment {
         });
     }
 
+    /* Добавляет сообщение в список сообщений */
     private void AddMessage(ArrayList<Map<String, Object>> msgList,
                             String msg_text, String msg_time, String msg_name){
         if(msgList != null){
+            sAdapter.notifyDataSetInvalidated();
             MsgControl.AddMessageToList(msgList, msg_text, msg_time, msg_name);
+            sAdapter.notifyDataSetChanged();
         }
         listMessages.smoothScrollByOffset(listMessages.getMaxScrollAmount());
     }
 
+    /* Посылает сообщение серверу */
     private void SendMessage(final String socialToken,
                                    final String destination, final String message){
         URI uri = MessageRequest.BuildRequestSend(socialToken,
                 destination, MsgControl.SpacesToWebSpaces(message));
-        RequestTask requestTask = new RequestTask(uri, connectionTimeout);
-        final Thread execRequest = new Thread(requestTask);
-        execRequest.setPriority(Thread.MAX_PRIORITY);
-        execRequest.start();
-        try{
-            execRequest.join();
-        }
-        catch(Exception e){
-            Utils.ShowError(getActivity(), requestTask.getErrorReason());
-        }
-
-        if(requestTask.isError()){
-            Utils.ShowError(getActivity(), requestTask.getErrorReason());
-            return;
-        }
+        RequestExecutor executor = new RequestExecutor(getActivity(), uri, connectionTimeout);
     }
 
-    private void InitNetwork(final String date){
+    /* Инициализация обновления сообщений */
+    private void ReinitUpdater(long delay){
+        if(updateTimer != null){
+            updateTimer.cancel();
+        }
+        updateTimer = new Timer();
+        updateTimer.schedule(new Updater(), delay);
+    }
+
+    /* Класс, производящий в отдельном потоке обновление сообщений */
+    private class Updater extends TimerTask {
         final String CommonChatToken = "d757146a03cc4a2e69c573acbd00c1e259de9782089b67";
-        URI uri = MessageRequest.BuildRequestGet(CommonChatToken,
-                        date, MessageRequest.Types.Receive);
-
-        RequestTask requestTask = new RequestTask(uri, connectionTimeout);
-        final Thread execRequest = new Thread(requestTask);
-        execRequest.setPriority(Thread.MAX_PRIORITY);
-        execRequest.start();
-
-        try{
-            execRequest.join();
-        }
-        catch(Exception e){
-            Utils.ShowError(getActivity(), requestTask.getErrorReason());
-        }
-
-        if(requestTask.isError()){
-            Utils.ShowError(getActivity(), requestTask.getErrorReason());
-            return;
-        }
-
-        if(!requestTask.isDataReady()) {
-            Utils.ShowError(getActivity(), "Не могу загрузить сообщения. Это странно.");
-        }
-        else {
-            String data = requestTask.getData();
+        final Activity activity = getActivity();
+        @Override
+        public void run() {
+            String errorReason = "";
+            boolean isError = false;
             ArrayList<MessageStruct> parsed = null;
-            try {
-                parsed = ParseMessages.Parse(data);
-            }
-            catch(Exception e){
-                Utils.ShowError(getActivity(), e.toString());
-                String time = MsgControl.FormatDate(MsgControl.DATE_DAY_AND_TIME);
-                AddMessage(msgList, data, time, "System");
-            }
-            String time = MsgControl.FormatDate(MsgControl.DATE_DAY_AND_TIME);
-            if(parsed != null) {
-                for (MessageStruct msg : parsed){
-                    UserStruct user = GetUserInformation(msg.Source);
-                    AddMessage(msgList, msg.Message, msg.SendTime, user.Name);
+            for(;;) {
+                URI uri = MessageRequest.BuildRequestGet(CommonChatToken,
+                        "2012-12-01%2000:00:00", MessageRequest.Types.Receive);
+                RequestExecutor executor = new RequestExecutor(
+                        activity, uri, connectionTimeout);
+                try{
+                    executor.GetThread().join();
                 }
+                catch(InterruptedException e){
+                    isError = true;
+                    errorReason = e.toString();
+                    break;
+                }
+
+                if (executor.GetTask().isDataReady()){
+                    String data = executor.GetTask().getData();
+                    try {
+                        parsed = ParseMessages.Parse(data);
+                        for(MessageStruct msg: parsed){
+                            // Загружаем в структуру, отобразить её в этом потоке нельзя
+                            GetUserInformation(msg.Source);
+                        }
+                    } catch (Exception e) {
+                        isError = true;
+                        errorReason = e.toString();
+                        break;
+                    }
+                }
+                else{
+                    isError = true;
+                    errorReason = "Невозможно загрузить сообщения";
+                }
+                break;
             }
+            UpdateUI(isError, errorReason, parsed);
         }
-    }
 
+        /* Updater.UpdateUI() Производит обновление пользовательского интерфейса*/
+        private void UpdateUI(final boolean isError, final String errorReason,
+                              final ArrayList<MessageStruct> parsed){
+            FragmentMessages.this.getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if(isError) {
+                        Utils.ShowError(activity, errorReason);
+                    }
+                    if (parsed != null) {
+                        sAdapter.notifyDataSetInvalidated();
+                        msgList.clear();
+                        for (MessageStruct msg : parsed) {
+                            String userName = msg.Source;
+                            UserStruct user = GetUserInformation(msg.Source);
+                            if (user != null) {
+                                userName = user.Name;
+                            }
+                            AddMessage(msgList, msg.Message, msg.SendTime, userName);
+                        }
+                        sAdapter.notifyDataSetChanged();
+                    }
+                    listMessages.smoothScrollByOffset(listMessages.getMaxScrollAmount());
+                }
+            });
+        }
 
-    private UserStruct GetUserInformation(final String ID){
-        if(Users.List.containsKey(ID)){
+        /*Получает информацию о пользователях из чата*/
+        private UserStruct GetUserInformation(final String ID){
+            if(!Users.List.containsKey(ID)){
+                LoadUserInformation(ID);
+            }
             return Users.List.get(ID);
         }
-        else{
-            UserStruct userStruct = LoadUserInformation(ID);
-            if(userStruct != null){
-                Users.List.put(ID, userStruct);
+
+        /*Загружает информацию о пользователях из чата*/
+        private void LoadUserInformation(final String ID) {
+            boolean isError = false;
+            String errorReason = "";
+            URI uri = UserRequest.BuildUserRequest(ID);
+            for (;;) {
+                RequestExecutor executor = new RequestExecutor(getActivity(),
+                        uri, connectionTimeout);
+                try {
+                    executor.GetThread().join();
+                }
+                catch (InterruptedException e) {
+                    isError = true;
+                    errorReason = e.toString();
+                    break;
+                }
+                if (executor.GetTask().isError()) {
+                    isError = true;
+                    errorReason = executor.GetTask().getErrorReason();
+                    break;
+                }
+                if (executor.GetTask().isDataReady()) {
+                    try {
+                        UserStruct user = ParseUsers.Parse(executor.GetTask().getData());
+                        Users.List.put(ID, user);
+                    } catch (Exception e) {
+                        isError = true;
+                        errorReason = e.toString();
+                    }
+                    break;
+                } else {
+                    isError = true;
+                    errorReason = "Данные ещё не готовы";
+                    break;
+                }
             }
-            return userStruct;
+            if(isError){
+                final String finalErrorReason = errorReason;
+                activity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Utils.ShowError(activity, finalErrorReason);
+                    }
+                });
+            }
         }
+    };
+
+    @Override
+    public void onPause(){
+        super.onPause();
+        updateTimer.cancel();
+        updateTimer = null;
     }
 
-    private UserStruct LoadUserInformation(final String ID){
-        URI uri = UserRequest.BuildUserRequest(ID);
-        RequestExecutor executor = new RequestExecutor(uri, connectionTimeout);
-        if(executor.isError()){
-            Utils.ShowError(getActivity(), executor.getErrorReason());
-            return null;
-        }
-        if(executor.isDataReady()){
-            try {
-                return ParseUsers.Parse(executor.getData());
-            }
-            catch(Exception e){
-                Utils.ShowError(getActivity(), e.toString());
-                return null;
-            }
-        }
-        else{
-            return null;
-        }
+    @Override
+    public void onResume(){
+        super.onResume();
+        ReinitUpdater(0);
     }
 
+
+    /* Рудиментарное изменение ника */
     private final String ChangeNameAttempt(final String textOfMessage){
         final String name_change_seq = "$newnick";
         final int first_space = textOfMessage.indexOf(' ');
@@ -254,11 +336,4 @@ public class FragmentMessages extends Fragment {
         }
         return newName;
     }
-
-    private void HideSoftInput(Activity activity){
-        InputMethodManager inputMethodManager = (InputMethodManager)
-                        getActivity().getSystemService(Activity.INPUT_METHOD_SERVICE);
-        inputMethodManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
-    }
-
 }

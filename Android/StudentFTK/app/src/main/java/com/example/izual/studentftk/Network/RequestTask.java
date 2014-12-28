@@ -1,5 +1,9 @@
 package com.example.izual.studentftk.Network;
 
+import android.app.Activity;
+
+import com.example.izual.studentftk.Utils;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -20,13 +24,15 @@ public class RequestTask implements Runnable {
     private boolean dataReady = false;
     private String data;
     private int timeout;
+    private Activity activity;
 
     private boolean isError = false;
     private String errorReason;
 
-    public RequestTask(final URI uri, int timeout){
+    public RequestTask(Activity activity, final URI uri, int timeout){
         this.uri = uri;
         this.timeout = timeout;
+        this.activity = activity;
     }
 
     public boolean isDataReady(){
@@ -66,6 +72,15 @@ public class RequestTask implements Runnable {
         catch(Exception e){
             isError = true;
             errorReason = e.toString();
+            if(activity != null){
+                final String reason = errorReason;
+                activity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Utils.ShowError(activity, reason);
+                    }
+                });
+            }
         }
         finally{
             if(connection != null) {
