@@ -5,6 +5,7 @@ import com.example.izual.studentftk.Messages.MessageStruct;
 import org.json.simple.JSONObject;
 
 /**
+ * Описание структуры пользователя
  * Created by oglandx on 27.12.2014.
  */
 public class UserStruct {
@@ -23,6 +24,10 @@ public class UserStruct {
             "name", "about", "socialType", "surname", "socialId", "group", "photo"};
     public final static int OBJECTS_COUNT = KEYS.length;
 
+    /**
+     * Конструктор структуры на основе объекта JSON
+     * @param jsonObject
+     */
     public UserStruct(JSONObject jsonObject){
         final String[] data = ParseObject(jsonObject);
 
@@ -38,6 +43,11 @@ public class UserStruct {
         Photo = data[9];
     }
 
+    /**
+     * Парсинг загруженного объекта
+     * @param jsonObject загруженный из сети объект в формате JSON
+     * @return массив разобранных значений в порядке, установленном KEYS
+     */
     private String[] ParseObject(JSONObject jsonObject){
         String stringObjects[] = new String[UserStruct.OBJECTS_COUNT];
         String keys[] = UserStruct.KEYS;

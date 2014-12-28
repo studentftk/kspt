@@ -41,7 +41,13 @@ public class MessageStruct {
         String keys[] = MessageStruct.KEYS;
 
         for(int i = 0; i < MessageStruct.OBJECTS_COUNT; i++){
-            stringObjects[i] = jsonObject.get(keys[i]).toString();
+            Object parsed = jsonObject.get(keys[i]);
+            if(parsed == null){
+                stringObjects[i] = "null";
+            }
+            else {
+                stringObjects[i] = parsed.toString();
+            }
         }
         return stringObjects;
     }
