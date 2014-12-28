@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -32,18 +33,20 @@ import java.util.concurrent.TimeoutException;
 
 
 public class Profile extends Activity
-        implements NavigationDrawerFragment.NavigationDrawerCallbacks {
+        implements NavigationDrawerFragment.NavigationDrawerCallbacks, FragmentPlaces.FragmentPlacesCallbacks {
 
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
      */
     private NavigationDrawerFragment mNavigationDrawerFragment;
+    private FragmentPlaces mFragmentPlaces;
 
     /**
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
      */
     private CharSequence mTitle;
-
+    FragmentTransaction ft;
+    FragmentManager fragmentManager = getFragmentManager();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,8 +76,33 @@ public class Profile extends Activity
                 .commit();
     }
 
+    @Override
+    public void onFragmentPlacesItemSelected(int position) {
+        Bundle args;
+        ft = fragmentManager.beginTransaction();
+        FragmentPlaceList fragmentPlaceList;
+        switch (position) {
+            case 0:
+                fragmentPlaceList = new FragmentPlaceList();
+                args = new Bundle();
+                args.putInt("2", 2);
+                fragmentPlaceList.setArguments(args);
+                ft.replace(R.id.container, fragmentPlaceList, "fragmentPlaceList");
+                //ft.addToBackStack(null);
+                ft.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);
+                ft.commit();
+                break;
+        //Toast.makeText(this, "choytka " + position, Toast.LENGTH_SHORT).show();
+    }
+}
+
+    public void onButtonSelected(int buttonIndex) {
+        // TODO Auto-generated method stub
+
+    }
+
     public void onSectionAttached(int number) {
-        FragmentManager fragmentManager = getFragmentManager();
+
         FragmentProfile fragmentProfile;
         FragmentMessages fragmentMessages;
         FragmentPlaces fragmentPlaces;
@@ -83,9 +111,10 @@ public class Profile extends Activity
         FragmentSettings fragmentSettings;
         FragmentPlacePage fragmentPlacePage;
         FragmentMaps fragmentMaps;
+        FragmentPlaceList fragmentPlaceList;
 
         Bundle args;
-        FragmentTransaction ft = fragmentManager.beginTransaction();
+        ft = fragmentManager.beginTransaction();
         switch (number) {
             case 1:
                 fragmentProfile = new FragmentProfile();
@@ -140,7 +169,7 @@ public class Profile extends Activity
                 ft.commit();
                 break;
             case 6:
-                fragmentPlacePage = new FragmentPlacePage();
+                /*fragmentPlacePage = new FragmentPlacePage();
                 args = new Bundle();
                 args.putInt("2", 2);
                 fragmentPlacePage.setArguments(args);
@@ -148,7 +177,17 @@ public class Profile extends Activity
                 //ft.addToBackStack(null);
                 ft.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);
                 ft.commit();
+                break;*/
+                fragmentPlaceList = new FragmentPlaceList();
+                args = new Bundle();
+                args.putInt("2", 2);
+                fragmentPlaceList.setArguments(args);
+                ft.replace(R.id.container, fragmentPlaceList, "fragmentPlaceList");
+                //ft.addToBackStack(null);
+                ft.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);
+                ft.commit();
                 break;
+
         }
     }
 
@@ -158,6 +197,8 @@ public class Profile extends Activity
         actionBar.setDisplayShowTitleEnabled(true);
         actionBar.setTitle(mTitle);
     }
+
+
 
 
     /*@Override
@@ -227,4 +268,6 @@ public class Profile extends Activity
                     getArguments().getInt(ARG_SECTION_NUMBER));
         }
     }
+
+
 }

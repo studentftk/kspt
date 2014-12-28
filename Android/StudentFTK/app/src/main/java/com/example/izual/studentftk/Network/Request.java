@@ -16,6 +16,4 @@ public class Request {
         public static final String Get = "get";
         public static final String Send = "send";
     }
-
-
 }

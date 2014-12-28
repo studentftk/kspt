@@ -3,14 +3,10 @@ package com.example.izual.studentftk;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.SimpleAdapter;
 
 
 public class ChooseFriendToChat extends Activity {
@@ -35,5 +31,11 @@ public class ChooseFriendToChat extends Activity {
                 finish();
             }
         });
+    }
+
+    /**
+     * Created by Антон on 28.12.2014.
+     */
+    public static class FragmentListPlaces {
     }
 }

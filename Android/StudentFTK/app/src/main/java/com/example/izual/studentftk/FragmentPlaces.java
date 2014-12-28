@@ -1,12 +1,16 @@
 package com.example.izual.studentftk;
 
+import android.app.Activity;
 import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -20,8 +24,14 @@ public class FragmentPlaces extends Fragment {
     // имена атрибутов для Map
     final String ATTRIBUTE_NAME_TEXT = "text";
     final String ATTRIBUTE_NAME_IMAGE = "image";
-
     private ListView listPlaces;
+
+    private FragmentPlacesCallbacks mCallbacks;
+
+    public interface OnSelectedListIdListener {
+        void onListIdSelected(int ListIndex);
+    }
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -32,7 +42,14 @@ public class FragmentPlaces extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View viewPlaces = inflater.inflate(R.layout.fragment_places, container, false);
-
+        // определяем список и присваиваем ему адаптер
+        listPlaces = (ListView) viewPlaces.findViewById(R.id.list_places);
+        listPlaces.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                selectItem(position);
+            }
+        });
         // массивы данных
         String[] items = getResources().getStringArray(R.array.items_piaces);
         int [] img = {R.drawable.ic_places_main_body, R.drawable.ic_places_body,
@@ -62,9 +79,37 @@ public class FragmentPlaces extends Fragment {
                 data,
                 R.layout.item,from,to
         );
-        // определяем список и присваиваем ему адаптер
-        listPlaces = (ListView) viewPlaces.findViewById(R.id.list_places);
+
         listPlaces.setAdapter(adapter);
         return viewPlaces;
+    }
+
+    private void selectItem(int position) {
+        if (mCallbacks != null) {
+            mCallbacks.onFragmentPlacesItemSelected(position);
+        }
+    }
+
+    public static interface FragmentPlacesCallbacks {
+        /**
+         * Called when an item in the navigation drawer is selected.
+         */
+        void onFragmentPlacesItemSelected(int position);
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        try {
+            mCallbacks = (FragmentPlacesCallbacks) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException("Activity must implement NavigationDrawerCallbacks.");
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mCallbacks = null;
     }
 }
