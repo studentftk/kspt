@@ -37,7 +37,7 @@ import java.util.concurrent.TimeoutException;
  */
 public class FragmentProfile extends Fragment {
 
-    String[] Places = { "9-ый корпус вчера в 18:00", "Главное здание вчера в 13:00", "9-ый корпус 01.10 в 10:00", "9-ый корпус 01.09 в 12:00"};
+    String[] Places = { "9-ый корпус вчера в 18:00", "Главное здание вчера в 13:00", "9-ый корпус 26.12 в 10:00", "9-ый корпус 25.12 в 12:00"};
     ImageView m_Photo;
     ListView PlacesList;
     View viewProfile;

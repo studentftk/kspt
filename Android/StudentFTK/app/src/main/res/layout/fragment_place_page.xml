@@ -40,24 +40,23 @@
                     android:textColor="#FFFFFF"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:textSize="25sp"
-                    android:text="9й Корпус ИИТУ"
+                    android:textSize="22sp"
                     android:gravity="center_horizontal"/>
 
-                <TextView
+                <!--TextView
                     android:textColor="#FFFFFF"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:text="Учебный корпус"
                     android:textSize="18sp"
-                    android:layout_marginLeft="10dp"/>
+                    android:layout_marginLeft="10dp"/-->
 
                 <TextView
+                    android:id="@+id/placeadres"
                     android:textColor="#FFFFFF"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:text="ул. Политехническая, 21"
-                    android:textSize="@dimen/activity_horizontal_margin"
+                    android:textSize="16sp"
                     android:layout_marginLeft="10dp"/>
 
                 <Button

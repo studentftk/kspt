@@ -33,7 +33,6 @@ public class FragmentMaps extends Fragment {
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         View viewMaps = inflater.inflate(R.layout.activity_maps, container, false);
         setUpMapIfNeeded();
         return viewMaps;
