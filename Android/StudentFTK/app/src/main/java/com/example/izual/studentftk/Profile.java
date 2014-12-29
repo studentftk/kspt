@@ -165,11 +165,11 @@ public class Profile extends Activity
                 ft.commit();
                 break;
             case 6:
-                fragmentPlacePage = new FragmentPlacePage();
+                fragmentAbout = new FragmentAbout();
                 args = new Bundle();
                 args.putInt("2", 2);
-                fragmentPlacePage.setArguments(args);
-                ft.replace(R.id.container, fragmentPlacePage, "fragmentAbout");
+                fragmentAbout.setArguments(args);
+                ft.replace(R.id.container, fragmentAbout, "fragmentAbout");
                 //ft.addToBackStack(null);
                 ft.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);
                 ft.commit();

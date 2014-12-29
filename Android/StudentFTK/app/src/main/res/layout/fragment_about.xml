@@ -5,23 +5,25 @@
     android:layout_height="match_parent">
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="25dp"
+        android:layout_height="wrap_content"
         android:gravity="center_horizontal|center_vertical"
         android:textSize="20dp"
-        android:text="О проекте"/>
+        android:text="Разработчики \nСтуденты 5 курса \nкафедры КСПТ"/>
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Приложение СТУДЕНТ ПОЛИТЕХА"
+        android:text="Гиганова Вероника,
+Грушко Иван,\n
+Бусаров Влад,
+Абрамов Антон,\n
+Бетаев Михаил,
+Косолапов Семен,\n
+Сухинин Александр,
+Данг Тхи Суан,
+"
         android:textSize="20dp"
         android:layout_marginTop="20dp"
         android:gravity="center_horizontal"/>
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Информация"
-        android:textSize="20dp"
-        android:gravity="center_horizontal"
-        android:layout_marginTop="20dp"/>
+
 
 </LinearLayout>
