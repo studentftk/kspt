@@ -49,10 +49,12 @@ public class FragmentMessages extends Fragment {
     private String current_name = "Admin";
     private final int connectionTimeout = 1000;
     private final int REQUEST_CODE_FRIENDS = 1;
-    private long updatePeriod = 10000;
+    private long updatePeriod = 4000;
     private Timer updateTimer;
     private SimpleAdapter sAdapter = null;
     private long updaterReinitDelay = 200;
+    private final long TIMER_ONCE = -1;
+    private boolean timerFirstTime = true;
 
     // структура, содержащая сообщения в удобном виде
     private static ArrayList<Map<String, Object>> msgList;
@@ -76,7 +78,7 @@ public class FragmentMessages extends Fragment {
 
         Users.Init();
         InitMessages();
-        ReinitUpdater(0);
+        ReinitUpdater(0, TIMER_ONCE);
 
         Utils.ShowError(getActivity(), "Загрузка сообщений...");
 
@@ -129,7 +131,7 @@ public class FragmentMessages extends Fragment {
                 String time = MsgControl.FormatDate(MsgControl.DATE_DAY_AND_TIME);
                 //AddMessage(msgList, textOfMessage, time, current_name);
                 SendMessage(AllProfileInform.socialToken, "1", textOfMessage);
-                ReinitUpdater(updaterReinitDelay);
+                ReinitUpdater(updaterReinitDelay, TIMER_ONCE);
             }
         });
 
@@ -162,12 +164,19 @@ public class FragmentMessages extends Fragment {
     }
 
     /* Инициализация обновления сообщений */
-    private void ReinitUpdater(long delay){
+    private void ReinitUpdater(long delay, long period){
         if(updateTimer != null){
             updateTimer.cancel();
         }
         updateTimer = new Timer();
-        updateTimer.schedule(new Updater(), delay);
+        if(period == TIMER_ONCE) {
+            timerFirstTime = true;
+            updateTimer.schedule(new Updater(), delay);
+        }
+        else{
+            timerFirstTime = false;
+            updateTimer.schedule(new Updater(), delay, period);
+        }
     }
 
     /* Класс, производящий в отдельном потоке обновление сообщений */
@@ -234,9 +243,13 @@ public class FragmentMessages extends Fragment {
                             if (user != null) {
                                 userName = user.Name;
                             }
-                            AddMessage(msgList, msg.Message, msg.SendTime, userName);
+                            AddMessage(msgList, msg.Message,
+                                    MsgControl.RoundToSeconds(msg.SendTime), userName);
                         }
                         sAdapter.notifyDataSetChanged();
+                    }
+                    if(timerFirstTime){
+                        ReinitUpdater(updatePeriod, updatePeriod);
                     }
                     listMessages.smoothScrollByOffset(listMessages.getMaxScrollAmount());
                 }
@@ -309,7 +322,7 @@ public class FragmentMessages extends Fragment {
     @Override
     public void onResume(){
         super.onResume();
-        ReinitUpdater(0);
+        ReinitUpdater(0, TIMER_ONCE);
     }
 
 

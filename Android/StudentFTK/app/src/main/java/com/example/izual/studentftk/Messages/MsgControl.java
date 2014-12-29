@@ -113,6 +113,10 @@ public class MsgControl {
         return message.substring(FirstAfterBracket, LastBeforeBracket);
     }
 
+    public static String RoundToSeconds(final String date){
+        return date.substring(0, date.length() - 2);
+    }
+
     public static String FormatDate(int mode){
         Calendar calendar = Calendar.getInstance();
         String time = calendar.getTime().toString();
