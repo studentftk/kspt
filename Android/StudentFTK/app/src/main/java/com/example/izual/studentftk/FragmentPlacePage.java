@@ -15,6 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,7 +26,7 @@ import java.util.Map;
 
 public class FragmentPlacePage extends Fragment {
 
-    String[] Places = { "Миша Бетаев Вчера в 18:00", "Владимир Ицыксон Вчера в 13:00", "Марат Ахин 01.12 в 10:00", "Вы здесь были 01.09 в 11:00"};
+    ArrayList<String> Places = new ArrayList<String>();
     ImageView m_Photo;
     ListView PlacesList;
     View viewPlacePage;
@@ -37,30 +38,14 @@ public class FragmentPlacePage extends Fragment {
 
     }
 
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        viewPlacePage = inflater.inflate(R.layout.fragment_place_page, container, false);
 
-        PlacesList = (ListView) viewPlacePage.findViewById(R.id.list_place);
-
-        //Кнопка Check In на вкладке "О проекте"
-        // --------------------------Begin-------------------
-        Button chkBtn = (Button) viewPlacePage.findViewById(R.id.chkBtn);
-        chkBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast toast = Toast.makeText(getActivity(),
-                        "Пора покормить кота!", Toast.LENGTH_SHORT);
-                toast.show();
-            }
-        });
-        //---------------------------End---------------------
+    public void refresh(ArrayList<String> mas){
         ArrayList<Map<String, Object>> data = new ArrayList<Map<String, Object>>(
-                Places.length);
+                mas.size());
         Map<String, Object> tmp;
-        for (int i = 0; i < Places.length; i++) {
+        for (int i = 0; i < mas.size(); i++) {
             tmp = new HashMap<String, Object>();
-            tmp.put("Text", Places[i]);
+            tmp.put("Text", mas.get(i));
             // tmp.put("Image", R.drawable.places);
             data.add(tmp);
         }
@@ -72,9 +57,37 @@ public class FragmentPlacePage extends Fragment {
                 data,
                 R.layout.places_layout,from,to
         );
+
         PlacesList.setAdapter(adapter);
         m_Photo = (ImageView)viewPlacePage.findViewById(R.id.photoPlace);
         m_Photo.setImageResource(R.drawable.photo_place);
+    }
+
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        Places.add("Миша Бетаев Вчера в 18:00");
+        Places.add("Владимир Ицыксон Вчера в 13:00");
+        viewPlacePage = inflater.inflate(R.layout.fragment_place_page, container, false);
+        PlacesList = (ListView) viewPlacePage.findViewById(R.id.list_place);
+
+        //Кнопка Check In на вкладке "О проекте"
+        // --------------------------Begin-------------------
+        Button chkBtn = (Button) viewPlacePage.findViewById(R.id.chkBtn);
+        chkBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Calendar calendar = Calendar.getInstance();
+                String time = calendar.getTime().toString();
+                Places.add("Вы были здесь " + time.substring(1, 16));
+                refresh(Places);
+                Toast toast = Toast.makeText(getActivity(),
+                        "Вы зачекинились в 9-ом корпусе ИИТУ" , Toast.LENGTH_SHORT);
+                toast.show();
+            }
+        });
+        //---------------------------End---------------------
+
+        refresh(Places);
         return viewPlacePage;
     }
 }

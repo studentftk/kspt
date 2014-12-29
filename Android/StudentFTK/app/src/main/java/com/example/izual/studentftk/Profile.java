@@ -169,7 +169,7 @@ public class Profile extends Activity
                 ft.commit();
                 break;
             case 6:
-                /*fragmentPlacePage = new FragmentPlacePage();
+                fragmentPlacePage = new FragmentPlacePage();
                 args = new Bundle();
                 args.putInt("2", 2);
                 fragmentPlacePage.setArguments(args);
@@ -177,8 +177,8 @@ public class Profile extends Activity
                 //ft.addToBackStack(null);
                 ft.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);
                 ft.commit();
-                break;*/
-                fragmentPlaceList = new FragmentPlaceList();
+                break;
+               /* fragmentPlaceList = new FragmentPlaceList();
                 args = new Bundle();
                 args.putInt("2", 2);
                 fragmentPlaceList.setArguments(args);
@@ -186,7 +186,7 @@ public class Profile extends Activity
                 //ft.addToBackStack(null);
                 ft.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);
                 ft.commit();
-                break;
+                break;*/
 
         }
     }

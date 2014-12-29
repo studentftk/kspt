@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -13,6 +14,7 @@ import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 /**
@@ -53,6 +55,7 @@ public class FragmentMaps extends Fragment {
         }
     }
 
+
     private void setUpMap() {
 
         CameraPosition cameraPosition = new CameraPosition.Builder()
@@ -88,5 +91,14 @@ public class FragmentMaps extends Fragment {
         mMap.addMarker(new MarkerOptions().position(new LatLng(60.004997, 30.378066)).icon(BitmapDescriptorFactory.fromResource(R.drawable.stud)).title("2 профессорский корпус СПбПУ"));
         mMap.addMarker(new MarkerOptions().position(new LatLng(60.00435, 30.379987)).icon(BitmapDescriptorFactory.fromResource(R.drawable.stud)).title("Дом ученых в Лесном СПбПУ"));
         mMap.addMarker(new MarkerOptions().position(new LatLng(60.002795, 30.368968)).icon(BitmapDescriptorFactory.fromResource(R.drawable.stud)).title("Спортивный комплекс СПбПУ"));
+
+        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                Toast toast = Toast.makeText(getActivity(), marker.getTitle() + marker.getId(), Toast.LENGTH_SHORT);
+                toast.show();
+                return false;
+            }
+        });
     }
 }
