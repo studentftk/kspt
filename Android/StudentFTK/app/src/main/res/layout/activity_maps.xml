@@ -10,14 +10,4 @@
         android:id="@+id/map"
         tools:context="com.example.izual.studentftk"
         android:name="com.google.android.gms.maps.MapFragment" />
-
-    <Button
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Check In"
-        android:id="@+id/button"
-        android:layout_marginBottom="27dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true" />
 </RelativeLayout>

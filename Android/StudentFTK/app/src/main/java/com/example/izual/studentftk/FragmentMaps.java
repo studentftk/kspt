@@ -1,11 +1,13 @@
 package com.example.izual.studentftk;
 
+import android.app.Activity;
 import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -43,6 +45,7 @@ public class FragmentMaps extends Fragment {
         setUpMapIfNeeded();
     }
 
+
     private void setUpMapIfNeeded() {
         // Do a null check to confirm that we have not already instantiated the map.
         if (mMap == null) {
@@ -54,7 +57,6 @@ public class FragmentMaps extends Fragment {
             }
         }
     }
-
 
     private void setUpMap() {
 
@@ -95,8 +97,10 @@ public class FragmentMaps extends Fragment {
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
-                Toast toast = Toast.makeText(getActivity(), marker.getTitle() + marker.getId(), Toast.LENGTH_SHORT);
-                toast.show();
+                String check = marker.getId();
+                if (check.equals("m15")) {
+                    
+                }
                 return false;
             }
         });
