@@ -33,13 +33,13 @@ import java.util.concurrent.TimeoutException;
 
 
 public class Profile extends Activity
-        implements NavigationDrawerFragment.NavigationDrawerCallbacks, FragmentPlaces.FragmentPlacesCallbacks {
+        implements NavigationDrawerFragment.NavigationDrawerCallbacks, FragmentPlaceList.FragmentPlacesCallbacks {
 
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
      */
     private NavigationDrawerFragment mNavigationDrawerFragment;
-    private FragmentPlaces mFragmentPlaces;
+    private FragmentPlaceList mFragmentPlaces;
 
     /**
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
@@ -80,20 +80,16 @@ public class Profile extends Activity
     public void onFragmentPlacesItemSelected(int position) {
         Bundle args;
         ft = fragmentManager.beginTransaction();
-        FragmentPlaceList fragmentPlaceList;
-        switch (position) {
-            case 0:
-                fragmentPlaceList = new FragmentPlaceList();
+        FragmentPlacePage fragmentPlacePage;
+
+                fragmentPlacePage = new FragmentPlacePage();
                 args = new Bundle();
-                args.putInt("2", 2);
-                fragmentPlaceList.setArguments(args);
-                ft.replace(R.id.container, fragmentPlaceList, "fragmentPlaceList");
+                args.putInt("Id", position);
+                fragmentPlacePage.setArguments(args);
+                ft.replace(R.id.container, fragmentPlacePage, "fragmentPlacePage");
                 //ft.addToBackStack(null);
                 ft.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);
                 ft.commit();
-                break;
-        //Toast.makeText(this, "choytka " + position, Toast.LENGTH_SHORT).show();
-    }
 }
 
     public void onButtonSelected(int buttonIndex) {
@@ -149,11 +145,11 @@ public class Profile extends Activity
                 ft.commit();
                 break;
             case 4:
-                fragmentPlaces = new FragmentPlaces();
+                fragmentPlaceList = new FragmentPlaceList();
                 args = new Bundle();
                 args.putInt("2", 2);
-                fragmentPlaces.setArguments(args);
-                ft.replace(R.id.container, fragmentPlaces, "fragmentPlaces");
+                fragmentPlaceList.setArguments(args);
+                ft.replace(R.id.container, fragmentPlaceList, "fragmentPlaceList");
                 //ft.addToBackStack(null);
                 ft.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);
                 ft.commit();

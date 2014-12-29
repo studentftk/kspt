@@ -71,7 +71,7 @@ public class FragmentMaps extends Fragment {
         mMap.addMarker(new MarkerOptions().position(new LatLng(60.007387, 30.372935)).icon(BitmapDescriptorFactory.fromResource(R.drawable.gz)).title("Главный учебный корпус СПбПУ"));
         mMap.addMarker(new MarkerOptions().position(new LatLng(60.006716, 30.376414)).icon(BitmapDescriptorFactory.fromResource(R.drawable.stud)).title("Химический корпус СПбПУ"));
         mMap.addMarker(new MarkerOptions().position(new LatLng(60.008072, 30.377154)).icon(BitmapDescriptorFactory.fromResource(R.drawable.stud)).title("Механический корпус СПбПУ"));
-        mMap.addMarker(new MarkerOptions().position(new LatLng(60.005817, 30.381896)).icon(BitmapDescriptorFactory.fromResource(R.drawable.stud)).title("Гидрокорпус-1 СПбПУ "));
+        mMap.addMarker(new MarkerOptions().position(new LatLng(60.005817, 30.381896)).icon(BitmapDescriptorFactory.fromResource(R.drawable.stud)).title("Гидрокорпус-1 СПбПУ"));
         mMap.addMarker(new MarkerOptions().position(new LatLng(60.006598, 30.383565)).icon(BitmapDescriptorFactory.fromResource(R.drawable.stud)).title("Гидрокорпус-2 СПбПУ ИСИ"));
         mMap.addMarker(new MarkerOptions().position(new LatLng(60.005479, 30.374064)).icon(BitmapDescriptorFactory.fromResource(R.drawable.stud)).title("Гидробашня СПбПУ"));
         mMap.addMarker(new MarkerOptions().position(new LatLng(60.007566, 30.379906)).icon(BitmapDescriptorFactory.fromResource(R.drawable.stud)).title("Лабораторный корпус СПбПУ"));

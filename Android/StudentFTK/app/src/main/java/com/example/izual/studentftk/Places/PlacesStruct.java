@@ -7,13 +7,27 @@ import org.json.simple.JSONObject;
  */
 public class PlacesStruct {
 
-    public final String ID;
+    public final String Id;
+    public final String HouseCorp;
+    public final String Title;
+    public final String Geo;
+    public final String Street;
+    public final String About;
+    public final String HouseNumber;
+    public final String Type;
     public final static String[] KEYS = {"id","houseCorp","title","geo","street","about","houseNumber","type"};
     public final static int OBJECTS_COUNT = KEYS.length;
 
     public PlacesStruct(JSONObject jsonObject) {
         final String[] data = ParseObject(jsonObject);
-        ID = data[0];
+        Id = data[0];
+        HouseCorp = data[1];
+        Title = data[2];
+        Geo = data[3];
+        Street = data[4];
+        About = data[5];
+        HouseNumber = data[6];
+        Type = data[7];
     }
 
     private String[] ParseObject(JSONObject jsonObject) {

@@ -38,7 +38,6 @@ public class FragmentPlacePage extends Fragment {
 
     }
 
-
     public void refresh(ArrayList<String> mas){
         ArrayList<Map<String, Object>> data = new ArrayList<Map<String, Object>>(
                 mas.size());
@@ -65,6 +64,8 @@ public class FragmentPlacePage extends Fragment {
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        getArguments().getInt("Id");
+        Toast.makeText(getActivity(), "кнопка Cancel" + getArguments().getInt("Id"),  Toast.LENGTH_LONG ).show();
         Places.add("Миша Бетаев Вчера в 18:00");
         Places.add("Владимир Ицыксон Вчера в 13:00");
         viewPlacePage = inflater.inflate(R.layout.fragment_place_page, container, false);

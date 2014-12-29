@@ -17,6 +17,8 @@ public class PlacesRequest extends Request {
         String [] params = {Params.Type};
         String [] values = {place};
         return RequestBuilder.BuildRequest(NameOfSite,
+
+
                 Request.Pages.Places, Request.Methods.Get, params, values);
     }
 }
