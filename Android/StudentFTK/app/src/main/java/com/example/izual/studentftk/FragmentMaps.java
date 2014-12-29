@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -44,6 +45,10 @@ public class FragmentMaps extends Fragment {
         setUpMapIfNeeded();
     }
 
+    public int filter(String id){
+        Integer id2 = Integer.valueOf(id.substring(1, id.length()));
+        return id2;
+    }
 
     private void setUpMapIfNeeded() {
         // Do a null check to confirm that we have not already instantiated the map.
@@ -97,8 +102,8 @@ public class FragmentMaps extends Fragment {
             @Override
             public boolean onMarkerClick(Marker marker) {
                 String check = marker.getId();
-                if (check.equals("m15")) {
-                    
+                if (filter(marker.getId()) == 15) {
+                    //TODO: Marker Click
                 }
                 return false;
             }
