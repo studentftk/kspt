@@ -54,6 +54,7 @@ public class FragmentMaps extends Fragment {
             // Check if we were successful in obtaining the map.
             if (mMap != null) {
                 setUpMap();
+                mMap.setMyLocationEnabled(true);
             }
         }
     }
