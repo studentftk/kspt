@@ -1,10 +1,8 @@
 package com.example.izual.studentftk;
 
-import android.app.Activity;
 import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.os.Bundle;
+import android.view.InflateException;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,16 +14,16 @@ import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 /**
  * Created by Антон on 24.12.2014.
+ * Changed by Fedor(fdr91@mail.ru) 3.23.2015
  */
 public class FragmentMaps extends Fragment {
 
-    private GoogleMap mMap; // Might be null if Google Play services APK is not available.
-    MapFragment mapFragment;
+    private static GoogleMap mMap; // Might be null if Google Play services APK is not available.
+    private static View viewMaps;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -34,8 +32,17 @@ public class FragmentMaps extends Fragment {
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        View viewMaps = inflater.inflate(R.layout.activity_maps, container, false);
-        setUpMapIfNeeded();
+        if (viewMaps != null) {
+            ViewGroup parent = (ViewGroup) viewMaps.getParent();
+            if (parent != null)
+                parent.removeView(viewMaps);
+        }
+        try {
+            viewMaps = inflater.inflate(R.layout.activity_maps, container, false);
+            setUpMapIfNeeded();
+        } catch (InflateException e) {
+        /* map is already there, just return view as it is */
+        }
         return viewMaps;
     }
 
@@ -49,7 +56,7 @@ public class FragmentMaps extends Fragment {
     private void setUpMapIfNeeded() {
         // Do a null check to confirm that we have not already instantiated the map.
         if (mMap == null) {
-            mapFragment = (MapFragment) getFragmentManager ().findFragmentById(R.id.map);
+            MapFragment mapFragment = (MapFragment) getFragmentManager ().findFragmentById(R.id.map);
             mMap = mapFragment.getMap();
             // Check if we were successful in obtaining the map.
             if (mMap != null) {
@@ -94,16 +101,5 @@ public class FragmentMaps extends Fragment {
         mMap.addMarker(new MarkerOptions().position(new LatLng(60.004997, 30.378066)).icon(BitmapDescriptorFactory.fromResource(R.drawable.stud)).title("2 профессорский корпус СПбПУ"));
         mMap.addMarker(new MarkerOptions().position(new LatLng(60.00435, 30.379987)).icon(BitmapDescriptorFactory.fromResource(R.drawable.stud)).title("Дом ученых в Лесном СПбПУ"));
         mMap.addMarker(new MarkerOptions().position(new LatLng(60.002795, 30.368968)).icon(BitmapDescriptorFactory.fromResource(R.drawable.stud)).title("Спортивный комплекс СПбПУ"));
-
-        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-            @Override
-            public boolean onMarkerClick(Marker marker) {
-                String check = marker.getId();
-                if (check.equals("m15")) {
-
-                }
-                return false;
-            }
-        });
     }
 }
