@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+<string-array name="housings">
+    <item>position=\"60.007387,30.372935\" icon_name=\"gz\" title=\"Главный учебный корпус СПбПУ\"</item>
+    <item>position=\"60.006716,30.376414\" icon_name=\"stud\" title=\"Химический корпус СПбПУ\"</item>
+    <item>position=\"60.008072,30.377154\" icon_name=\"stud\" title=\"Механический корпус СПбПУ\"</item>
+    <item>position=\"60.005817,30.381896\" icon_name=\"stud\" title=\"Гидрокорпус-1 СПбПУ \"</item>
+    <item>position=\"60.006598,30.383565\" icon_name=\"stud\" title=\"Гидрокорпус-2 СПбПУ ИСИ\"</item>
+    <item>position=\"60.005479,30.374064\" icon_name=\"stud\" title=\"Гидробашня СПбПУ\"</item>
+    <item>position=\"60.007566,30.379906\" icon_name=\"stud\" title=\"Лабораторный корпус СПбПУ\"</item>
+    <item>position=\"60.002972,30.374054\" icon_name=\"stud\" title=\"НОЦ РАН СПбПУ\"</item>
+    <item>position=\"60.008855,30.372992\" icon_name=\"stud\" title=\"1 корпус СПбПУ\"</item>
+    <item>position=\"60.008566,30.374665\" icon_name=\"stud\" title=\"2 корпус СПбПУ\"</item>
+    <item>position=\"60.007273,30.381703\" icon_name=\"stud\" title=\"3 корпус СпбПУ ИЭИ\"</item>
+    <item>position=\"60.007281,30.376811\" icon_name=\"stud\" title=\"4 корпус СПбПУ\"</item>
+    <item>position=\"59.999709,30.374815\" icon_name=\"stud\" title=\"5 корпус СПбПУ\"</item>
+    <item>position=\"60.000145,30.367498\" icon_name=\"stud\" title=\"6 корпус СПбПУ\"</item>
+    <item>position=\"59.999437,30.372058\" icon_name=\"stud\" title=\"8 корпус СПбПУ\"</item>
+    <item>position=\"60.000823,30.366485\" icon_name=\"ftk\" title=\"9 корпус СПбПУ ИИТУ\"</item>
+    <item>position=\"60.000579,30.369558\" icon_name=\"stud\" title=\"10 корпус СПбПУ\"</item>
+    <item>position=\"60.009263,30.378377\" icon_name=\"stud\" title=\"11 корпус СПбПУ ИИТУ\"</item>
+    <item>position=\"60.007316,30.390281\" icon_name=\"stud\" title=\"15 корпус СПбПУ ИМОП\"</item>
+    <item>position=\"60.007676,30.390796\" icon_name=\"stud\" title=\"Общежитие №15 СПбПУ\"</item>
+    <item>position=\"60.00767,30.390029\" icon_name=\"stud\" title=\"16 корпус СПбПУ\"</item>
+    <item>position=\"60.005002,30.369966\" icon_name=\"stud\" title=\"1 профессорский корпус СПбПУ\"</item>
+    <item>position=\"60.004997,30.378066\" icon_name=\"stud\" title=\"2 профессорский корпус СПбПУ\"</item>
+    <item>position=\"60.00435,30.379987\" icon_name=\"stud\" title=\"Дом ученых в Лесном СПбПУ\"</item>
+    <item>position=\"60.002795,30.368968\" icon_name=\"stud\" title=\"Спортивный комплекс СПбПУ\"</item>
+</string-array>
+</resources>
