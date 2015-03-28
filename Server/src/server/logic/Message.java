@@ -13,7 +13,7 @@ import java.sql.Time;
 import java.sql.Timestamp;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import server.DbConnectionFactory;
+/*import server.DbConnectionFactory;*/
 
 /**
  *
@@ -42,7 +42,7 @@ public class Message {
         return json;
     }
     
-    public void send(DbConnectionFactory connectionFactory) throws SQLException{
+   /*public void send(DbConnectionFactory connectionFactory) throws SQLException{
        try (Connection connection = connectionFactory.getConnection()) {
            String sql = "INSERT INTO "+table+" ( SenderID, MailerID, Message ) VALUES (?, ?, ?)";
            PreparedStatement statement = connection.prepareStatement(sql);
@@ -51,7 +51,7 @@ public class Message {
            statement.setString(3, message);
            statement.execute();
         }
-    }
+    }*/
     
     public Message(long source, long destination, String message){
         this.source = source;
@@ -59,7 +59,7 @@ public class Message {
         this.message = message;
     }
     
-    public static JSONArray getDestinationMessages(DbConnectionFactory connectionFactory, long destination, Timestamp from) throws SQLException{
+    /*public static JSONArray getDestinationMessages(DbConnectionFactory connectionFactory, long destination, Timestamp from) throws SQLException{
         try (Connection connection = connectionFactory.getConnection()) {
            String sql = "SELECT * from "+table+" WHERE MailerID=? AND time>?";
            PreparedStatement statement = connection.prepareStatement(sql);
@@ -70,9 +70,9 @@ public class Message {
            while (answer.next()) json.add(new Message(answer).asJsonObject());
            return json;
         }
-    }
+    }*/
     
-    public static JSONArray getSourceMessages(DbConnectionFactory connectionFactory, long sender, Timestamp from) throws SQLException{
+    /*public static JSONArray getSourceMessages(DbConnectionFactory connectionFactory, long sender, Timestamp from) throws SQLException{
         try (Connection connection = connectionFactory.getConnection()) {
            String sql = "SELECT * from "+table+" WHERE SenderID=? AND time>?";
            PreparedStatement statement = connection.prepareStatement(sql);
@@ -83,9 +83,9 @@ public class Message {
            while (answer.next()) json.add(new Message(answer).asJsonObject());
            return json;
         }
-    }
+    }*/
     
-    public static JSONArray getAllMessages(DbConnectionFactory connectionFactory, long id, Timestamp from) throws SQLException{
+    /*public static JSONArray getAllMessages(DbConnectionFactory connectionFactory, long id, Timestamp from) throws SQLException{
         try (Connection connection = connectionFactory.getConnection()) {
            String sql = "SELECT * from "+table+" WHERE (SenderID=? OR  MailerID=?) AND time>?";
            PreparedStatement statement = connection.prepareStatement(sql);
@@ -97,7 +97,7 @@ public class Message {
            while (answer.next()) json.add(new Message(answer).asJsonObject());
            return json;
         }
-    }
+    }*/
   
     
     private Message(ResultSet answer) throws SQLException{

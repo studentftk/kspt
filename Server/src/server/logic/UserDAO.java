@@ -56,45 +56,5 @@ public class UserDAO {
         } finally {
             session.close();
         }
-    }
-    
-    public static User[] getFriends(long id){ //выводим список друзей
-      Session session = HibernateUtil.getSessionFactory().openSession();
-        try {
-            session.beginTransaction();
-            List friendIds = session.createQuery("select friendId from friends where userId = " + id).list();
-            List <user> friends = new ArrayList() <user>;
-            
-            for(int friendId: friendIds){
-                friends.add(getById(friendId));
-            }
-            
-            session.getTransaction().commit();
-        } finally {
-            session.close();
-        }
-        return friends;
-    }
-    
-    public static void addFriend(long userId, long friendId){
-        Session session = HibernateUtil.getSessionFactory().openSession();
-        try {
-            session.beginTransaction();           
-            session.save(user);         
-            session.getTransaction().commit();
-        } finally {
-            session.close();
-        };
-    }
-    
-    public static User deleteFriend(long userId, long friendId){
-         Session session = HibernateUtil.getSessionFactory().openSession();
-        try {
-            session.beginTransaction();           
-            session.delete(user);         
-            session.getTransaction().commit();
-        } finally {
-            session.close();
-        };
-    }
+    }   
 }

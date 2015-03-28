@@ -18,7 +18,7 @@
 --
 -- Table structure for table `commentsnews`
 --
-
+/*USE student;*/
 DROP TABLE IF EXISTS `commentsnews`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
@@ -255,10 +255,12 @@ UNLOCK TABLES;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
 
-DROP TABLE IF EXISTS `friends`;
-CREATE TABLE friends (
-  `userId` INT UNSIGNED NOT NULL ,
-  `friendId` INT UNSIGNED NOT NULL 
-   PRIMARY KEY ( `userId` , `friendId` ) 
-) ENGINE = MYISAM ;
+DROP TABLE IF EXISTS `friend`;
+CREATE TABLE friend (
+  `idUser` int(11) NOT NULL ,
+  `idFriend` int(11) NOT NULL, 
+   PRIMARY KEY (`idUser`),
+   KEY `FK_idFriend` (`idFriend`),
+  CONSTRAINT `FK_idFriend` FOREIGN KEY (`idFriend`) REFERENCES `places` (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 -- Dump completed on 2014-12-11 19:53:08
