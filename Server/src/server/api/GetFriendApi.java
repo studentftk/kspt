@@ -13,7 +13,7 @@ public class GetFriendApi implements ApiMethod{
     
      @Override
     public ApiAnswer execute(Map<String, String> params) {
-        
+        return null;
     }
     
 }

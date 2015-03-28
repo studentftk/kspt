@@ -8,8 +8,6 @@ package server.entity;
 import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import org.json.simple.JSONObject;
@@ -46,11 +44,11 @@ public class Friend implements Serializable, JSONAble{
         return idFriend;
     }
       
-    /*public void setIdUser(Long idUser) {
-    this.idUser = idUser;
-  }
+    public void setIdUser(Long idUser) {
+        this.idUser = idUser;
+      }
     
-    public void setIdFriend(int number) {
-    this.idFriend = idFriend;
-  }*/
+    public void setIdFriend(Long idFriend) {
+        this.idFriend = idFriend;
+      }
 }
