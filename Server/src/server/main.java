@@ -17,18 +17,6 @@ public class main {
         Server s = new Server(sslContext, 4);
         s.start();  
         
-        User testUser = new  User();
-        testUser.setName("Анастасия");
-        testUser.setSurname("Тарасова");
-        testUser.setPhoto("NULL");
-        testUser.setSocialToken("NULL");
-        testUser.setSocialType("NULL");
-        testUser.setAbout("NULL");
-        testUser.setGroup("53501/3");
-        testUser.setInstituteId(18123);
-        testUser.setSocialId(2473622L);
-        
-        UserDAO.save(testUser);
         
     }
 }
