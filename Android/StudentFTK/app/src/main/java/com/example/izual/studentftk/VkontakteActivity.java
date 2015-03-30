@@ -18,7 +18,7 @@ public class VkontakteActivity extends Activity {
 
     WebView webview;
     ProgressBar progress;
-    String vk_redirect_url = "https://studentspbstu.tk/vk/oauth&v=5.25";
+    String vk_redirect_url = "https://studentftk.tk/vk/oauth&v=5.25";
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,7 +43,7 @@ public class VkontakteActivity extends Activity {
         public void onPageStarted(WebView view, String url, Bitmap favicon) {
             super.onPageStarted(view, url, favicon);
             progress.setVisibility(View.VISIBLE);
-            if( url.startsWith("https://studentspbstu") ) {
+            if( url.startsWith("https://studentftk") ) {
                 Intent intent = new Intent(VkontakteActivity.this, Profile.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 intent.putExtra("url", url);

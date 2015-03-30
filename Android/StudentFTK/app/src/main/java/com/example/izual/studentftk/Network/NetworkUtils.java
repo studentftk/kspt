@@ -121,7 +121,7 @@ public final class NetworkUtils {
     }
 
     public static String getServerURL(){
-        return "https://studentspbstu.tk";
+        return "https://studentftk.tk";
     }
 
 
