@@ -13,7 +13,7 @@ import server.logic.FriendDAO;
 import server.entity.User;
 import server.logic.UserDAO;
 
-public class AddFriendAPI {
+public class AddFriendApi {
     //@Override
     public ApiMethod.ApiAnswer execute(Map<String, String> params) {
             

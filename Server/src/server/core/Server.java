@@ -6,8 +6,11 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.concurrent.Executors;
 import javax.net.ssl.SSLContext;
+import server.api.AddFriendApi;
 import server.api.CheckinApi;
+import server.api.DeleteFriendApi;
 import server.api.GetCheckinsApi;
+import server.api.GetFriendsApi;
 import server.api.GetMessageApi;
 import server.api.GetPlaceApi;
 import server.api.GetUserApi;
@@ -55,13 +58,29 @@ public class Server {
                 new GetPlaceApi(),
                 "/places.get");
         
+        HttpApiMehodImpl getFriendsApi = new HttpApiMehodImpl(
+                new GetFriendsApi(),
+                "/friends.get");
+        
+        HttpApiMehodImpl addFriendApi = new HttpApiMehodImpl(
+                (ApiMethod) new AddFriendApi(),
+                "/friend.add");
+        
+        HttpApiMehodImpl deleteFriendApi = new HttpApiMehodImpl(
+                (ApiMethod) new DeleteFriendApi(),
+                "/friend.delete");
+        
         addMethod(getMessages);
         addMethod(getUser);
         addMethod(sendMessage);
         addMethod(vkApi);
         addMethod(getCheckinsApi);
         addMethod(checkinApi);
-        addMethod(getPlacesApi);
+        addMethod(getPlacesApi);        
+        addMethod(getFriendsApi);
+        addMethod(addFriendApi);
+        addMethod(deleteFriendApi);
+
     }
     
     private void addMethod(HttpApiMethod method){
