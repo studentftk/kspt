@@ -11,8 +11,8 @@ import server.io.JSONHelper;
 import server.logic.FriendDAO;
 import server.logic.UserDAO;
 
-public class DeleteFriendApi {
-    //@Override
+public class DeleteFriendApi implements ApiMethod{
+    @Override
     public ApiMethod.ApiAnswer execute(Map<String, String> params) {
             
         try {           

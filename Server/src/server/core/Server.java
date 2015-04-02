@@ -63,11 +63,11 @@ public class Server {
                 "/friends.get");
         
         HttpApiMehodImpl addFriendApi = new HttpApiMehodImpl(
-                (ApiMethod) new AddFriendApi(),
+                new AddFriendApi(),
                 "/friend.add");
         
         HttpApiMehodImpl deleteFriendApi = new HttpApiMehodImpl(
-                (ApiMethod) new DeleteFriendApi(),
+                new DeleteFriendApi(),
                 "/friend.delete");
         
         addMethod(getMessages);
