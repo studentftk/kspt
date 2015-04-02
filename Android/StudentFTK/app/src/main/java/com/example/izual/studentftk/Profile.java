@@ -101,9 +101,8 @@ public class Profile extends Activity
 
         FragmentProfile fragmentProfile;
         FragmentMessages fragmentMessages;
-        FragmentFriendsList fragmentFriendsList;
         FragmentPlaces fragmentPlaces;
-       // FragmentFriendsList fragmentFriendsList;
+        FragmentFriendsList fragmentFriendsList;
         FragmentAbout fragmentAbout;
         FragmentSettings fragmentSettings;
         FragmentPlacePage fragmentPlacePage;
@@ -134,16 +133,6 @@ public class Profile extends Activity
                 ft.commit();
                 break;
             case 3:
-                fragmentFriendsList = new FragmentFriendsList();
-                args = new Bundle();
-                args.putInt("2", 2);
-                fragmentFriendsList.setArguments(args);
-                ft.replace(R.id.container, fragmentFriendsList, "fragmentPlaceList");
-                //ft.addToBackStack(null);
-                ft.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);
-                ft.commit();
-                break;
-            case 4:
                 //Intent intentMaps = new Intent(this, MapsActivity.class);
                 //startActivity(intentMaps);
                 fragmentMaps = new FragmentMaps();
@@ -155,7 +144,7 @@ public class Profile extends Activity
                 ft.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);
                 ft.commit();
                 break;
-            case 5:
+            case 4:
                 fragmentPlaceList = new FragmentPlaceList();
                 args = new Bundle();
                 args.putInt("2", 2);
@@ -165,7 +154,7 @@ public class Profile extends Activity
                 ft.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);
                 ft.commit();
                 break;
-            case 6:
+            case 5:
                 fragmentSettings = new FragmentSettings();
                 args = new Bundle();
                 args.putInt("2", 2);
@@ -175,7 +164,7 @@ public class Profile extends Activity
                 ft.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);
                 ft.commit();
                 break;
-            case 7:
+            case 6:
                 fragmentAbout = new FragmentAbout();
                 args = new Bundle();
                 args.putInt("2", 2);
