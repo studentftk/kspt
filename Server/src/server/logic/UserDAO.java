@@ -56,5 +56,6 @@ public class UserDAO {
         } finally {
             session.close();
         }
-    }   
+    }
+    
 }
