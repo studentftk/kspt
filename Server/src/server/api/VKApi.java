@@ -1,3 +1,7 @@
+/**
+ * Changed by oglandx on 04.03.2015
+ */
+
 package server.api;
 
 import java.io.IOException;

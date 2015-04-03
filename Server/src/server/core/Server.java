@@ -11,6 +11,7 @@ import server.api.GetCheckinsApi;
 import server.api.GetMessageApi;
 import server.api.GetPlaceApi;
 import server.api.GetUserApi;
+import server.api.GetUsersApi;
 import server.api.SendMessageApi;
 import server.api.VKApi;
 import utils.NetworkUtils;
@@ -55,6 +56,10 @@ public class Server {
                 new GetPlaceApi(),
                 "/places.get");
         
+        HttpApiMehodImpl getUsers = new HttpApiMehodImpl(
+                new GetUsersApi(),
+                "/users.get");
+        
         addMethod(getMessages);
         addMethod(getUser);
         addMethod(sendMessage);
@@ -62,6 +67,7 @@ public class Server {
         addMethod(getCheckinsApi);
         addMethod(checkinApi);
         addMethod(getPlacesApi);
+        addMethod(getUsers);
     }
     
     private void addMethod(HttpApiMethod method){
