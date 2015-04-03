@@ -2,6 +2,7 @@ package com.example.izual.studentftk;
 
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -21,9 +22,11 @@ import android.widget.SimpleAdapter;
 import com.example.izual.studentftk.Messages.MessageStruct;
 import com.example.izual.studentftk.Messages.MsgControl;
 import com.example.izual.studentftk.Messages.ParseMessages;
-import com.example.izual.studentftk.Network.MessageRequest;
+import com.example.izual.studentftk.Network.RequestBuilder.ManyUsersRequest;
+import com.example.izual.studentftk.Network.RequestBuilder.MessageRequest;
 import com.example.izual.studentftk.Network.RequestExecutor;
-import com.example.izual.studentftk.Network.UserRequest;
+import com.example.izual.studentftk.Network.RequestBuilder.UserRequest;
+import com.example.izual.studentftk.Users.ParseManyUsers;
 import com.example.izual.studentftk.Users.ParseUsers;
 import com.example.izual.studentftk.Users.UserStruct;
 import com.example.izual.studentftk.Users.Users;
@@ -196,10 +199,11 @@ public class FragmentMessages extends Fragment {
                     String data = executor.GetTask().getData();
                     try {
                         parsed = ParseMessages.Parse(data);
+                        ArrayList<String> IDs = new ArrayList<String>();
                         for(MessageStruct msg: parsed){
-                            // Загружаем в структуру, отобразить её в этом потоке нельзя
-                            GetUserInformation(msg.Source);
+                            IDs.add(msg.Source);
                         }
+                        GetUsersInformation(IDs);
                     } catch (Exception e) {
                         isError = true;
                         errorReason = e.toString();
@@ -252,6 +256,66 @@ public class FragmentMessages extends Fragment {
                 LoadUserInformation(ID);
             }
             return Users.List.get(ID);
+        }
+
+        private Collection<UserStruct> GetUsersInformation(final ArrayList<String> IDs){
+            ArrayList<String> unknownIDs = new ArrayList();
+            for (String id : IDs){
+                if(!Users.List.containsKey(id)){
+                    unknownIDs.add(id);
+                }
+            }
+            LoadUsersInformation(unknownIDs);
+            return Users.List.values();
+        }
+
+        private void LoadUsersInformation(final ArrayList<String> IDs){
+            boolean isError = false;
+            String errorReason = "";
+            URI uri = ManyUsersRequest.BuildManyUsersRequest(IDs);
+            for (;;) {
+                RequestExecutor executor = new RequestExecutor(getActivity(),
+                        uri, connectionTimeout);
+                try {
+                    executor.GetThread().join();
+                }
+                catch (InterruptedException e) {
+                    isError = true;
+                    errorReason = e.toString();
+                    break;
+                }
+                if (executor.GetTask().isError()) {
+                    isError = true;
+                    errorReason = executor.GetTask().getErrorReason();
+                    break;
+                }
+                if (executor.GetTask().isDataReady()) {
+                    try {
+                        ArrayList<UserStruct> users =
+                                    ParseManyUsers.Parse(executor.GetTask().getData());
+                        for (UserStruct user: users) {
+                            Users.List.put(user.ID, user);
+                        }
+                    } catch (Exception e) {
+                        isError = true;
+                        errorReason = e.toString();
+                    }
+                    break;
+                } else {
+                    isError = true;
+                    errorReason = "Данные ещё не готовы";
+                    break;
+                }
+            }
+            if(isError){
+                final String finalErrorReason = errorReason;
+                activity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Utils.ShowError(activity, finalErrorReason);
+                    }
+                });
+            }
         }
 
         /*Загружает информацию о пользователях из чата*/
