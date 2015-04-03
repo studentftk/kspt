@@ -20,6 +20,9 @@ public class VkontakteActivity extends Activity {
     ProgressBar progress;
     String vk_redirect_url = "https://studentftk.tk/vk/oauth&v=5.25";
 
+    String vkClientID = "4858987";
+    //old 4601196
+
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.webview);
@@ -33,7 +36,8 @@ public class VkontakteActivity extends Activity {
 
         webview.setWebViewClient(new VkWebViewClient());
 
-        String url = "http://oauth.vk.com/authorize?client_id=" + "4601196" + "&redirect_uri="+ vk_redirect_url + "&response_type=code";
+        String url = "http://oauth.vk.com/authorize?client_id=" + vkClientID
+                            + "&redirect_uri="+ vk_redirect_url + "&response_type=code";
         webview.loadUrl(url);
         webview.setVisibility(View.VISIBLE);
     }

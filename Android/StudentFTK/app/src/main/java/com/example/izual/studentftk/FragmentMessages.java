@@ -1,23 +1,17 @@
 package com.example.izual.studentftk;
 
-import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.concurrent.Semaphore;
 
 import android.app.Activity;
 import android.app.Fragment;
-import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -29,14 +23,10 @@ import com.example.izual.studentftk.Messages.MsgControl;
 import com.example.izual.studentftk.Messages.ParseMessages;
 import com.example.izual.studentftk.Network.MessageRequest;
 import com.example.izual.studentftk.Network.RequestExecutor;
-import com.example.izual.studentftk.Network.RequestTask;
 import com.example.izual.studentftk.Network.UserRequest;
 import com.example.izual.studentftk.Users.ParseUsers;
 import com.example.izual.studentftk.Users.UserStruct;
 import com.example.izual.studentftk.Users.Users;
-import com.google.android.gms.games.multiplayer.realtime.RealTimeMessageReceivedListener;
-
-import org.json.simple.JSONObject;
 
 /**
  * Created by Антон on 12.12.2014.
@@ -327,18 +317,18 @@ public class FragmentMessages extends Fragment {
 
 
     /* Рудиментарное изменение ника */
-    private final String ChangeNameAttempt(final String textOfMessage){
+    private final String ChangeNameAttempt(final String textOfMessage) {
         final String name_change_seq = "$newnick";
         final int first_space = textOfMessage.indexOf(' ');
-        if(first_space == -1){
+        if (first_space == -1) {
             return "";
         }
         final String command = textOfMessage.substring(0, first_space);
         String newName = "";
-        if(command.compareTo(name_change_seq) == 0){
+        if (command.compareTo(name_change_seq) == 0) {
             newName = textOfMessage.substring(name_change_seq.length() + 1);
             final int max_length_name = 16;
-            if(newName.length() > max_length_name) {
+            if (newName.length() > max_length_name) {
                 final int second_space = newName.indexOf(' ');
                 if (second_space != -1 && second_space < max_length_name) {
                     newName = newName.substring(0, second_space);
@@ -350,3 +340,4 @@ public class FragmentMessages extends Fragment {
         return newName;
     }
 }
+

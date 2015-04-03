@@ -19,14 +19,19 @@ import server.io.JSONHelper;
 import server.logic.UserDAO;
 
 /* simple test
-https://oauth.vk.com/authorize?client_id=4601196&scope=offline&redirect_uri=https://studentspbstu.tk/vk/oauth&v=5.25&response_type=code
+https://oauth.vk.com/authorize?client_id=4858987&scope=offline&redirect_uri=https://studentspbstu.tk/vk/oauth&v=5.25&response_type=code
 */
 
 public class VKApi implements ApiMethod {
     public final String baseTokenQueryURI;
+    public final String vkClientID = "4858987";
+    public final String vkClientSecret = "xKygMGw6zfzc1Vcwt7e8";
+    // old -- 4FfKXAErEZYuC9G55RUK and 4601196
 
     public VKApi(String redirectURI) {
-        baseTokenQueryURI = "https://oauth.vk.com/access_token?client_id=4601196&client_secret=4FfKXAErEZYuC9G55RUK&v=5.25&redirect_uri="+redirectURI+"&code=";
+        baseTokenQueryURI = "https://oauth.vk.com/access_token?client_id=" + 
+                            vkClientID + "&client_secret=" + vkClientSecret + 
+                            "&v=5.25&redirect_uri=" + redirectURI + "&code=";
     }
 
     protected User getUserData(AuthInfo authInfo) throws IOException, ParseException {
