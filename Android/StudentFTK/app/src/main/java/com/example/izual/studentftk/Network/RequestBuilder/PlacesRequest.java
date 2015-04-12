@@ -13,7 +13,7 @@ public class PlacesRequest extends Request {
     public static URI BuildPlacesRequest(final String place){
         String [] params = {Params.Type};
         String [] values = {place};
-        return RequestBuilder.BuildRequest(NameOfSite,
+        return BaseRequestBuilder.BuildRequest(NameOfSite,
 
 
                 Request.Pages.Places, Request.Methods.Get, params, values);

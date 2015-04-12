@@ -14,6 +14,6 @@ public class UserRequest extends Request{
     public static URI BuildUserRequest(final String ID){
         String [] params = {Params.ID};
         String [] values = {ID};
-        return RequestBuilder.BuildRequest(NameOfSite, Pages.User, Methods.Get, params, values);
+        return BaseRequestBuilder.BuildRequest(NameOfSite, Pages.User, Methods.Get, params, values);
     }
 }

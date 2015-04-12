@@ -26,7 +26,7 @@ public class ManyUsersRequest extends Request{
     public static URI BuildManyUsersRequest(final ArrayList<String> IDs){
         String [] params = {Params.IDs};
         String [] values = {MakeValues(IDs, "$")};
-        return RequestBuilder.BuildRequest(NameOfSite, Pages.Users, Methods.Get, params, values);
+        return BaseRequestBuilder.BuildRequest(NameOfSite, Pages.Users, Methods.Get, params, values);
     }
 
 }

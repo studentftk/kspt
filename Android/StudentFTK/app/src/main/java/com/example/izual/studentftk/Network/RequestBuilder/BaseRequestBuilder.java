@@ -1,11 +1,11 @@
-package com.example.izual.studentftk.Network;
+package com.example.izual.studentftk.Network.RequestBuilder;
 
 import java.net.URI;
 
 /**
  * Created by oglandx on 22.12.2014.
  */
-public class RequestBuilder {
+public class BaseRequestBuilder {
     public static URI BuildRequest(final String nameOfSite, final String page,
                                 final String method, final String[] params, final String[] values){
         if(params.length != values.length){

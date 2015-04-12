@@ -25,15 +25,15 @@ public class MessageRequest extends Request{
                                       final String fromDate, final String type){
         String[] params = {Params.SocialToken, Params.From, Params.Type};
         String[] values = {socialToken, fromDate, type};
-        return RequestBuilder.BuildRequest(NameOfSite,
-                            Pages.Messages, Methods.Get, params, values);
+        return BaseRequestBuilder.BuildRequest(NameOfSite,
+                Pages.Messages, Methods.Get, params, values);
     }
 
     public static URI BuildRequestSend(final String socialToken,
                                        final String destination, final String message){
         String[] params = {Params.SocialToken, Params.Destination, Params.Message};
         String[] values = {socialToken, destination, message};
-        return RequestBuilder.BuildRequest(NameOfSite,
-                            Pages.Messages, Methods.Send, params, values);
+        return BaseRequestBuilder.BuildRequest(NameOfSite,
+                Pages.Messages, Methods.Send, params, values);
     }
 }
