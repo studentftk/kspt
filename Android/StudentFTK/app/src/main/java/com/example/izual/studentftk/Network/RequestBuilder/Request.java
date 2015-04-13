@@ -11,6 +11,7 @@ public class Request {
         public static final String User = "user";
         public static final String Places = "places";
         public static final String Users = "users";
+        public static final String Friends = "friends";
     }
 
     public static final class Methods{
