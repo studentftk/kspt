@@ -127,7 +127,7 @@ public class FragmentProfile extends Fragment {
                 DeleteFriend(ATTRIBUTE_Social_Token,ATTRIBUTE_vkId, ATTRIBUTE_vkId_Friend);
             }
         });
-        
+
         return viewProfile;
     }
 

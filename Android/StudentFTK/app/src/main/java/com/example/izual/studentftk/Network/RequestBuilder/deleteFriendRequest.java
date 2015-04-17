@@ -5,9 +5,6 @@ import com.example.izual.studentftk.Network.Request;
 
 import java.net.URI;
 
-/**
- * Created by на on 22.04.2015.
- */
 public class deleteFriendRequest extends Request{
     public static final class Params {
         public static final String SocialToken = "SocialToken";

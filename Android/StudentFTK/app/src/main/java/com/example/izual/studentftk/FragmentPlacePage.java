@@ -18,8 +18,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.os.Message;
 
+import com.example.izual.studentftk.Like.LikeApiAnswer;
+import com.example.izual.studentftk.Like.ParseLike;
 import com.example.izual.studentftk.Network.RequestBuilder.LikeRequest;
 import com.example.izual.studentftk.Network.RequestExecutor;
+import com.example.izual.studentftk.Places.ParsePlaces;
 import com.example.izual.studentftk.Places.Places;
 import com.example.izual.studentftk.Places.PlacesStruct;
 
@@ -130,36 +133,44 @@ public class FragmentPlacePage extends Fragment {
     }
 
     private void SendLike(final String id_places,final String ATTRIBUTE_vkId) {
-        boolean isError = false;
-        String errorReason = "";
         // надо int в string сконвертировать
         URI uri = LikeRequest.BuildRequestGet(id_places, ATTRIBUTE_vkId);
 
-        for (;;) {
-            RequestExecutor executor = new RequestExecutor(getActivity(),
-                    uri, connectionTimeout);
+        RequestExecutor executor = new RequestExecutor(getActivity(),
+                uri, connectionTimeout);
+        try {
+            executor.GetThread().join();
+        } catch (InterruptedException e) {
+            errorHandler(e.toString());
+            return;
+        }
+        if (executor.GetTask().isError()) {
+            errorHandler(executor.GetTask().getErrorReason());
+            return;
+        }
+        if (executor.GetTask().isDataReady()) {
             try {
-                executor.GetThread().join();
-            } catch (InterruptedException e) {
-                isError = true;
-                errorReason = e.toString();
-                break;
-            }
-            if (executor.GetTask().isError()) {
-                isError = true;
-                errorReason = executor.GetTask().getErrorReason();
-                break;
-            }
-        }
-        if(isError){
-            final String finalErrorReason = errorReason;
-            activity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    Utils.ShowError(activity, finalErrorReason);
+                String answer = executor.GetTask().getData();
+                LikeApiAnswer likeApiAnswer = ParseLike.ParseAnswerFromLikeApi(answer);
+                if (likeApiAnswer.httpCode != 200) {
+                    // TODO: log this fact
                 }
-            });
+            } catch (Exception e) {
+                errorHandler(e.toString());
+                return;
+            }
         }
+    }
+
+    // TODO: DISCUSS: place method to base class
+    private void errorHandler(String errorReason) {
+        final String finalErrorReason = errorReason;
+        activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Utils.ShowError(activity, finalErrorReason);
+            }
+        });
     }
 
     public static void fetchImage(final String iUrl, final ImageView iView) {
