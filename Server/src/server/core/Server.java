@@ -8,6 +8,8 @@ import java.util.concurrent.Executors;
 import javax.net.ssl.SSLContext;
 import server.api.CheckinApi;
 import server.api.GetCheckinsApi;
+import server.api.GetFriendsApi;
+import server.api.GetFriendsGroupApi;
 import server.api.GetMessageApi;
 import server.api.GetPlaceApi;
 import server.api.GetUserApi;
@@ -60,6 +62,14 @@ public class Server {
                 new GetUsersApi(),
                 "/users.get");
         
+        HttpApiMehodImpl getSingleFriends = new HttpApiMehodImpl(
+                new GetFriendsApi(),
+                "/friends.get");
+        
+        HttpApiMehodImpl getFriendsGroup = new HttpApiMehodImpl(
+                new GetFriendsGroupApi(),
+                "/fg.get");
+        
         addMethod(getMessages);
         addMethod(getUser);
         addMethod(sendMessage);
@@ -68,6 +78,8 @@ public class Server {
         addMethod(checkinApi);
         addMethod(getPlacesApi);
         addMethod(getUsers);
+        addMethod(getSingleFriends);
+        addMethod(getFriendsGroup);
     }
     
     private void addMethod(HttpApiMethod method){
