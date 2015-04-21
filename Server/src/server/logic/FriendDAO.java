@@ -22,7 +22,7 @@ public class FriendDAO {
         Session session = HibernateUtil.getSessionFactory().openSession();
         try {
             return (List<Friend>) session.createCriteria(Friend.class)
-                    .add(Restrictions.gt("singleFriend", 1))
+                    .add(Restrictions.eq("singleFriend", 1))
                     .add(Restrictions.eq("idVk", idVk))
                     .list();
         } finally {

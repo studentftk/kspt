@@ -8,12 +8,14 @@ import java.util.concurrent.Executors;
 import javax.net.ssl.SSLContext;
 import server.api.CheckinApi;
 import server.api.GetCheckinsApi;
+import server.api.GetCommentsApi;
 import server.api.GetFriendsApi;
 import server.api.GetFriendsGroupApi;
 import server.api.GetMessageApi;
 import server.api.GetPlaceApi;
 import server.api.GetUserApi;
 import server.api.GetUsersApi;
+import server.api.ManipCommentsApi;
 import server.api.ManipSingleFriendApi;
 import server.api.SendMessageApi;
 import server.api.VKApi;
@@ -75,6 +77,14 @@ public class Server {
                 new ManipSingleFriendApi(),
                 "/friends.manip");
         
+        HttpApiMehodImpl getComments = new HttpApiMehodImpl(
+                new GetCommentsApi(),
+                "/comments.get");
+        
+        HttpApiMehodImpl manipComments = new HttpApiMehodImpl(
+                new ManipCommentsApi(),
+                "/comments.manip");
+        
         addMethod(getMessages);
         addMethod(getUser);
         addMethod(sendMessage);
@@ -86,6 +96,8 @@ public class Server {
         addMethod(getSingleFriends);
         addMethod(getFriendsGroup);
         addMethod(manipSingleFriends);
+        addMethod(getComments);
+        addMethod(manipComments);
     }
     
     private void addMethod(HttpApiMethod method){

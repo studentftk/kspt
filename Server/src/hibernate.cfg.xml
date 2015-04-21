@@ -13,5 +13,6 @@
     <mapping class="server.entity.Friend"/>
     <mapping class="server.entity.Checkin"/>
     <mapping class="server.entity.FriendsGroup"/>
+    <mapping class="server.entity.Comment"/>
   </session-factory>
 </hibernate-configuration>

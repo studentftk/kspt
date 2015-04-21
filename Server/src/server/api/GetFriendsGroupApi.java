@@ -29,11 +29,10 @@ public class GetFriendsGroupApi implements ApiMethod {
                 return  new ApiAnswer(HttpCode.OK, JSONHelper.toJSON(groups));
             }
             else{
-                throw new NullPointerException(
-                        "Parameter is not \"id\", wrong query");
+                throw new Exception("Parameter is not \"id\", wrong query");
             }
         }
-        catch(NumberFormatException | NullPointerException ex){
+        catch(Exception ex){
             String answer = JSONHelper.toJSON(ex);
             Logger.getLogger(VKApi.class.getName()).log(Level.SEVERE, null, ex);
             return new ApiAnswer(HttpCode.ERROR, answer);

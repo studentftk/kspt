@@ -34,7 +34,7 @@ public class GetFriendsApi implements ApiMethod{
                 List friendIds = FriendDAO.getSingleFriends(user.getSocialId());
                 return new ApiAnswer(HttpCode.OK, JSONHelper.toJSON(friendIds));
             }else {
-                throw new NullPointerException(
+                throw new Exception(
                         "Parameters idVk or id not found in the query");
             }
         } catch (Exception ex) {
