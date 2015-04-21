@@ -14,6 +14,7 @@ import server.api.GetMessageApi;
 import server.api.GetPlaceApi;
 import server.api.GetUserApi;
 import server.api.GetUsersApi;
+import server.api.ManipSingleFriendApi;
 import server.api.SendMessageApi;
 import server.api.VKApi;
 import utils.NetworkUtils;
@@ -70,6 +71,10 @@ public class Server {
                 new GetFriendsGroupApi(),
                 "/fg.get");
         
+        HttpApiMehodImpl manipSingleFriends = new HttpApiMehodImpl(
+                new ManipSingleFriendApi(),
+                "/friends.manip");
+        
         addMethod(getMessages);
         addMethod(getUser);
         addMethod(sendMessage);
@@ -80,6 +85,7 @@ public class Server {
         addMethod(getUsers);
         addMethod(getSingleFriends);
         addMethod(getFriendsGroup);
+        addMethod(manipSingleFriends);
     }
     
     private void addMethod(HttpApiMethod method){

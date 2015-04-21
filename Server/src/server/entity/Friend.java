@@ -37,7 +37,7 @@ public class Friend implements Serializable, JSONAble{
     private Integer singleFriend;
     
     @Column(name="idVkFriend")
-    private Long idFriend;
+    private Long idVkFriend;
     
     @Override
     public JSONObject asJSON() {
@@ -45,7 +45,7 @@ public class Friend implements Serializable, JSONAble{
         json.put("id", id);
         json.put("idVk", idVk);
         json.put("singleFriend", singleFriend);
-        json.put("idFriend", idFriend); 
+        json.put("idVkFriend", idVkFriend); 
         return json;    
     }
     
@@ -57,21 +57,26 @@ public class Friend implements Serializable, JSONAble{
         return idVk;
     }
      
-    public Long getIdFriendsGroup() {
-        return idFriend;
+    public Long getIdFriend() {
+        return idVkFriend;
     }
     
     public boolean isSingleFriend(){
         return singleFriend != 0;
     }
+    
+    public Friend setId(Long id){
+        this.id = id;
+        return this;
+    }
       
-    public Friend setIdUser(Long idUser) {
-        this.idVk = idUser;
+    public Friend setIdVkUser(Long idVkUser) {
+        this.idVk = idVkUser;
         return this;
     }
     
-    public Friend setIdFriend(Long idFriend) {
-        this.idFriend = idFriend;
+    public Friend setIdVkFriend(Long idVkFriend) {
+        this.idVkFriend = idVkFriend;
         return this;
     }
     

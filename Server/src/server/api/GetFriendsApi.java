@@ -21,7 +21,7 @@ import server.logic.UserDAO;
 
 public class GetFriendsApi implements ApiMethod{
     
-     @Override
+    @Override
     public ApiAnswer execute(Map<String, String> params) {
         try {            
             if (params.get("idVk") != null) {
@@ -35,7 +35,7 @@ public class GetFriendsApi implements ApiMethod{
                 return new ApiAnswer(HttpCode.OK, JSONHelper.toJSON(friendIds));
             }else {
                 throw new NullPointerException(
-                        "Parameter idVk not found in the query");
+                        "Parameters idVk or id not found in the query");
             }
         } catch (Exception ex) {
             String answer = JSONHelper.toJSON(ex);
