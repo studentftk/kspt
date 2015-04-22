@@ -106,6 +106,24 @@ public class FragmentPlacePage extends Fragment {
         });
         //---------------------------End---------------------
 
+        //---------------------------Кнопка с лайком---------------------
+        /*Button likeBtn = (Button) viewPlacePage.findViewById(R.id.likeBtn);
+        likeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ArrayList<Map<String, Object>> data = new ArrayList<Map<String, Object>>(Places.List.get("teachCorp").size());
+                Map<String, Object> m;
+
+                Places.add("Вы были здесь " + time.substring(1, 16));
+                refresh(Places);
+                Toast toast = Toast.makeText(getActivity(),
+                        "Вы зачекинились: "+ com.example.izual.studentftk.Places.Places.List.get("teachCorp").get(id_places).Title , Toast.LENGTH_SHORT);
+                toast.show();
+            }
+        });*/
+        //---------------------------End---------------------
+
+
         refresh(Places);
         return viewPlacePage;
     }

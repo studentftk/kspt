@@ -58,6 +58,26 @@
                     android:text="Студент группы 53501/3"
                     android:textSize="@dimen/activity_horizontal_margin"
                     android:gravity="center_horizontal"/>
+                <Button
+                    android:id="@+id/addFriendBtn"
+                    android:textColor="#FFFFFF"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="Добавить в друзья"
+                    android:gravity="center_horizontal"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_gravity="center_horizontal"/>
+                <Button
+                    android:id="@+id/deleteFriendBtn"
+                    android:textColor="#FFFFFF"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="Удалить из друзей"
+                    android:gravity="center_horizontal"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_gravity="center_horizontal"/>
 
             </LinearLayout>
         </LinearLayout>

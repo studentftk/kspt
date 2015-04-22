@@ -11,10 +11,16 @@ public class Request {
         public static final String User = "user";
         public static final String Places = "places";
 		public static final String Friends = "friends";
+        public static final String SingleFriend = "SingleFriend";
+
     }
 
     public static final class Methods{
         public static final String Get = "get";
         public static final String Send = "send";
+        public static final String Manip = "manip";
+        public static final String Delete = "del";
+        public static final String Like = "like";
+
     }
 }
