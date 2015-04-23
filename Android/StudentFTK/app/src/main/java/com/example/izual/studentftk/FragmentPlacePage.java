@@ -1,5 +1,6 @@
 package com.example.izual.studentftk;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.DialogInterface;
@@ -17,6 +18,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.os.Message;
 
+import com.example.izual.studentftk.Network.RequestBuilder.LikeRequest;
+import com.example.izual.studentftk.Network.RequestExecutor;
 import com.example.izual.studentftk.Places.Places;
 import com.example.izual.studentftk.Places.PlacesStruct;
 
@@ -25,6 +28,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -48,6 +52,9 @@ public class FragmentPlacePage extends Fragment {
     TextView PlaceName;
     TextView PlaceAdres;
     int id_places;
+    final String ATTRIBUTE_vkId = "vkId"; //разобраться с ID
+    private final int connectionTimeout = 1000;
+    final Activity activity = getActivity();
 
     public void onCreate(Bundle savedInstanceState) {super.onCreate(savedInstanceState);}
 
@@ -107,25 +114,61 @@ public class FragmentPlacePage extends Fragment {
         //---------------------------End---------------------
 
         //---------------------------Кнопка с лайком---------------------
-        /*Button likeBtn = (Button) viewPlacePage.findViewById(R.id.likeBtn);
+        Button likeBtn = (Button) viewPlacePage.findViewById(R.id.likeBtn);
         likeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ArrayList<Map<String, Object>> data = new ArrayList<Map<String, Object>>(Places.List.get("teachCorp").size());
+                final String idPlace = Integer.toString(id_places);
+                final String idPlace1 = String.valueOf(id_places);
+                SendLike(idPlace, ATTRIBUTE_vkId);
+                /*ArrayList<Map<String, Object>> data = new ArrayList<Map<String, Object>>(Places.List.get("teachCorp").size());
                 Map<String, Object> m;
 
                 Places.add("Вы были здесь " + time.substring(1, 16));
                 refresh(Places);
                 Toast toast = Toast.makeText(getActivity(),
                         "Вы зачекинились: "+ com.example.izual.studentftk.Places.Places.List.get("teachCorp").get(id_places).Title , Toast.LENGTH_SHORT);
-                toast.show();
+                toast.show();*/
             }
-        });*/
+        });
         //---------------------------End---------------------
 
 
         refresh(Places);
         return viewPlacePage;
+    }
+
+    private void SendLike(final String id_places,final String ATTRIBUTE_vkId) {
+        boolean isError = false;
+        String errorReason = "";
+        // надо int в string сконвертировать
+        URI uri = LikeRequest.BuildRequestGet(id_places, ATTRIBUTE_vkId);
+
+        for (;;) {
+            RequestExecutor executor = new RequestExecutor(getActivity(),
+                    uri, connectionTimeout);
+            try {
+                executor.GetThread().join();
+            } catch (InterruptedException e) {
+                isError = true;
+                errorReason = e.toString();
+                break;
+            }
+            if (executor.GetTask().isError()) {
+                isError = true;
+                errorReason = executor.GetTask().getErrorReason();
+                break;
+            }
+        }
+        if(isError){
+            final String finalErrorReason = errorReason;
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Utils.ShowError(activity, finalErrorReason);
+                }
+            });
+        }
     }
 
     public static void fetchImage(final String iUrl, final ImageView iView) {
