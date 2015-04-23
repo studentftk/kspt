@@ -1,5 +1,6 @@
 package com.example.izual.studentftk;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -9,12 +10,15 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
 import com.example.izual.studentftk.Network.NetworkUtils;
+import com.example.izual.studentftk.Network.RequestBuilder.addFriendRequest;
+import com.example.izual.studentftk.Network.RequestExecutor;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -25,6 +29,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -43,6 +48,11 @@ public class FragmentProfile extends Fragment {
     View viewProfile;
     TextView PersonName;
     Bitmap resizedBitmap;
+    final String ATTRIBUTE_vkId = "vkId"; //разобраться с ID
+    final String ATTRIBUTE_vkId_Friend = "vkIdFriend"; //разобраться с ID
+    final String ATTRIBUTE_Social_Token = "socialToken";
+    private final int connectionTimeout = 1000;
+    final Activity activity = getActivity();
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -101,7 +111,88 @@ public class FragmentProfile extends Fragment {
             );
             PlacesList.setAdapter(adapter);
         }
+
+        Button addFriendBtn = (Button) viewProfile.findViewById(R.id.addFriendBtn);
+        addFriendBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AddFriend(ATTRIBUTE_Social_Token,ATTRIBUTE_vkId, ATTRIBUTE_vkId_Friend);
+            }
+        });
+
+        Button deleteFriendBtn = (Button) viewProfile.findViewById(R.id.deleteFriendBtn);
+        deleteFriendBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                DeleteFriend(ATTRIBUTE_Social_Token,ATTRIBUTE_vkId, ATTRIBUTE_vkId_Friend);
+            }
+        });
+        
         return viewProfile;
+    }
+
+    private void AddFriend(final String ATTRIBUTE_Social_Token,final String ATTRIBUTE_vkId,final String ATTRIBUTE_vkId_Friend) {
+        boolean isError = false;
+        String errorReason = "";
+        // надо int в string сконвертировать
+        URI uri = addFriendRequest.BuildRequestGet(ATTRIBUTE_Social_Token, ATTRIBUTE_vkId, ATTRIBUTE_vkId, "add");
+        for (;;) {
+            RequestExecutor executor = new RequestExecutor(getActivity(),
+                    uri, connectionTimeout);
+            try {
+                executor.GetThread().join();
+            } catch (InterruptedException e) {
+                isError = true;
+                errorReason = e.toString();
+                break;
+            }
+            if (executor.GetTask().isError()) {
+                isError = true;
+                errorReason = executor.GetTask().getErrorReason();
+                break;
+            }
+        }
+        if(isError){
+            final String finalErrorReason = errorReason;
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Utils.ShowError(activity, finalErrorReason);
+                }
+            });
+        }
+    }
+
+    private void DeleteFriend(final String ATTRIBUTE_Social_Token,final String ATTRIBUTE_vkId,final String ATTRIBUTE_vkId_Friend) {
+        boolean isError = false;
+        String errorReason = "";
+        // надо int в string сконвертировать
+        URI uri = addFriendRequest.BuildRequestGet(ATTRIBUTE_Social_Token, ATTRIBUTE_vkId, ATTRIBUTE_vkId, "del");
+        for (;;) {
+            RequestExecutor executor = new RequestExecutor(getActivity(),
+                    uri, connectionTimeout);
+            try {
+                executor.GetThread().join();
+            } catch (InterruptedException e) {
+                isError = true;
+                errorReason = e.toString();
+                break;
+            }
+            if (executor.GetTask().isError()) {
+                isError = true;
+                errorReason = executor.GetTask().getErrorReason();
+                break;
+            }
+        }
+        if(isError){
+            final String finalErrorReason = errorReason;
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Utils.ShowError(activity, finalErrorReason);
+                }
+            });
+        }
     }
 
     private void getProfileFromServer(String url) throws InterruptedException, TimeoutException, ExecutionException {

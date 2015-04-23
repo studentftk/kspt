@@ -119,16 +119,7 @@ public class FragmentPlacePage extends Fragment {
             @Override
             public void onClick(View view) {
                 final String idPlace = Integer.toString(id_places);
-                final String idPlace1 = String.valueOf(id_places);
                 SendLike(idPlace, ATTRIBUTE_vkId);
-                /*ArrayList<Map<String, Object>> data = new ArrayList<Map<String, Object>>(Places.List.get("teachCorp").size());
-                Map<String, Object> m;
-
-                Places.add("Вы были здесь " + time.substring(1, 16));
-                refresh(Places);
-                Toast toast = Toast.makeText(getActivity(),
-                        "Вы зачекинились: "+ com.example.izual.studentftk.Places.Places.List.get("teachCorp").get(id_places).Title , Toast.LENGTH_SHORT);
-                toast.show();*/
             }
         });
         //---------------------------End---------------------
