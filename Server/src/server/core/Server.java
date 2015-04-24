@@ -75,7 +75,7 @@ public class Server {
         
         HttpApiMehodImpl manipSingleFriends = new HttpApiMehodImpl(
                 new ManipSingleFriendApi(),
-                "/friends.manip");
+                "/friends");
         
         HttpApiMehodImpl getComments = new HttpApiMehodImpl(
                 new GetCommentsApi(),
@@ -83,7 +83,7 @@ public class Server {
         
         HttpApiMehodImpl manipComments = new HttpApiMehodImpl(
                 new ManipCommentsApi(),
-                "/comments.manip");
+                "/comments");
         
         addMethod(getMessages);
         addMethod(getUser);
