@@ -8,11 +8,13 @@ package server.api;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import server.api.params.ParamsChecker;
 import server.core.ApiMethod;
 import server.core.HttpCode;
 import server.entity.Comment;
 import server.io.JSONHelper;
 import server.logic.CommentDAO;
+import server.entity.User;
 
 /**
  *
@@ -29,43 +31,39 @@ public class ManipCommentsApi implements ApiMethod{
     @Override
     public ApiMethod.ApiAnswer execute(Map<String, String> params) {
         try {
+            User user = ParamsChecker.CheckSecure(params);
             if(params.get("op") != null) switch(params.get("op")){
                 case Operations.Add:
-                    if( params.get("type") != null && 
-                        params.get("entityId") != null &&
-                        params.get("idVkUser") != null &&
-                        params.get("head") != null &&
-                        params.get("text") != null){
-                        
-                        int entityType = 0;
-                        switch(params.get("type")){
-                            case Comment.EntityTypesStr.Places:
-                                entityType = Comment.EntityTypes.Places;
-                                break;
-                            case Comment.EntityTypesStr.News:
-                                entityType = Comment.EntityTypes.News;
-                                break;
-                            default:
-                                throw new Exception("Bad parameter type");
-                        }
-                        Long entityId = Long.parseLong(params.get("entityId"));
-                        Long idVkUser = Long.parseLong(params.get("idVkUser"));
-                        Long prevComment = 0L;
-                        if(params.get("previousComment") != null){
-                            prevComment = Long.parseLong(
-                                    params.get("previousComment"));
-                        }
-                        CommentDAO.AddComment(entityType, entityId, idVkUser, 
-                            prevComment, params.get("head"), params.get("text"));
+                    ParamsChecker.CheckParams(params, "type", "entityId", 
+                            "head", "text");
+                    int entityType = 0;
+                    switch(params.get("type")){
+                        case Comment.EntityTypesStr.Places:
+                            entityType = Comment.EntityTypes.Places;
+                            break;
+                        case Comment.EntityTypesStr.News:
+                            entityType = Comment.EntityTypes.News;
+                            break;
+                        default:
+                            throw new Exception("Bad parameter type");
                     }
+                    Long entityId = Long.parseLong(params.get("entityId"));
+                    Long idVkUser = user.getSocialId();
+                    Long prevComment = 0L;
+                    if(params.get("previousComment") != null){
+                        prevComment = Long.parseLong(
+                                params.get("previousComment"));
+                    }
+                    CommentDAO.AddComment(entityType, entityId, idVkUser, 
+                        prevComment, params.get("head"), params.get("text"));
                     break;
                 case Operations.Delete:
                     Long commentId = Long.parseLong(params.get("id"));
                     CommentDAO.DeleteComment(commentId);
                     break;
                 default:
-                    throw new Exception(
-                            "Unsupported operation: " + params.get("op"));
+                    throw new UnsupportedOperationException(
+                            "For parameter \'" + params.get("op") + "\'");
             }
             return new ApiAnswer(HttpCode.OK, "");
         } catch (Exception ex) {

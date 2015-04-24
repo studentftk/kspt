@@ -1,5 +1,6 @@
 package server.logic;
 
+import java.util.List;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
 import server.HibernateUtil;
@@ -53,6 +54,19 @@ public class UserDAO {
             session.beginTransaction();
             session.save(user);
             session.getTransaction().commit();
+        } finally {
+            session.close();
+        }
+    }
+    
+    public static boolean isTokenActual(Long socialId, final String socialToken){
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        try {
+            List<User> users = (List<User>) session.createCriteria(User.class)
+                    .add(Restrictions.eq("socialId", socialId))
+                    .list();
+            User last = users.get(users.size() - 1);
+            return last.getSocialToken().equals(socialToken);
         } finally {
             session.close();
         }

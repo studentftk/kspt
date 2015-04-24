@@ -6,6 +6,7 @@ package server.api;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import server.api.params.ParamsChecker;
 import server.core.ApiMethod;
 import server.core.HttpCode;
 import server.entity.User;
@@ -22,6 +23,7 @@ public class GetUsersApi implements ApiMethod{
 
     @Override
     public ApiAnswer execute(Map<String, String> params) {
+        ParamsChecker.CheckSecure(params);
         boolean isParamIDs = params.get("ids") != null;
         final String param = isParamIDs ? 
                 params.get("ids") : params.get("SocialTokens");

@@ -3,16 +3,16 @@
  */
 package server.api;
 
-import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import server.api.params.ParamsChecker;
 import server.core.ApiMethod;
 import server.core.HttpCode;
 import server.entity.User;
 import server.io.JSONHelper;
 import server.logic.FriendDAO;
-import server.logic.UserDAO;
+import utils.exceptions.ParameterNotFoundException;
 
 /**
  *
@@ -23,22 +23,15 @@ import server.logic.UserDAO;
 public class ManipSingleFriendApi implements ApiMethod{
     @Override
     public ApiAnswer execute(Map<String, String> params) {
-        try {            
-            Long idVkUser = 0L, idVkFriend = 0L;
-            if (params.get("idVk") != null && params.get("idVkFriend") != null){
-                idVkUser = Long.parseLong(params.get("idVk"));
+        try {
+            User user = ParamsChecker.CheckSecure(params);
+            Long idVkUser = user.getSocialId();
+            Long idVkFriend = 0L;
+            if (params.get("idVkFriend") != null){
                 idVkFriend = Long.parseLong(params.get("idVkFriend"));
-                
-            }
-            else if (params.get("id") != null && params.get("idFriend") != null) {
-                User user = UserDAO.getById(Long.parseLong(params.get("id")));
-                idVkUser = user.getSocialId();
-                User friend = UserDAO.getById(
-                        Long.parseLong(params.get("idFriend")));   
             }
             else{
-                throw new NullPointerException(
-                        "Parameters idVk or id not found in the query");
+                throw new ParameterNotFoundException("idVkFriend");
             }
             if(params.get("op") != null && "del".equals(params.get("op"))){
                 FriendDAO.deleteSingleFriend(idVkUser, idVkFriend);
@@ -48,7 +41,8 @@ public class ManipSingleFriendApi implements ApiMethod{
             }
             return new ApiAnswer(HttpCode.OK, "");
             
-        } catch (Exception ex) {
+        } catch (SecurityException | NumberFormatException | 
+                ParameterNotFoundException ex) {
             String answer = JSONHelper.toJSON(ex);
             Logger.getLogger(VKApi.class.getName()).log(Level.SEVERE, null, ex);
             return new ApiAnswer(HttpCode.ERROR, answer);

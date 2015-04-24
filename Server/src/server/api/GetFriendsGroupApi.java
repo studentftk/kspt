@@ -9,10 +9,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import server.api.params.ParamsChecker;
 import server.core.ApiMethod;
 import server.core.HttpCode;
 import server.io.JSONHelper;
 import server.logic.FriendsGroupDAO;
+import utils.exceptions.ParameterNotFoundException;
 
 /**
  *
@@ -23,16 +25,14 @@ public class GetFriendsGroupApi implements ApiMethod {
     @Override
     public ApiAnswer execute(Map<String, String> params) {
         try{
-            if (params.get("id") != null){
-                Long idFriendsGroup = Long.parseLong(params.get("id"));
-                List groups = FriendsGroupDAO.getFriendsGroupById(idFriendsGroup);
-                return  new ApiAnswer(HttpCode.OK, JSONHelper.toJSON(groups));
-            }
-            else{
-                throw new Exception("Parameter is not \"id\", wrong query");
-            }
+            ParamsChecker.CheckSecure(params);
+            ParamsChecker.CheckParams(params, "id");
+            Long idFriendsGroup = Long.parseLong(params.get("id"));
+            List groups = FriendsGroupDAO.getFriendsGroupById(idFriendsGroup);
+            return  new ApiAnswer(HttpCode.OK, JSONHelper.toJSON(groups));
         }
-        catch(Exception ex){
+        catch(SecurityException | ParameterNotFoundException | 
+                NumberFormatException ex){
             String answer = JSONHelper.toJSON(ex);
             Logger.getLogger(VKApi.class.getName()).log(Level.SEVERE, null, ex);
             return new ApiAnswer(HttpCode.ERROR, answer);

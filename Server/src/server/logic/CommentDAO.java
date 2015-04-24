@@ -61,7 +61,7 @@ public class CommentDAO {
         
         Session session = HibernateUtil.getSessionFactory().openSession();
         try {
-            session.beginTransaction();           
+            session.beginTransaction();       
             session.save(comment);     
             session.getTransaction().commit();
         } finally {

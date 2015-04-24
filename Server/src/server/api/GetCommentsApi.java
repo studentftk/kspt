@@ -7,11 +7,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import server.api.params.ParamsChecker;
 import server.core.ApiMethod;
 import server.core.HttpCode;
 import server.io.JSONHelper;
 import server.logic.CommentDAO;
 import server.entity.Comment;
+import server.entity.User;
 
 /**
  *
@@ -21,7 +23,8 @@ import server.entity.Comment;
 public class GetCommentsApi implements ApiMethod{
     @Override
     public ApiAnswer execute(Map<String, String> params) {
-        try {            
+        try {
+            User user = ParamsChecker.CheckSecure(params);
             if(params.get("id") != null){
                 Long idComment = Long.parseLong(params.get("id"));
                 Comment comment = CommentDAO.getCommentById(idComment);
@@ -47,8 +50,8 @@ public class GetCommentsApi implements ApiMethod{
                 String answer = JSONHelper.toJSON(comments);
                 return new ApiAnswer(HttpCode.OK, answer);
             }
-            else if(params.get("idVkUser") != null){
-                Long idVkUser = Long.parseLong(params.get("idVkUser"));
+            else if(params.size() == 1){
+                Long idVkUser = user.getSocialId();
                 List comments = CommentDAO.getAllCommentsFromUser(idVkUser);
                 String answer = JSONHelper.toJSON(comments);
                 return new ApiAnswer(HttpCode.OK, answer);
