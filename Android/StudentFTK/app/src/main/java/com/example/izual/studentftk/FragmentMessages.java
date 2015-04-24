@@ -223,24 +223,35 @@ public class FragmentMessages extends Fragment {
                     if(isError) {
                         Utils.ShowError(activity, errorReason);
                     }
-                    if (parsed != null) {
-                        sAdapter.notifyDataSetInvalidated();
-                        msgList.clear();
-                        for (MessageStruct msg : parsed) {
-                            String userName = msg.Source;
-                            UserStruct user = GetUserInformation(msg.Source);
-                            if (user != null) {
-                                userName = user.Name;
+                    try {
+                        if (parsed != null && parsed.size() > msgList.size()) {
+                            sAdapter.notifyDataSetInvalidated();
+                            msgList.clear();
+                            for (MessageStruct msg : parsed) {
+                                String userName = msg.Source;
+                                UserStruct user = GetUserInformation(msg.Source);
+                                if (user != null) {
+                                    userName = user.Name;
+                                }
+                                AddMessage(msgList, msg.Message,
+                                        MsgControl.RoundToSeconds(msg.SendTime), userName);
                             }
-                            AddMessage(msgList, msg.Message,
-                                    MsgControl.RoundToSeconds(msg.SendTime), userName);
+                            sAdapter.notifyDataSetChanged();
                         }
-                        sAdapter.notifyDataSetChanged();
+                        else{
+                            return;
+                        }
                     }
-                    if(timerFirstTime){
-                        ReinitUpdater(updatePeriod, updatePeriod);
+                    finally {
+                        if (timerFirstTime) {
+                            ReinitUpdater(updatePeriod, updatePeriod);
+                            listMessages.setSelection(listMessages.getCount() - 1);
+                        }
+                        else{
+                            listMessages.smoothScrollByOffset(listMessages.getMaxScrollAmount());
+                        }
                     }
-                    listMessages.smoothScrollByOffset(listMessages.getMaxScrollAmount());
+
                 }
             });
         }
