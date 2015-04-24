@@ -24,6 +24,7 @@ import com.example.izual.studentftk.Messages.MsgControl;
 import com.example.izual.studentftk.Messages.ParseMessages;
 import com.example.izual.studentftk.Network.RequestBuilder.ManyUsersRequest;
 import com.example.izual.studentftk.Network.RequestBuilder.MessageRequest;
+import com.example.izual.studentftk.Network.RequestBuilder.Utils.URLEncoderRu;
 import com.example.izual.studentftk.Network.RequestExecutor;
 import com.example.izual.studentftk.Network.RequestBuilder.UserRequest;
 import com.example.izual.studentftk.Users.ParseManyUsers;
@@ -116,11 +117,6 @@ public class FragmentMessages extends Fragment {
                 if(txtMessageEdit.hasFocus()){
                     Utils.HideSoftInput(getActivity());
                 }
-                String newName = "";
-                if((newName = ChangeNameAttempt(textOfMessage)) != ""){
-                    current_name = newName;
-                    return;
-                }
                 String time = MsgControl.FormatDate(MsgControl.DATE_DAY_AND_TIME);
                 //AddMessage(msgList, textOfMessage, time, current_name);
                 SendMessage(AllProfileInform.socialToken, "1", textOfMessage);
@@ -151,8 +147,7 @@ public class FragmentMessages extends Fragment {
     /* Посылает сообщение серверу */
     private void SendMessage(final String socialToken,
                                    final String destination, final String message){
-        URI uri = MessageRequest.BuildRequestSend(socialToken,
-                destination, MsgControl.SpacesToWebSpaces(message));
+        URI uri = MessageRequest.BuildRequestSend(socialToken, destination, message);
         RequestExecutor executor = new RequestExecutor(getActivity(), uri, connectionTimeout);
     }
 
@@ -196,7 +191,7 @@ public class FragmentMessages extends Fragment {
                 }
 
                 if (executor.GetTask().isDataReady()){
-                    String data = executor.GetTask().getData();
+                    String data = URLEncoderRu.RestoreSpacesDef(executor.GetTask().getData());
                     try {
                         parsed = ParseMessages.Parse(data);
                         ArrayList<String> IDs = new ArrayList<String>();
@@ -377,31 +372,6 @@ public class FragmentMessages extends Fragment {
     public void onResume(){
         super.onResume();
         ReinitUpdater(0, TIMER_ONCE);
-    }
-
-
-    /* Рудиментарное изменение ника */
-    private final String ChangeNameAttempt(final String textOfMessage) {
-        final String name_change_seq = "$newnick";
-        final int first_space = textOfMessage.indexOf(' ');
-        if (first_space == -1) {
-            return "";
-        }
-        final String command = textOfMessage.substring(0, first_space);
-        String newName = "";
-        if (command.compareTo(name_change_seq) == 0) {
-            newName = textOfMessage.substring(name_change_seq.length() + 1);
-            final int max_length_name = 16;
-            if (newName.length() > max_length_name) {
-                final int second_space = newName.indexOf(' ');
-                if (second_space != -1 && second_space < max_length_name) {
-                    newName = newName.substring(0, second_space);
-                } else {
-                    newName = newName.substring(0, max_length_name);
-                }
-            }
-        }
-        return newName;
     }
 }
 
