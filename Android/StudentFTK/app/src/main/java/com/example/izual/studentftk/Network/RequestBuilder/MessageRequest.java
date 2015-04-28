@@ -9,8 +9,7 @@ import java.net.URI;
  */
 public class MessageRequest extends Request{
 
-   public static final class Params{
-        public static final String SocialToken = "SocialToken";
+   public static final class Params extends Request.Params {
         public static final String From = "from";
         public static final String Type = "type";
         public static final String Destination = "destination";

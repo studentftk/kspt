@@ -8,6 +8,10 @@ import com.example.izual.studentftk.Network.Settings;
 public class Request {
     public static final String NameOfSite = Settings.FULL_SITE_NAME;
 
+    public static class Params{
+        public static final String SocialToken = "socialToken";
+    }
+
     public static final class Pages{
         public static final String Messages = "messages";
         public static final String User = "user";
