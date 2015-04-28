@@ -278,7 +278,7 @@ public class FragmentMessages extends Fragment {
         private void LoadUsersInformation(final ArrayList<String> IDs){
             boolean isError = false;
             String errorReason = "";
-            URI uri = ManyUsersRequest.BuildManyUsersRequest(IDs);
+            URI uri = ManyUsersRequest.BuildManyUsersRequest(IDs, AllProfileInform.socialToken);
             for (;;) {
                 RequestExecutor executor = new RequestExecutor(getActivity(),
                         uri, connectionTimeout);
@@ -328,7 +328,7 @@ public class FragmentMessages extends Fragment {
         private void LoadUserInformation(final String ID) {
             boolean isError = false;
             String errorReason = "";
-            URI uri = UserRequest.BuildUserRequest(ID);
+            URI uri = UserRequest.BuildUserRequest(ID, AllProfileInform.socialToken);
             for (;;) {
                 RequestExecutor executor = new RequestExecutor(getActivity(),
                         uri, connectionTimeout);

@@ -82,7 +82,7 @@ public class FragmentPlaceList extends Fragment{
     private void LoadPlacesInformation(final String TYPE) {
         boolean isError = false;
         String errorReason = "";
-        URI uri = PlacesRequest.BuildPlacesRequest(TYPE);
+        URI uri = PlacesRequest.BuildPlacesRequest(TYPE, AllProfileInform.socialToken);
         for (;;) {
             RequestExecutor executor = new RequestExecutor(getActivity(),
                     uri, connectionTimeout);
