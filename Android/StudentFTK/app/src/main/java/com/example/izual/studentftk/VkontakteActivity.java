@@ -11,14 +11,14 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 
-
+import com.example.izual.studentftk.Network.Settings;
 
 
 public class VkontakteActivity extends Activity {
 
     WebView webview;
     ProgressBar progress;
-    String vk_redirect_url = "https://studentftk.tk/vk/oauth&v=5.25";
+    String vk_redirect_url = Settings.FULL_SITE_NAME + "vk/oauth&v=5.25";
 
     String vkClientID = "4858987";
     //old 4601196
@@ -47,7 +47,7 @@ public class VkontakteActivity extends Activity {
         public void onPageStarted(WebView view, String url, Bitmap favicon) {
             super.onPageStarted(view, url, favicon);
             progress.setVisibility(View.VISIBLE);
-            if( url.startsWith("https://studentftk") ) {
+            if( url.startsWith("https://" + Settings.SITE_NAME) ) {
                 Intent intent = new Intent(VkontakteActivity.this, Profile.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 intent.putExtra("url", url);
