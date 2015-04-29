@@ -27,13 +27,17 @@ public class ParamsChecker {
         if(socialToken == null){
             throw new SecurityException("Parameter socialToken is absent");
         }
+        /*if("null".equals(socialToken)){
+            throw new SecurityException("Social token is \"null\". "
+                    + "Maybe you've not authorized");
+        }*/
         User user = UserDAO.getByToken(socialToken);
-        if(user == null){
+        /*if(user == null){
             throw new SecurityException("Wrong social token");
         }
         if(!UserDAO.isTokenActual(user.getSocialId(), socialToken)){
             throw new SecurityException("Social token is not actual");
-        }
+        }*/
         return user;
     }
     
