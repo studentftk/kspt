@@ -1,6 +1,10 @@
 package server.logic;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
 import server.HibernateUtil;
@@ -72,4 +76,29 @@ public class UserDAO {
         }
     }
     
+    public static List<User> deleteDuplicates(final List<User> users){
+        Map<Long, User> clean_users = new HashMap<>();
+        for (User user: users){
+            if(!clean_users.containsKey(user.getSocialId())){
+                clean_users.put(user.getSocialId(), user);
+            }
+        }
+        return new ArrayList(clean_users.values());
+    }
+    
+    public static List<User> findUsers(final String name, final String surname){
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        try {
+            Criteria criteria = session.createCriteria(User.class);
+            if(name != null){
+                criteria.add(Restrictions.ilike("name", name + "%"));
+            }
+            if(surname != null){
+                criteria.add(Restrictions.ilike("surname", surname + "%"));
+            }
+            return deleteDuplicates((List<User>) criteria.list());
+        } finally {
+            session.close();
+        }
+    }
 }

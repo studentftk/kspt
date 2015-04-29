@@ -7,6 +7,7 @@ import java.net.InetSocketAddress;
 import java.util.concurrent.Executors;
 import javax.net.ssl.SSLContext;
 import server.api.CheckinApi;
+import server.api.FindFriendsApi;
 import server.api.GetCheckinsApi;
 import server.api.GetCommentsApi;
 import server.api.GetFriendsApi;
@@ -85,6 +86,10 @@ public class Server {
                 new ManipCommentsApi(),
                 "/comments");
         
+        HttpApiMehodImpl findUsers = new HttpApiMehodImpl(
+                new FindFriendsApi(),
+                "/users.find");
+        
         addMethod(getMessages);
         addMethod(getUser);
         addMethod(sendMessage);
@@ -98,6 +103,7 @@ public class Server {
         addMethod(manipSingleFriends);
         addMethod(getComments);
         addMethod(manipComments);
+        addMethod(findUsers);
     }
     
     private void addMethod(HttpApiMethod method){
