@@ -2,39 +2,28 @@
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:weightSum="1">
-
+    android:layout_height="match_parent">
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Приложение «Студент СПбПУ» позволяет пользователям стать более мобильными, быть в курсе многих событий и мероприятий, быстро ориентироваться в кампусе Политеха, делиться мнениями с другими пользователями. Целевая аудитория приложения: студенты, абитуриенты, преподаватели, а также гости СПбПУ."
-        android:textSize="14dp"
-        android:layout_marginTop="20dp"
-        android:gravity="center_horizontal"
-        android:layout_weight="0.24"
-        android:textIsSelectable="true" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:gravity="center_horizontal|center_vertical"
-        android:textSize="16dp"
-        android:text="Разработчики \nСтуденты 5 курса \nкафедры КСПТ"
-        android:id="@+id/textView"
-        android:layout_gravity="center_horizontal"
-        android:layout_weight="0.06" />
-
+        android:textSize="20dp"
+        android:text="Разработчики \nСтуденты 5 курса \nкафедры КСПТ"/>
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Гиганова Вероника, Грушко Иван,\n Бусаров Влад, Абрамов Антон, \nБетаев Михаил, Косолапов Семен, \nСухинин Александр,Тарасова Анастасия, Данг Тхи Суан, Yacho Djombo"
-        android:textSize="15dp"
+        android:text="Гиганова Вероника,
+Грушко Иван,\n
+Бусаров Влад,
+Абрамов Антон,\n
+Бетаев Михаил,
+Косолапов Семен,\n
+Сухинин Александр,
+Данг Тхи Суан,
+"
+        android:textSize="20dp"
         android:layout_marginTop="20dp"
-        android:gravity="center_horizontal"
-        android:layout_weight="0.31"
-        android:id="@+id/textView2"
-        android:layout_gravity="center_horizontal" />
+        android:gravity="center_horizontal"/>
 
 
 </LinearLayout>

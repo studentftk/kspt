@@ -2,7 +2,6 @@ package com.example.izual.studentftk.Network;
 
 import android.app.Activity;
 
-import com.example.izual.studentftk.Exceptions.ExceptionsParser;
 import com.example.izual.studentftk.Utils;
 
 import org.json.simple.JSONArray;
@@ -68,7 +67,6 @@ public class RequestTask implements Runnable {
             InputStreamReader inputStreamReader = new InputStreamReader(inputStream, "utf-8");
             BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
             data = bufferedReader.readLine();
-            ExceptionsParser.TryToRaise(data);
             dataReady = true;
         }
         catch(Exception e){

@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import server.api.params.ParamsChecker;
 import server.core.ApiMethod;
 import server.core.HttpCode;
 import server.entity.Place;
@@ -16,7 +15,6 @@ public class GetPlaceApi implements ApiMethod{
     @Override
     public ApiAnswer execute(Map<String, String> params) {
         try {
-            ParamsChecker.CheckSecure(params);
             ApiAnswer answer;
             if (params.get("id")!=null) {
                 answer = getById(params.get("id"));

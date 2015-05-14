@@ -3,7 +3,6 @@ package server.api;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import server.api.params.ParamsChecker;
 import server.core.ApiMethod;
 import server.core.HttpCode;
 import server.entity.Message;
@@ -18,16 +17,14 @@ public class SendMessageApi implements ApiMethod{
     @Override
     public ApiAnswer execute(Map<String, String> params) {
        try {
-            User user = ParamsChecker.CheckSecure(params);
+            User user = UserDAO.getByToken(params.get("SocialToken"));
             long destination;
                 try{
                     destination = Long.parseLong(params.get("destination"));
                 } catch (Exception e) {
                     throw new IllegalArgumentException("destination must be long");
                 }
-            if (params.get("message")==null) {
-                throw new IllegalArgumentException("message must not be empty");
-            }
+            if (params.get("message")==null) throw new IllegalArgumentException("message must not be empty");
             Message message = new Message()
                     .setDesination(destination)
                     .setSender(user.getId())

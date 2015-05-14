@@ -1,7 +1,5 @@
 package com.example.izual.studentftk.Network.RequestBuilder;
 
-import com.example.izual.studentftk.Network.RequestBuilder.Utils.URLEncoderRu;
-
 import java.net.URI;
 
 /**
@@ -9,7 +7,8 @@ import java.net.URI;
  */
 public class MessageRequest extends Request{
 
-   public static final class Params extends Request.Params {
+   public static final class Params{
+        public static final String SocialToken = "SocialToken";
         public static final String From = "from";
         public static final String Type = "type";
         public static final String Destination = "destination";
@@ -22,8 +21,6 @@ public class MessageRequest extends Request{
         public static final String Receive = "receive";
     }
 
-
-
     public static URI BuildRequestGet(final String socialToken,
                                       final String fromDate, final String type){
         String[] params = {Params.SocialToken, Params.From, Params.Type};
@@ -35,7 +32,7 @@ public class MessageRequest extends Request{
     public static URI BuildRequestSend(final String socialToken,
                                        final String destination, final String message){
         String[] params = {Params.SocialToken, Params.Destination, Params.Message};
-        String[] values = {socialToken, destination, URLEncoderRu.Encode(message)};
+        String[] values = {socialToken, destination, message};
         return BaseRequestBuilder.BuildRequest(NameOfSite,
                 Pages.Messages, Methods.Send, params, values);
     }
