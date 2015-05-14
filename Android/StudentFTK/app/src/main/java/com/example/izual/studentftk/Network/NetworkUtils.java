@@ -121,7 +121,7 @@ public final class NetworkUtils {
     }
 
     public static String getServerURL(){
-        return Settings.FULL_SITE_NAME;
+        return "https://studentftk.tk";
     }
 
 

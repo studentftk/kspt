@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import server.api.params.ParamsChecker;
 import server.core.ApiMethod;
 import server.core.HttpCode;
 import server.entity.Checkin;
@@ -18,7 +17,6 @@ public class GetCheckinsApi implements ApiMethod{
         try {
             long id;
             int count;
-            ParamsChecker.CheckSecure(params);
             try {
                 id = Long.parseLong(params.get("id"));
             } catch (Exception e) {

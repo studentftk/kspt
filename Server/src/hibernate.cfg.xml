@@ -9,10 +9,7 @@
     <property name="hibernate.connection.password">f4ub6QvpzC2cHquz</property>
     <mapping class="server.entity.Message"/>
     <mapping class="server.entity.User"/>
-    <mapping class="server.entity.Place"/>
-    <mapping class="server.entity.Friend"/>
     <mapping class="server.entity.Checkin"/>
-    <mapping class="server.entity.FriendsGroup"/>
-    <mapping class="server.entity.Comment"/>
+    <mapping class="server.entity.Place"/>
   </session-factory>
 </hibernate-configuration>

@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import server.api.params.ParamsChecker;
 import server.core.ApiMethod;
 import server.core.HttpCode;
 import server.entity.Message;
@@ -19,7 +18,7 @@ public class GetMessageApi implements ApiMethod{
     @Override
     public ApiAnswer execute(Map<String, String> params) {
         try {
-            User user = ParamsChecker.CheckSecure(params);
+            User user = UserDAO.getByToken(params.get("SocialToken"));
             Timestamp from = params.get("from")==null ? new Timestamp(0) : Timestamp.valueOf(params.get("from"));
             List<Message> messages;
             if ("send".equals(params.get("type"))) {

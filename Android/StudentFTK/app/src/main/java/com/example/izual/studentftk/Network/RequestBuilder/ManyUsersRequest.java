@@ -8,7 +8,7 @@ import java.util.ArrayList;
  */
 public class ManyUsersRequest extends Request{
 
-    public static final class Params extends Request.Params {
+    public static final class Params {
         public static final String IDs = "ids";
         public static final String SocialTokens = "SocialTokens";
     }
@@ -23,9 +23,9 @@ public class ManyUsersRequest extends Request{
         return endPos > 0 ? result.toString().substring(0, endPos) : splitter;
     }
 
-    public static URI BuildManyUsersRequest(final ArrayList<String> IDs, final String socialToken){
-        String [] params = {Params.IDs, Params.SocialToken};
-        String [] values = {MakeValues(IDs, "$"), socialToken};
+    public static URI BuildManyUsersRequest(final ArrayList<String> IDs){
+        String [] params = {Params.IDs};
+        String [] values = {MakeValues(IDs, "$")};
         return BaseRequestBuilder.BuildRequest(NameOfSite, Pages.Users, Methods.Get, params, values);
     }
 

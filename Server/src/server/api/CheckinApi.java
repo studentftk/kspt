@@ -3,12 +3,12 @@ package server.api;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import server.api.params.ParamsChecker;
 import server.core.ApiMethod;
 import server.core.HttpCode;
 import server.entity.Checkin;
 import server.io.JSONHelper;
 import server.logic.CheckinDAO;
+import server.logic.UserDAO;
 
 
 public class CheckinApi implements ApiMethod{
@@ -19,7 +19,7 @@ public class CheckinApi implements ApiMethod{
             long idUser;
             long idPlace;
             try {
-                idUser = ParamsChecker.CheckSecure(params).getId();
+                idUser = UserDAO.getByToken(params.get("socialToken")).getId();
                 idPlace = Long.parseLong(params.get("idPlace"));
             } catch (Exception e) {
                 throw new IllegalArgumentException("wrong parameters");
