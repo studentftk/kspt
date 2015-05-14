@@ -1,5 +1,6 @@
 package com.example.izual.studentftk;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.DialogInterface;
@@ -17,6 +18,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.os.Message;
 
+import com.example.izual.studentftk.Like.LikeApiAnswer;
+import com.example.izual.studentftk.Like.ParseLike;
+import com.example.izual.studentftk.Network.RequestBuilder.LikeRequest;
+import com.example.izual.studentftk.Network.RequestExecutor;
+import com.example.izual.studentftk.Places.ParsePlaces;
 import com.example.izual.studentftk.Places.Places;
 import com.example.izual.studentftk.Places.PlacesStruct;
 
@@ -25,6 +31,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -48,6 +55,9 @@ public class FragmentPlacePage extends Fragment {
     TextView PlaceName;
     TextView PlaceAdres;
     int id_places;
+    final String ATTRIBUTE_vkId = "vkId"; //разобраться с ID
+    private final int connectionTimeout = 1000;
+    final Activity activity = getActivity();
 
     public void onCreate(Bundle savedInstanceState) {super.onCreate(savedInstanceState);}
 
@@ -106,8 +116,61 @@ public class FragmentPlacePage extends Fragment {
         });
         //---------------------------End---------------------
 
+        //---------------------------Кнопка с лайком---------------------
+        Button likeBtn = (Button) viewPlacePage.findViewById(R.id.likeBtn);
+        likeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final String idPlace = Integer.toString(id_places);
+                SendLike(idPlace, ATTRIBUTE_vkId);
+            }
+        });
+        //---------------------------End---------------------
+
+
         refresh(Places);
         return viewPlacePage;
+    }
+
+    private void SendLike(final String id_places,final String ATTRIBUTE_vkId) {
+        // надо int в string сконвертировать
+        URI uri = LikeRequest.BuildRequestGet(id_places, ATTRIBUTE_vkId);
+
+        RequestExecutor executor = new RequestExecutor(getActivity(),
+                uri, connectionTimeout);
+        try {
+            executor.GetThread().join();
+        } catch (InterruptedException e) {
+            errorHandler(e.toString());
+            return;
+        }
+        if (executor.GetTask().isError()) {
+            errorHandler(executor.GetTask().getErrorReason());
+            return;
+        }
+        if (executor.GetTask().isDataReady()) {
+            try {
+                String answer = executor.GetTask().getData();
+                LikeApiAnswer likeApiAnswer = ParseLike.ParseAnswerFromLikeApi(answer);
+                if (likeApiAnswer.httpCode != 200) {
+                    // TODO: log this fact
+                }
+            } catch (Exception e) {
+                errorHandler(e.toString());
+                return;
+            }
+        }
+    }
+
+    // TODO: DISCUSS: place method to base class
+    private void errorHandler(String errorReason) {
+        final String finalErrorReason = errorReason;
+        activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Utils.ShowError(activity, finalErrorReason);
+            }
+        });
     }
 
     public static void fetchImage(final String iUrl, final ImageView iView) {

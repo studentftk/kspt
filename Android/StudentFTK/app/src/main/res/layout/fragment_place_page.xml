@@ -60,11 +60,22 @@
                     android:layout_marginLeft="10dp"/>
 
                 <Button
-                    android:id="@+id/chkBtn"
+                android:id="@+id/chkBtn"
+                android:textColor="#FFFFFF"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="Чекин"
+                android:gravity="center_horizontal"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_gravity="center_horizontal"/>
+
+                <Button
+                    android:id="@+id/likeBtn"
                     android:textColor="#FFFFFF"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:text="Чекин"
+                    android:text="Like"
                     android:gravity="center_horizontal"
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp"
