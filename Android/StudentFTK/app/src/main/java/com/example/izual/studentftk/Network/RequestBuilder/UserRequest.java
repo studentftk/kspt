@@ -7,13 +7,13 @@ import java.net.URI;
  */
 public class UserRequest extends Request{
 
-    public static final class Params {
+    public static final class Params extends Request.Params {
         public static final String ID = "id";
     }
 
-    public static URI BuildUserRequest(final String ID){
-        String [] params = {Params.ID};
-        String [] values = {ID};
+    public static URI BuildUserRequest(final String ID, final String socialToken){
+        String [] params = {Params.ID, Params.SocialToken};
+        String [] values = {ID, socialToken};
         return BaseRequestBuilder.BuildRequest(NameOfSite, Pages.User, Methods.Get, params, values);
     }
 }

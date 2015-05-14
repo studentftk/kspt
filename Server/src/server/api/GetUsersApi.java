@@ -6,9 +6,11 @@ package server.api;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import server.api.params.ParamsChecker;
 import server.core.ApiMethod;
 import server.core.HttpCode;
 import server.entity.User;
+import server.io.JSONHelper;
 import server.logic.UserDAO;
 
 /**
@@ -22,6 +24,15 @@ public class GetUsersApi implements ApiMethod{
 
     @Override
     public ApiAnswer execute(Map<String, String> params) {
+        try{
+            ParamsChecker.CheckSecure(params);
+        }
+        catch(SecurityException e){
+            Logger.getLogger(VKApi.class.getName())
+                                .log(Level.SEVERE, null, e);
+            String errorAnswer = JSONHelper.toJSON(e);
+            return new ApiAnswer(HttpCode.ERROR, errorAnswer);
+        }
         boolean isParamIDs = params.get("ids") != null;
         final String param = isParamIDs ? 
                 params.get("ids") : params.get("SocialTokens");
@@ -37,6 +48,8 @@ public class GetUsersApi implements ApiMethod{
             } catch(Exception e){
                 Logger.getLogger(VKApi.class.getName())
                                 .log(Level.SEVERE, null, e);
+                String errorAnswer = JSONHelper.toJSON(e);
+                return new ApiAnswer(HttpCode.ERROR, errorAnswer);
             }
         }
         if(answer.length() != 1){

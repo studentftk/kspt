@@ -1,10 +1,16 @@
 package com.example.izual.studentftk.Network.RequestBuilder;
 
+import com.example.izual.studentftk.Network.Settings;
+
 /**
  * Created by oglandx on 27.12.2014.
  */
 public class Request {
-    public static final String NameOfSite = "https://studentftk.tk/";
+    public static final String NameOfSite = Settings.FULL_SITE_NAME;
+
+    public static class Params{
+        public static final String SocialToken = "socialToken";
+    }
 
     public static final class Pages{
         public static final String Messages = "messages";
