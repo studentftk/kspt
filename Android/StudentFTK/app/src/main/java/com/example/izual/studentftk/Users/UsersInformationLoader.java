@@ -32,7 +32,13 @@ public class UsersInformationLoader {
             }
         }
         LoadUsersInformation(unknownIDs, dataType);
-        return Users.List.values();
+        Collection<UserStruct> required = new ArrayList<UserStruct>();
+        for (UserStruct user: Users.List.values()){
+            if(IDs.contains(user.SocialID)){
+                required.add(user);
+            }
+        }
+        return required;
     }
 
     public void LoadUsersInformation(final ArrayList<String> IDs,

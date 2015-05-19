@@ -26,6 +26,7 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 
 /**
@@ -113,11 +114,15 @@ public class FragmentFriendsList extends Fragment {
                                     ManyUsersRequest.DataType.TYPE_SOCIAL_ID);
                     adapter.notifyDataSetInvalidated();
                     data.clear();
+                    HashSet<String> socialIds = new HashSet<String>();
                     for (final UserStruct friend: friends_users){
-                        Map<String, Object> container = new HashMap<String, Object>();
-                        container.put(ATTRIBUTE_NAME, friend.Name + " " + friend.Surname);
-                        container.put(ATTRIBUTE_IMAGE, ProfileInformation.Photo);
-                        data.add(container);
+                        if(!socialIds.contains(friend.SocialID)) {
+                            Map<String, Object> container = new HashMap<String, Object>();
+                            container.put(ATTRIBUTE_NAME, friend.Name + " " + friend.Surname);
+                            container.put(ATTRIBUTE_IMAGE, ProfileInformation.Photo);
+                            data.add(container);
+                            socialIds.add(friend.SocialID);
+                        }
                     }
                     adapter.notifyDataSetChanged();
                 } catch (Exception e) {
