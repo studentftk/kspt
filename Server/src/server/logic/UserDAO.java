@@ -42,10 +42,11 @@ public class UserDAO {
         Session session = HibernateUtil.getSessionFactory().openSession();
         User user;
         try {
-            user = (User) session.createCriteria(User.class)
+            List<User> users = (List<User>) session.createCriteria(User.class)
                     .add(Restrictions.eq("socialType", socialType))
                     .add(Restrictions.eq("socialId", socialId))
-                    .uniqueResult();
+                    .list();
+            user = users.get(users.size() - 1);
         } finally {
             session.close();
         }

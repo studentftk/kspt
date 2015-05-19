@@ -34,15 +34,19 @@ public class GetUsersApi implements ApiMethod{
             return new ApiAnswer(HttpCode.ERROR, errorAnswer);
         }
         boolean isParamIDs = params.get("ids") != null;
-        final String param = isParamIDs ? 
-                params.get("ids") : params.get("SocialTokens");
+        boolean isParamSocialTokens = params.get("SocialTokens") != null;
+        final String param = 
+                isParamIDs && !isParamSocialTokens ? params.get("ids") 
+                : isParamSocialTokens ? params.get("SocialTokens")
+                : params.get("SocialIds");
         final String [] splitted = param.split("\\$");
         StringBuilder answer = new StringBuilder("[");
         for (String element: splitted){
             try{
-                User user = isParamIDs ?
-                        UserDAO.getById(Long.parseLong(element)):
-                        UserDAO.getByToken(element);
+                User user = isParamIDs && !isParamSocialTokens ? 
+                        UserDAO.getById(Long.parseLong(element))
+                        : isParamSocialTokens ? UserDAO.getByToken(element)
+                        : UserDAO.getBySocial("vk", Long.parseLong(element));
                 answer.append(user.asJSON().toJSONString());
                 answer.append(",");
             } catch(Exception e){
