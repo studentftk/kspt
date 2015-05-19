@@ -1,5 +1,5 @@
 package com.example.izual.studentftk.Network;
-import com.example.izual.studentftk.Network.RequestBuilder.RequestBuilder;
+import com.example.izual.studentftk.Network.RequestBuilder.BaseRequestBuilder;
 import java.net.URI;
 
 
@@ -15,14 +15,14 @@ public class FriendRequest extends Request {
                                       final String idUser, final String idFriend){
         String[] params = {Params.SocialToken, Params.idUser, Params.idFriend};
         String[] values = {socialToken, idUser, idFriend};
-        return RequestBuilder.BuildRequest(NameOfSite,
+        return BaseRequestBuilder.BuildRequest(NameOfSite,
                 Request.Pages.Friends, Request.Methods.Get, params, values);
     }
     public static URI BuildRequestSend(final String socialToken,
                                        final String idUser, final String idFriend){
         String[] params = {Params.SocialToken, Params.idUser, Params.idFriend};
         String[] values = {socialToken, idUser, idFriend};
-        return RequestBuilder.BuildRequest(NameOfSite,
+        return BaseRequestBuilder.BuildRequest(NameOfSite,
                 Request.Pages.Friends, Request.Methods.Send, params, values);
     }
 
@@ -30,7 +30,7 @@ public class FriendRequest extends Request {
                                        final String idUser){
         String[] params = {Params.SocialToken, Params.idUser};
         String[] values = {socialToken, idUser};
-        return RequestBuilder.BuildRequest(NameOfSite,
+        return BaseRequestBuilder.BuildRequest(NameOfSite,
                 Request.Pages.Friends, Request.Methods.Send, params, values);
     }
 }

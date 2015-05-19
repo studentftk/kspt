@@ -3,11 +3,7 @@ package com.example.izual.studentftk.Network;
 import android.app.Activity;
 
 import com.example.izual.studentftk.Exceptions.ExceptionsParser;
-import com.example.izual.studentftk.Utils;
-
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
+import com.example.izual.studentftk.Common.Utils;
 
 import java.io.BufferedReader;
 import java.io.InputStream;

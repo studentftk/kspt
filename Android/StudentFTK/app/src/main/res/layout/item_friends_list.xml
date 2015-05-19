@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:weightSum="1">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="77dp"
+        android:id="@+id/LayoutBackground"
+        android:contentDescription="@string/app_name">
+
+        <FrameLayout
+            android:layout_width="64dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="left|center_vertical"
+            android:id="@+id/FrameLayoutImg">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/imgFriendsListAvatar"
+                android:layout_gravity="center"
+                android:adjustViewBounds="true"
+                android:background="@drawable/ic_launcher_student_ftk"
+                android:contentDescription="@string/app_name" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="232dp"
+            android:layout_height="fill_parent"
+            android:layout_gravity="center"
+            android:id="@+id/FrameLayoutTxt">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="&lt;Friend&apos;s name>"
+                android:id="@+id/txtFriendsListName"
+                android:layout_gravity="left|center_vertical" />
+        </FrameLayout>
+    </FrameLayout>
+</LinearLayout>

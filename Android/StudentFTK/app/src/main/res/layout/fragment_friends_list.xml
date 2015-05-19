@@ -2,17 +2,39 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 android:orientation="vertical"
 android:layout_width="match_parent"
-android:layout_height="match_parent">
+android:layout_height="match_parent"
+    android:weightSum="1">
 <TextView
     android:layout_width="match_parent"
-    android:layout_height="25dp"
+    android:layout_height="wrap_content"
     android:gravity="center_horizontal|center_vertical"
     android:text="Друзья"
-    android:textSize="20dp"/>
-<ListView
-    android:id="@+id/list_friends"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:textSize="30dp"/>
 
-</ListView>
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="54dp"
+        android:layout_gravity="center_horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="You have zero friends"
+            android:id="@+id/txtFriendsCount"
+            android:layout_gravity="center" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_horizontal|top">
+
+        <ListView
+            android:id="@+id/list_friends"
+            android:layout_width="match_parent"
+            android:layout_height="397dp"
+            android:layout_gravity="center" />
+    </FrameLayout>
+
 </LinearLayout>

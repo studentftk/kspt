@@ -1,9 +1,7 @@
 package com.example.izual.studentftk;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Fragment;
-import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -18,13 +16,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.os.Message;
 
+import com.example.izual.studentftk.Common.Utils;
 import com.example.izual.studentftk.Like.LikeApiAnswer;
 import com.example.izual.studentftk.Like.ParseLike;
 import com.example.izual.studentftk.Network.RequestBuilder.LikeRequest;
 import com.example.izual.studentftk.Network.RequestExecutor;
-import com.example.izual.studentftk.Places.ParsePlaces;
-import com.example.izual.studentftk.Places.Places;
-import com.example.izual.studentftk.Places.PlacesStruct;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
@@ -32,16 +28,13 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URI;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
-import java.util.logging.LogRecord;
-
 import android.os.Handler;
-import android.os.Message;
+
 /**
  * Created by Антон on 23.12.2014.
  */

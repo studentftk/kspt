@@ -5,7 +5,7 @@ import com.example.izual.studentftk.Network.Request;
 
 import java.net.URI;
 
-public class deleteFriendRequest extends Request{
+public class DeleteFriendRequest extends Request{
     public static final class Params {
         public static final String SocialToken = "SocialToken";
         public static final String idVk = "idVk";
@@ -17,7 +17,7 @@ public class deleteFriendRequest extends Request{
                                       final String idVk, final String idVkFriend, final String op) {
         String[] params = {Params.SocialToken, Params.idVk, Params.idVkFriend, Params.op};
         String[] values = {SocialToken, idVk, idVkFriend, op};
-        return RequestBuilder.BuildRequest(NameOfSite,
+        return BaseRequestBuilder.BuildRequest(NameOfSite,
                 Request.Pages.SingleFriend, Request.Methods.Manip, params, values);
     }
 }

@@ -12,7 +12,7 @@ public class LikeRequest extends Request {
     public static URI BuildRequestGet(final String idPage, final String SocialToken) {
         String[] params = {Params.idPage, Params.SocialToken};
         String[] values = {idPage, SocialToken};
-        return RequestBuilder.BuildRequest(NameOfSite,
+        return BaseRequestBuilder.BuildRequest(NameOfSite,
                 Pages.Places, Methods.Like, params, values);
     }
 }

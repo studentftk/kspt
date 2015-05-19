@@ -10,11 +10,14 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
+import com.example.izual.studentftk.Common.Utils;
+import com.example.izual.studentftk.FragmentManagement.FragmentPlacesCallbacks;
 import com.example.izual.studentftk.Network.RequestBuilder.PlacesRequest;
 import com.example.izual.studentftk.Network.RequestExecutor;
 import com.example.izual.studentftk.Places.ParsePlaces;
 import com.example.izual.studentftk.Places.Places;
 import com.example.izual.studentftk.Places.PlacesStruct;
+import com.example.izual.studentftk.Common.ProfileInformation;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -37,7 +40,9 @@ public class FragmentPlaceList extends Fragment{
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {super.onCreate(savedInstanceState);}
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -82,7 +87,7 @@ public class FragmentPlaceList extends Fragment{
     private void LoadPlacesInformation(final String TYPE) {
         boolean isError = false;
         String errorReason = "";
-        URI uri = PlacesRequest.BuildPlacesRequest(TYPE, AllProfileInform.socialToken);
+        URI uri = PlacesRequest.BuildPlacesRequest(TYPE, ProfileInformation.socialToken);
         for (;;) {
             RequestExecutor executor = new RequestExecutor(getActivity(),
                     uri, connectionTimeout);
@@ -128,13 +133,6 @@ public class FragmentPlaceList extends Fragment{
         if (mCallbacks != null) {
             mCallbacks.onFragmentPlacesItemSelected(position);
         }
-    }
-
-    public static interface FragmentPlacesCallbacks {
-        /**
-         * Called when an item in the navigation drawer is selected.
-         */
-        void onFragmentPlacesItemSelected(int position);
     }
 
     @Override

@@ -12,6 +12,7 @@ import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 
 import com.example.izual.studentftk.Network.Settings;
+import com.example.izual.studentftk.FragmentManagement.TopLevelFragmentManager;
 
 
 public class VkontakteActivity extends Activity {
@@ -48,7 +49,7 @@ public class VkontakteActivity extends Activity {
             super.onPageStarted(view, url, favicon);
             progress.setVisibility(View.VISIBLE);
             if( url.startsWith("https://" + Settings.SITE_NAME) ) {
-                Intent intent = new Intent(VkontakteActivity.this, Profile.class);
+                Intent intent = new Intent(VkontakteActivity.this, TopLevelFragmentManager.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 intent.putExtra("url", url);
                 startActivity(intent);

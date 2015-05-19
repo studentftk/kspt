@@ -12,6 +12,8 @@ import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
+import com.example.izual.studentftk.FragmentManagement.FragmentPlacesCallbacks;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -73,13 +75,7 @@ public class FragmentPlaces extends Fragment {
         int[] to = { R.id.tvText, R.id.ivImg };
 
         // создаем адаптер
-
-        SimpleAdapter adapter = new SimpleAdapter(
-                getActivity() ,//getActionBar().getThemedContext(),
-                data,
-                R.layout.item,from,to
-        );
-
+        SimpleAdapter adapter = new SimpleAdapter(getActivity(), data, R.layout.item, from, to);
         listPlaces.setAdapter(adapter);
         return viewPlaces;
     }
@@ -88,13 +84,6 @@ public class FragmentPlaces extends Fragment {
         if (mCallbacks != null) {
             mCallbacks.onFragmentPlacesItemSelected(position);
         }
-    }
-
-    public static interface FragmentPlacesCallbacks {
-        /**
-         * Called when an item in the navigation drawer is selected.
-         */
-        void onFragmentPlacesItemSelected(int position);
     }
 
     @Override

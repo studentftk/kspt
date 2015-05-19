@@ -19,6 +19,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
+import com.example.izual.studentftk.Common.Utils;
 import com.example.izual.studentftk.Messages.MessageStruct;
 import com.example.izual.studentftk.Messages.MsgControl;
 import com.example.izual.studentftk.Messages.ParseMessages;
@@ -27,10 +28,13 @@ import com.example.izual.studentftk.Network.RequestBuilder.MessageRequest;
 import com.example.izual.studentftk.Network.RequestBuilder.Utils.URLEncoderRu;
 import com.example.izual.studentftk.Network.RequestExecutor;
 import com.example.izual.studentftk.Network.RequestBuilder.UserRequest;
+import com.example.izual.studentftk.Common.ProfileInformation;
 import com.example.izual.studentftk.Users.ParseManyUsers;
 import com.example.izual.studentftk.Users.ParseUsers;
+import com.example.izual.studentftk.Users.UserInformationLoader;
 import com.example.izual.studentftk.Users.UserStruct;
 import com.example.izual.studentftk.Users.Users;
+import com.example.izual.studentftk.Users.UsersInformationLoader;
 
 /**
  * Created by Антон on 12.12.2014.
@@ -99,8 +103,8 @@ public class FragmentMessages extends Fragment {
         final ArrayList<String> msg_time = new ArrayList<String>();
         ArrayList<String> msg_name = new ArrayList<String>();
 
-        if(AllProfileInform.Name != null){
-            current_name = AllProfileInform.Name;
+        if(ProfileInformation.Name != null){
+            current_name = ProfileInformation.Name;
         }
 
         /* Создаём адаптер и привязываем его к списку */
@@ -119,7 +123,7 @@ public class FragmentMessages extends Fragment {
                 }
                 String time = MsgControl.FormatDate(MsgControl.DATE_DAY_AND_TIME);
                 //AddMessage(msgList, textOfMessage, time, current_name);
-                SendMessage(AllProfileInform.socialToken, "1", textOfMessage);
+                SendMessage(ProfileInformation.socialToken, "1", textOfMessage);
                 ReinitUpdater(updaterReinitDelay, TIMER_ONCE);
             }
         });
@@ -198,7 +202,9 @@ public class FragmentMessages extends Fragment {
                         for(MessageStruct msg: parsed){
                             IDs.add(msg.Source);
                         }
-                        GetUsersInformation(IDs);
+                        UsersInformationLoader loader = new UsersInformationLoader(
+                                getActivity(), connectionTimeout);
+                        loader.GetUsersInformation(IDs, ManyUsersRequest.DataType.TYPE_ID);
                     } catch (Exception e) {
                         isError = true;
                         errorReason = e.toString();
@@ -229,7 +235,9 @@ public class FragmentMessages extends Fragment {
                             msgList.clear();
                             for (MessageStruct msg : parsed) {
                                 String userName = msg.Source;
-                                UserStruct user = GetUserInformation(msg.Source);
+                                UserInformationLoader loader = new UserInformationLoader(
+                                        getActivity(), connectionTimeout);
+                                UserStruct user = loader.GetUserInformation(msg.Source);
                                 if (user != null) {
                                     userName = user.Name;
                                 }
@@ -251,124 +259,8 @@ public class FragmentMessages extends Fragment {
                             listMessages.smoothScrollByOffset(listMessages.getMaxScrollAmount());
                         }
                     }
-
                 }
             });
-        }
-
-        /*Получает информацию о пользователях из чата*/
-        private UserStruct GetUserInformation(final String ID){
-            if(!Users.List.containsKey(ID)){
-                LoadUserInformation(ID);
-            }
-            return Users.List.get(ID);
-        }
-
-        private Collection<UserStruct> GetUsersInformation(final ArrayList<String> IDs){
-            ArrayList<String> unknownIDs = new ArrayList();
-            for (String id : IDs){
-                if(!Users.List.containsKey(id)){
-                    unknownIDs.add(id);
-                }
-            }
-            LoadUsersInformation(unknownIDs);
-            return Users.List.values();
-        }
-
-        private void LoadUsersInformation(final ArrayList<String> IDs){
-            boolean isError = false;
-            String errorReason = "";
-            URI uri = ManyUsersRequest.BuildManyUsersRequest(IDs, AllProfileInform.socialToken);
-            for (;;) {
-                RequestExecutor executor = new RequestExecutor(getActivity(),
-                        uri, connectionTimeout);
-                try {
-                    executor.GetThread().join();
-                }
-                catch (InterruptedException e) {
-                    isError = true;
-                    errorReason = e.toString();
-                    break;
-                }
-                if (executor.GetTask().isError()) {
-                    isError = true;
-                    errorReason = executor.GetTask().getErrorReason();
-                    break;
-                }
-                if (executor.GetTask().isDataReady()) {
-                    try {
-                        ArrayList<UserStruct> users =
-                                    ParseManyUsers.Parse(executor.GetTask().getData());
-                        for (UserStruct user: users) {
-                            Users.List.put(user.ID, user);
-                        }
-                    } catch (Exception e) {
-                        isError = true;
-                        errorReason = e.toString();
-                    }
-                    break;
-                } else {
-                    isError = true;
-                    errorReason = "Данные ещё не готовы";
-                    break;
-                }
-            }
-            if(isError){
-                final String finalErrorReason = errorReason;
-                activity.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Utils.ShowError(activity, finalErrorReason);
-                    }
-                });
-            }
-        }
-
-        /*Загружает информацию о пользователях из чата*/
-        private void LoadUserInformation(final String ID) {
-            boolean isError = false;
-            String errorReason = "";
-            URI uri = UserRequest.BuildUserRequest(ID, AllProfileInform.socialToken);
-            for (;;) {
-                RequestExecutor executor = new RequestExecutor(getActivity(),
-                        uri, connectionTimeout);
-                try {
-                    executor.GetThread().join();
-                }
-                catch (InterruptedException e) {
-                    isError = true;
-                    errorReason = e.toString();
-                    break;
-                }
-                if (executor.GetTask().isError()) {
-                    isError = true;
-                    errorReason = executor.GetTask().getErrorReason();
-                    break;
-                }
-                if (executor.GetTask().isDataReady()) {
-                    try {
-                        UserStruct user = ParseUsers.Parse(executor.GetTask().getData());
-                        Users.List.put(ID, user);
-                    } catch (Exception e) {
-                        isError = true;
-                        errorReason = e.toString();
-                    }
-                    break;
-                } else {
-                    isError = true;
-                    errorReason = "Данные ещё не готовы";
-                    break;
-                }
-            }
-            if(isError){
-                final String finalErrorReason = errorReason;
-                activity.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Utils.ShowError(activity, finalErrorReason);
-                    }
-                });
-            }
         }
     };
 

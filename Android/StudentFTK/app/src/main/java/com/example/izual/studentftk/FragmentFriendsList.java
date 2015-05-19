@@ -2,41 +2,48 @@ package com.example.izual.studentftk;
 
 import android.app.Activity;
 import android.app.Fragment;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.TextView;
 
+import com.example.izual.studentftk.Common.Utils;
 import com.example.izual.studentftk.Friends.Friends;
 import com.example.izual.studentftk.Friends.FriendsStruct;
 import com.example.izual.studentftk.Friends.ParseFriends;
 import com.example.izual.studentftk.Network.RequestBuilder.FriendRequest;
+import com.example.izual.studentftk.Network.RequestBuilder.ManyUsersRequest;
 import com.example.izual.studentftk.Network.RequestExecutor;
-import com.example.izual.studentftk.Places.PlacesStruct;
+import com.example.izual.studentftk.Common.ProfileInformation;
+import com.example.izual.studentftk.Users.UserStruct;
+import com.example.izual.studentftk.Users.Users;
+import com.example.izual.studentftk.Users.UsersInformationLoader;
 
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
  * Created by Антон on 12.12.2014.
+ * changed by oglandx on 19.05.2015
  */
 public class FragmentFriendsList extends Fragment {
-    // имена атрибутов для Map
-    private final int connectionTimeout = 1000;
-    final Activity activity = getActivity();
 
-    final String ATTRIBUTE_NAME = "name";
-    final String ATTRIBUTE_IMAGE = "image";
-    final String ATTRIBUTE_vkId = "vkId"; //разобраться с ID
+    private final int connectionTimeout = 1000;
+    private Activity activity;
+
+    private final String ATTRIBUTE_NAME = "name";
+    private final String ATTRIBUTE_IMAGE = "image";
 
     private ListView listFriends;
+    private TextView friendsCountMessage;
+    private SimpleAdapter adapter = null;
+    private ArrayList<Map<String, Object>> data = null;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -46,52 +53,37 @@ public class FragmentFriendsList extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View viewFriendsList = inflater.inflate(R.layout.fragment_friends_list, container, false);
         Friends.Init();
-        LoadFriendsInformation(ATTRIBUTE_vkId); //разобраться с ID
-
-        // массивы данных
+        Users.Init();
+        View viewFriendsList = inflater.inflate(R.layout.fragment_friends_list, container, false);
         listFriends = (ListView) viewFriendsList.findViewById(R.id.list_friends);
-
-        ArrayList<Map<String, Object>> data = new ArrayList<Map<String, Object>>(Friends.List.get(ATTRIBUTE_vkId).size()); //ID?
-        Map<String, Object> m;
-        /*
-        for (int i = 0; i < items.length; i++) {
-            m = new HashMap<String, Object>();
-            m.put(ATTRIBUTE_NAME, items[i]);
-            m.put(ATTRIBUTE_IMAGE, img);
-            data.add(m);
-        }*/
-
-        for(FriendsStruct element: Friends.List.get("ATTRIBUTE_vkId")){//ID
-            m = new HashMap<String, Object>();
-            m.put(element.Name,element.Surname);
-            data.add(m);
-        }
-
-        // массив имен атрибутов, из которых будут читаться данные
-        String[] from = { ATTRIBUTE_NAME,
-                ATTRIBUTE_IMAGE };
-        // массив ID View-компонентов, в которые будут вставлять данные
-        int[] to = { R.id.tvText, R.id.ivImg };
-
-        // создаем адаптер
-
-        SimpleAdapter adapter = new SimpleAdapter(
-                getActivity() ,//getActionBar().getThemedContext(),
-                data,
-                R.layout.item,from,to
-        );
-        // определяем список и присваиваем ему адаптер
-        listFriends = (ListView) viewFriendsList.findViewById(R.id.list_friends);
-        listFriends.setAdapter(adapter);
+        friendsCountMessage = (TextView) viewFriendsList.findViewById(R.id.txtFriendsCount);
+        data = new ArrayList<Map<String, Object>>();
         return viewFriendsList;
     }
 
-    private void LoadFriendsInformation (final String Id){
+    public SimpleAdapter getAdapter(){
+        if (adapter == null) {
+            String[] from = {ATTRIBUTE_NAME, ATTRIBUTE_IMAGE};
+            int[] to = {R.id.txtFriendsListName, R.id.imgFriendsListAvatar};
+            adapter = new SimpleAdapter(getActivity(), data, R.layout.item_friends_list, from, to);
+        }
+        return adapter;
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        if(ProfileInformation.socialToken != null) {
+            listFriends.setAdapter(getAdapter());
+            LoadFriendsInformation(ProfileInformation.socialToken);
+        }
+    }
+
+    private void LoadFriendsInformation (final String socialToken){
         boolean isError = false;
         String errorReason = "";
-        URI uri = FriendRequest.BuildFriendRequest(Id);
+        URI uri = FriendRequest.BuildFriendRequest(socialToken);
 
         for (;;) {
             RequestExecutor executor = new RequestExecutor(getActivity(),
@@ -110,8 +102,24 @@ public class FragmentFriendsList extends Fragment {
             }
             if (executor.GetTask().isDataReady()) {
                 try {
-                    ArrayList<FriendsStruct> friends = ParseFriends.Parse(executor.GetTask().getData());
-                    Friends.List.put(Id, friends);
+                    ArrayList<FriendsStruct> friends =
+                            ParseFriends.Parse(executor.GetTask().getData());
+                    friendsCountMessage.setText("У вас " + friends.size() + " друзей");
+                    Friends.List.put(socialToken, friends);
+                    UsersInformationLoader loader =
+                            new UsersInformationLoader(getActivity(), connectionTimeout);
+                    Collection<UserStruct> friends_users = loader
+                            .GetUsersInformation(Friends.getIds(ProfileInformation.socialToken),
+                                    ManyUsersRequest.DataType.TYPE_SOCIAL_ID);
+                    adapter.notifyDataSetInvalidated();
+                    data.clear();
+                    for (final UserStruct friend: friends_users){
+                        Map<String, Object> container = new HashMap<String, Object>();
+                        container.put(ATTRIBUTE_NAME, friend.Name + " " + friend.Surname);
+                        container.put(ATTRIBUTE_IMAGE, ProfileInformation.Photo);
+                        data.add(container);
+                    }
+                    adapter.notifyDataSetChanged();
                 } catch (Exception e) {
                     isError = true;
                     errorReason = e.toString();
@@ -125,6 +133,7 @@ public class FragmentFriendsList extends Fragment {
         }
         if(isError){
             final String finalErrorReason = errorReason;
+            this.activity = getActivity();
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {

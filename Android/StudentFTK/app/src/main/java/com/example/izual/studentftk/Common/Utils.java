@@ -1,4 +1,4 @@
-package com.example.izual.studentftk;
+package com.example.izual.studentftk.Common;
 
 import android.app.Activity;
 import android.view.inputmethod.InputMethodManager;

@@ -16,9 +16,11 @@ import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
+import com.example.izual.studentftk.Common.Utils;
 import com.example.izual.studentftk.Network.NetworkUtils;
-import com.example.izual.studentftk.Network.RequestBuilder.addFriendRequest;
+import com.example.izual.studentftk.Network.RequestBuilder.AddFriendRequest;
 import com.example.izual.studentftk.Network.RequestExecutor;
+import com.example.izual.studentftk.Common.ProfileInformation;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -63,7 +65,7 @@ public class FragmentProfile extends Fragment {
                              Bundle savedInstanceState) {
 
         viewProfile = inflater.inflate(R.layout.fragment_profile, container, false);
-        if(AllProfileInform.Photo == null && AllProfileInform.Name == null) {
+        if(ProfileInformation.Photo == null && ProfileInformation.Name == null) {
             if (getActivity().getIntent().getStringExtra("url") != null) {
                 try {
 
@@ -84,12 +86,12 @@ public class FragmentProfile extends Fragment {
         else
         {
             PersonName = (TextView)viewProfile.findViewById(R.id.personname);
-            PersonName.setText(AllProfileInform.Surname + " " + AllProfileInform.Name);
+            PersonName.setText(ProfileInformation.Surname + " " + ProfileInformation.Name);
             m_Photo = (ImageView)viewProfile.findViewById(R.id.photoJen);
-            m_Photo.setImageBitmap(AllProfileInform.Photo);
+            m_Photo.setImageBitmap(ProfileInformation.Photo);
         }
 
-        if((AllProfileInform.Photo != null && AllProfileInform.Name != null)||getActivity().getIntent().getStringExtra("url")!=null)
+        if((ProfileInformation.Photo != null && ProfileInformation.Name != null)||getActivity().getIntent().getStringExtra("url")!=null)
         {
             ListView PlacesList = (ListView) viewProfile.findViewById(R.id.list_place);
             ArrayList<Map<String, Object>> data = new ArrayList<Map<String, Object>>(
@@ -135,7 +137,7 @@ public class FragmentProfile extends Fragment {
         boolean isError = false;
         String errorReason = "";
         // надо int в string сконвертировать
-        URI uri = addFriendRequest.BuildRequestGet(ATTRIBUTE_Social_Token, ATTRIBUTE_vkId, ATTRIBUTE_vkId, "add");
+        URI uri = AddFriendRequest.BuildRequestGet(ATTRIBUTE_Social_Token, ATTRIBUTE_vkId, ATTRIBUTE_vkId, "add");
         for (;;) {
             RequestExecutor executor = new RequestExecutor(getActivity(),
                     uri, connectionTimeout);
@@ -167,7 +169,7 @@ public class FragmentProfile extends Fragment {
         boolean isError = false;
         String errorReason = "";
         // надо int в string сконвертировать
-        URI uri = addFriendRequest.BuildRequestGet(ATTRIBUTE_Social_Token, ATTRIBUTE_vkId, ATTRIBUTE_vkId, "del");
+        URI uri = AddFriendRequest.BuildRequestGet(ATTRIBUTE_Social_Token, ATTRIBUTE_vkId, ATTRIBUTE_vkId, "del");
         for (;;) {
             RequestExecutor executor = new RequestExecutor(getActivity(),
                     uri, connectionTimeout);
@@ -238,11 +240,11 @@ public class FragmentProfile extends Fragment {
                 InputStream is = connection.getInputStream();
                 JSONParser parser = new JSONParser();
                 JSONObject json = (JSONObject) parser.parse(new InputStreamReader(is));
-                AllProfileInform.Surname = (String) json.get("surname");
-                AllProfileInform.Name = (String) json.get("name");
-                AllProfileInform.Photo_URL = (String)json.get("photo");
-                AllProfileInform.socialToken = (String)json.get("socialToken");
-                getBitmapFromURL(AllProfileInform.Photo_URL);
+                ProfileInformation.Surname = (String) json.get("surname");
+                ProfileInformation.Name = (String) json.get("name");
+                ProfileInformation.Photo_URL = (String)json.get("photo");
+                ProfileInformation.socialToken = (String)json.get("socialToken");
+                getBitmapFromURL(ProfileInformation.Photo_URL);
                 return json.toJSONString();
 
             } catch (ParseException e) {
@@ -261,11 +263,11 @@ public class FragmentProfile extends Fragment {
         protected void onPostExecute(String jsonObject) {
             super.onPostExecute(jsonObject);
 
-            if(AllProfileInform.Name !=null && AllProfileInform.Photo != null) {
+            if(ProfileInformation.Name !=null && ProfileInformation.Photo != null) {
                 PersonName = (TextView) viewProfile.findViewById(R.id.personname);
-                PersonName.setText(AllProfileInform.Surname + " " + AllProfileInform.Name);
+                PersonName.setText(ProfileInformation.Surname + " " + ProfileInformation.Name);
                 m_Photo = (ImageView)viewProfile.findViewById(R.id.photoJen);
-                m_Photo.setImageBitmap(AllProfileInform.Photo);
+                m_Photo.setImageBitmap(ProfileInformation.Photo);
             }
         }
     }
@@ -281,7 +283,7 @@ public class FragmentProfile extends Fragment {
             Bitmap myBitmap = BitmapFactory.decodeStream(input);
             resizedBitmap = Bitmap.createScaledBitmap(myBitmap, 200, 200, true);
 
-            AllProfileInform.Photo = resizedBitmap;
+            ProfileInformation.Photo = resizedBitmap;
 
         } catch (IOException e) {
             e.printStackTrace();
