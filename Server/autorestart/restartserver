@@ -1,0 +1,15 @@
+#!/bin/bash
+
+java_proc_num=`ps -A | grep java | awk '{print $1}'`
+echo $java_proc_num
+if [ -n "$java_proc_num" ]; then
+	kill $java_proc_num
+	echo `date` "RESTARTSERVER::Process $java_proc_num killed"
+else
+	echo `date` "RESTARTSERVER::Cannot kill process"
+fi
+sleep 1
+echo `date` "RESTARTSERVER::Starting Server.jar..."
+cd /root/serv/
+java -jar Server.jar 2>&1
+
