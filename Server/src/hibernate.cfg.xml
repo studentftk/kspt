@@ -7,6 +7,14 @@
     <property name="hibernate.connection.url">jdbc:mysql://studentftk.tk:3306/student?zeroDateTimeBehavior=convertToNull&amp;characterEncoding=utf8</property>
     <property name="hibernate.connection.username">fromlocalhost</property>
     <property name="hibernate.connection.password">f4ub6QvpzC2cHquz</property>
+    <property name="hibernate.connection.CharSet">utf8</property>
+    <property name="hibernate.connection.characterEncoding">utf8</property>
+    <property name="hibernate.connection.useUnicode">true</property>
+    <property name="c3p0.min_size">5</property>
+    <property name="c3p0.max_size">20</property>
+    <property name="c3p0.timeout">1800</property>
+    <property name="c3p0.max_statements">50</property>
+    <property name="connection.provider_class">org.hibernate.connection.C3P0ConnectionProvider</property> 
     <mapping class="server.entity.Message"/>
     <mapping class="server.entity.User"/>
     <mapping class="server.entity.Place"/>
