@@ -3,8 +3,6 @@ package com.example.izual.studentftk;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -16,6 +14,7 @@ import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
+import com.example.izual.studentftk.Network.BitmapLoader;
 import com.example.izual.studentftk.Common.Utils;
 import com.example.izual.studentftk.Network.NetworkUtils;
 import com.example.izual.studentftk.Network.RequestBuilder.AddFriendRequest;
@@ -47,12 +46,10 @@ public class FragmentProfile extends Fragment {
     String[] Places = { "9-ый корпус вчера в 18:00", "Главное здание вчера в 13:00", "9-ый корпус 26.12 в 10:00", "9-ый корпус 25.12 в 12:00"};
     ImageView m_Photo;
     ListView PlacesList;
+    Button btnAddFriend;
+    Button btnDeleteFriend;
     View viewProfile;
     TextView PersonName;
-    Bitmap resizedBitmap;
-    final String ATTRIBUTE_vkId = "vkId"; //разобраться с ID
-    final String ATTRIBUTE_vkId_Friend = "vkIdFriend"; //разобраться с ID
-    final String ATTRIBUTE_Social_Token = "socialToken";
     private final int connectionTimeout = 1000;
     final Activity activity = getActivity();
     @Override
@@ -114,21 +111,11 @@ public class FragmentProfile extends Fragment {
             PlacesList.setAdapter(adapter);
         }
 
-        Button addFriendBtn = (Button) viewProfile.findViewById(R.id.addFriendBtn);
-        addFriendBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                AddFriend(ATTRIBUTE_Social_Token,ATTRIBUTE_vkId, ATTRIBUTE_vkId_Friend);
-            }
-        });
+        btnAddFriend = (Button) viewProfile.findViewById(R.id.btnAddFriend);
+        btnDeleteFriend = (Button) viewProfile.findViewById(R.id.btnDeleteFriend);
 
-        Button deleteFriendBtn = (Button) viewProfile.findViewById(R.id.deleteFriendBtn);
-        deleteFriendBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                DeleteFriend(ATTRIBUTE_Social_Token,ATTRIBUTE_vkId, ATTRIBUTE_vkId_Friend);
-            }
-        });
+        btnAddFriend.setVisibility(View.INVISIBLE);
+        btnDeleteFriend.setVisibility(View.INVISIBLE);
 
         return viewProfile;
     }
@@ -234,6 +221,8 @@ public class FragmentProfile extends Fragment {
                 // TODO Auto-generated catch block
                 e1.printStackTrace();
             }
+            String error = "";
+            boolean isError = false;
             try {
                 NetworkUtils.setAllTrusted(connection);
                 connection.connect();
@@ -244,16 +233,30 @@ public class FragmentProfile extends Fragment {
                 ProfileInformation.Name = (String) json.get("name");
                 ProfileInformation.Photo_URL = (String)json.get("photo");
                 ProfileInformation.socialToken = (String)json.get("socialToken");
-                getBitmapFromURL(ProfileInformation.Photo_URL);
+                ProfileInformation.Photo = BitmapLoader.GetBitmapFromURL(getActivity(),
+                        ProfileInformation.Photo_URL, 200, 200);
                 return json.toJSONString();
 
             } catch (ParseException e) {
+                isError = true;
+                error = e.toString();
                 e.printStackTrace();
             } catch (IOException e) {
+                isError = true;
+                error = e.toString();
                 e.printStackTrace();
             }
             finally {
                 connection.disconnect();
+                final String final_error = error;
+                if (isError){
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Utils.ShowError(getActivity(), final_error);
+                        }
+                    });
+                }
             }
 
             return null;
@@ -269,24 +272,6 @@ public class FragmentProfile extends Fragment {
                 m_Photo = (ImageView)viewProfile.findViewById(R.id.photoJen);
                 m_Photo.setImageBitmap(ProfileInformation.Photo);
             }
-        }
-    }
-
-    public void  getBitmapFromURL(String src) {
-        try {
-            java.net.URL url = new java.net.URL(src);
-            HttpURLConnection connection = (HttpURLConnection) url
-                    .openConnection();
-            connection.setDoInput(true);
-            connection.connect();
-            InputStream input = connection.getInputStream();
-            Bitmap myBitmap = BitmapFactory.decodeStream(input);
-            resizedBitmap = Bitmap.createScaledBitmap(myBitmap, 200, 200, true);
-
-            ProfileInformation.Photo = resizedBitmap;
-
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 }
