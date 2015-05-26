@@ -11,7 +11,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 
-import com.example.izual.studentftk.Network.Settings;
+import com.example.izual.studentftk.Common.Settings;
 import com.example.izual.studentftk.FragmentManagement.TopLevelFragmentManager;
 
 

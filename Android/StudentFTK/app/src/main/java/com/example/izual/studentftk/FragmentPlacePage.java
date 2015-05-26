@@ -161,7 +161,7 @@ public class FragmentPlacePage extends Fragment {
         activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Utils.ShowError(activity, finalErrorReason);
+                Utils.ShowError(activity, finalErrorReason, true);
             }
         });
     }

@@ -1,6 +1,6 @@
 package com.example.izual.studentftk.Network.RequestBuilder;
 
-import com.example.izual.studentftk.Network.Settings;
+import com.example.izual.studentftk.Common.Settings;
 
 /**
  * Created by oglandx on 27.12.2014.

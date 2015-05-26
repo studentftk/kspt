@@ -3,14 +3,16 @@ package com.example.izual.studentftk.Common;
 import android.app.Activity;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
-
 /**
  * Created by oglandx on 22.12.2014.
  */
 public class Utils {
-    public static void ShowError(Activity activity, final String message){
-        Toast toast = Toast.makeText(activity.getApplicationContext(), message, Toast.LENGTH_LONG);
-        toast.show();
+    public static void ShowError(Activity activity, final String message, boolean debug){
+        if(Settings.DEBUG && debug || !debug) {
+            Toast toast = Toast.makeText(activity.getApplicationContext(), message,
+                    Toast.LENGTH_LONG);
+            toast.show();
+        }
     }
 
     /**

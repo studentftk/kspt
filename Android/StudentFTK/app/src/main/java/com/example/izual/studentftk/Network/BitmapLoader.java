@@ -75,7 +75,7 @@ public class BitmapLoader {
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    Utils.ShowError(activity, message);
+                    Utils.ShowError(activity, message, true);
                 }
             });
             return null;

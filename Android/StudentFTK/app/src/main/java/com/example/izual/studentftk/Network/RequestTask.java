@@ -75,7 +75,7 @@ public class RequestTask implements Runnable {
                 activity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        Utils.ShowError(activity, reason);
+                        Utils.ShowError(activity, reason, true);
                     }
                 });
             }

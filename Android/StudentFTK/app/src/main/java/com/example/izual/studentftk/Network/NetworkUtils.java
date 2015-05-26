@@ -1,5 +1,7 @@
 package com.example.izual.studentftk.Network;
 
+import com.example.izual.studentftk.Common.Settings;
+
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URLConnection;
@@ -10,9 +12,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;

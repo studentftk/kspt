@@ -78,7 +78,7 @@ public class FragmentMessages extends Fragment {
         InitMessages();
         ReinitUpdater(0, TIMER_ONCE);
 
-        Utils.ShowError(getActivity(), "Загрузка сообщений...");
+        Utils.ShowError(getActivity(), "Загрузка сообщений...", false);
 
         return viewMessages;
     }
@@ -227,7 +227,7 @@ public class FragmentMessages extends Fragment {
                 @Override
                 public void run() {
                     if(isError) {
-                        Utils.ShowError(activity, errorReason);
+                        Utils.ShowError(activity, errorReason, false);
                     }
                     try {
                         if (parsed != null && parsed.size() > msgList.size()) {

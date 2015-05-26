@@ -30,6 +30,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.ProtocolException;
 import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
@@ -52,6 +53,7 @@ public class FragmentProfile extends Fragment {
     TextView PersonName;
     private final int connectionTimeout = 1000;
     final Activity activity = getActivity();
+    
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,14 +62,13 @@ public class FragmentProfile extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
         viewProfile = inflater.inflate(R.layout.fragment_profile, container, false);
-        if(ProfileInformation.Photo == null && ProfileInformation.Name == null) {
+        int attempts = 3;
+        boolean logged_in = false;
+        while(!ProfileInformation.valid && --attempts != 0) {
             if (getActivity().getIntent().getStringExtra("url") != null) {
                 try {
-
                     getProfileFromServer(getActivity().getIntent().getStringExtra("url"));
-
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 } catch (ExecutionException e) {
@@ -75,24 +76,21 @@ public class FragmentProfile extends Fragment {
                 } catch (TimeoutException e) {
                     e.printStackTrace();
                 }
-
             } else {
-                StartLogin();
+                if (!logged_in) {
+                    StartLogin();
+                    logged_in = true;
+                }
             }
         }
-        else
-        {
-            PersonName = (TextView)viewProfile.findViewById(R.id.personname);
-            PersonName.setText(ProfileInformation.Surname + " " + ProfileInformation.Name);
-            m_Photo = (ImageView)viewProfile.findViewById(R.id.photoJen);
-            m_Photo.setImageBitmap(ProfileInformation.Photo);
-        }
+        PersonName = (TextView)viewProfile.findViewById(R.id.personname);
+        PersonName.setText(ProfileInformation.Name + " " + ProfileInformation.Surname);
+        m_Photo = (ImageView)viewProfile.findViewById(R.id.photoJen);
+        m_Photo.setImageBitmap(ProfileInformation.Photo);
 
-        if((ProfileInformation.Photo != null && ProfileInformation.Name != null)||getActivity().getIntent().getStringExtra("url")!=null)
-        {
+        if(ProfileInformation.valid || getActivity().getIntent().getStringExtra("url") != null){
             ListView PlacesList = (ListView) viewProfile.findViewById(R.id.list_place);
-            ArrayList<Map<String, Object>> data = new ArrayList<Map<String, Object>>(
-                    Places.length);
+            ArrayList<Map<String, Object>> data = new ArrayList<Map<String, Object>>(Places.length);
             Map<String, Object> tmp;
             for (int i = 0; i < Places.length; i++) {
                 tmp = new HashMap<String, Object>();
@@ -146,7 +144,7 @@ public class FragmentProfile extends Fragment {
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    Utils.ShowError(activity, finalErrorReason);
+                    Utils.ShowError(activity, finalErrorReason, true);
                 }
             });
         }
@@ -178,24 +176,25 @@ public class FragmentProfile extends Fragment {
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    Utils.ShowError(activity, finalErrorReason);
+                    Utils.ShowError(activity, finalErrorReason, true);
                 }
             });
         }
     }
 
     private void getProfileFromServer(String url) throws InterruptedException, TimeoutException, ExecutionException {
-        HttpTask httpTask = new HttpTask();
-        httpTask.execute(url);
-
+        synchronized (this) {
+            this.wait(1000);
+            HttpTask httpTask = new HttpTask();
+            httpTask.execute(url);
+            this.notify();
+        }
     }
 
-    private void StartLogin()
-    {
-        Intent i = new Intent(getActivity(),VkontakteActivity.class); // Your list's Intent
+    private void StartLogin(){
+        Intent i = new Intent(getActivity(), VkontakteActivity.class); // Your list's Intent
         i.setFlags(i.getFlags() | Intent.FLAG_ACTIVITY_NO_HISTORY); // Adds the FLAG_ACTIVITY_NO_HISTORY flag
         startActivity(i);
-
     }
 
     final class HttpTask extends AsyncTask<String, Integer, String> {
@@ -204,9 +203,7 @@ public class FragmentProfile extends Fragment {
         private URL url;
 
 
-        protected void onPreExecute() {
-
-        }
+        protected void onPreExecute() {}
 
         protected String doInBackground(String... params) {
             try {
@@ -231,10 +228,11 @@ public class FragmentProfile extends Fragment {
                 JSONObject json = (JSONObject) parser.parse(new InputStreamReader(is));
                 ProfileInformation.Surname = (String) json.get("surname");
                 ProfileInformation.Name = (String) json.get("name");
-                ProfileInformation.Photo_URL = (String)json.get("photo");
-                ProfileInformation.socialToken = (String)json.get("socialToken");
+                ProfileInformation.Photo_URL = (String) json.get("photo");
+                ProfileInformation.socialToken = (String) json.get("socialToken");
                 ProfileInformation.Photo = BitmapLoader.GetBitmapFromURL(getActivity(),
                         ProfileInformation.Photo_URL, 200, 200);
+                ProfileInformation.valid = !ProfileInformation.hasNull();
                 return json.toJSONString();
 
             } catch (ParseException e) {
@@ -245,20 +243,18 @@ public class FragmentProfile extends Fragment {
                 isError = true;
                 error = e.toString();
                 e.printStackTrace();
-            }
-            finally {
+            } finally {
                 connection.disconnect();
                 final String final_error = error;
-                if (isError){
+                if (isError) {
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            Utils.ShowError(getActivity(), final_error);
+                            Utils.ShowError(getActivity(), final_error, true);
                         }
                     });
                 }
             }
-
             return null;
         }
 
