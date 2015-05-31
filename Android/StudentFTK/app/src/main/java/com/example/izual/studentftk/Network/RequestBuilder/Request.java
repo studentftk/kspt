@@ -23,5 +23,6 @@ public class Request {
     public static final class Methods{
         public static final String Get = "get";
         public static final String Send = "send";
+        public static final String Find = "find";
     }
 }

@@ -230,8 +230,9 @@ public class FragmentProfile extends Fragment {
                 ProfileInformation.Name = (String) json.get("name");
                 ProfileInformation.Photo_URL = (String) json.get("photo");
                 ProfileInformation.socialToken = (String) json.get("socialToken");
-                ProfileInformation.Photo = BitmapLoader.GetBitmapFromURL(getActivity(),
-                        ProfileInformation.Photo_URL, 200, 200);
+                BitmapLoader loader = new BitmapLoader(getActivity(), 1000);
+                ProfileInformation.Photo = loader.GetBitmapFromURL(ProfileInformation.Photo_URL,
+                        200, 200);
                 ProfileInformation.valid = !ProfileInformation.hasNull();
                 return json.toJSONString();
 

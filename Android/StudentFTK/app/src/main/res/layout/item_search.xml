@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:weightSum="1">
+
+    <GridLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_row="0"
+            android:layout_column="0">
+
+            <ImageButton
+                android:layout_width="66dp"
+                android:layout_height="69dp"
+                android:id="@+id/imgAvatarSearch"
+                android:src="@drawable/cat" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="&lt;name>"
+            android:id="@+id/txtNameSearch"
+            android:layout_row="0"
+            android:layout_column="6"
+            android:layout_gravity="left|center_vertical" />
+
+        <Button
+            android:layout_width="76dp"
+            android:layout_height="59dp"
+            android:text="Add"
+            android:id="@+id/btnAddSearch"
+            android:layout_row="0"
+            android:layout_column="17" />
+
+    </GridLayout>
+</LinearLayout>

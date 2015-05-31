@@ -1,0 +1,63 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.izual.studentftk.FragmentFindUsers">
+
+    <!-- TODO: Update blank fragment layout -->
+
+    <FrameLayout
+        android:layout_width="fill_parent"
+        android:layout_height="118dp"
+        android:layout_gravity="center_horizontal|top" >
+
+        <FrameLayout
+            android:layout_width="290dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center">
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="53dp"
+                android:inputType="textPersonName"
+                android:ems="10"
+                android:id="@+id/editNameSearch"
+                android:layout_gravity="center_horizontal|top" />
+
+        </FrameLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Введите имя или фамилию"
+            android:id="@+id/textView3"
+            android:layout_gravity="center_horizontal|top" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:id="@+id/foundRecordsSearch"
+            android:layout_gravity="center_horizontal|bottom" />
+
+    </FrameLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="349dp"
+        android:layout_gravity="center_horizontal|bottom"
+        android:weightSum="1">
+
+    </LinearLayout>
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="402dp"
+        android:id="@+id/listFriendsSearch"
+        android:choiceMode="singleChoice"
+        tools:listitem="@android:layout/simple_list_item_1"
+        android:layout_gravity="center_horizontal|bottom"
+        android:clickable="true" />
+
+</FrameLayout>

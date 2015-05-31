@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 
 import com.example.izual.studentftk.FragmentAbout;
+import com.example.izual.studentftk.FragmentFindUsers;
 import com.example.izual.studentftk.FragmentFriendsList;
 import com.example.izual.studentftk.FragmentMaps;
 import com.example.izual.studentftk.FragmentMessages;
@@ -28,16 +29,18 @@ public class TopLevelFragmentManager extends AppliedFragmentManager {
     public static class FragmentIds{
         public static final int ID_PROFILE      = 1;
         public static final int ID_MESSAGES     = 2;
-        public static final int ID_FRIENDS_LIST = 3;
-        public static final int ID_MAPS         = 4;
-        public static final int ID_PLACE_LIST   = 5;
-        public static final int ID_SETTINGS     = 6;
-        public static final int ID_ABOUT        = 7;
+        public static final int ID_FIND_USERS   = 3;
+        public static final int ID_FRIENDS_LIST = 4;
+        public static final int ID_MAPS         = 5;
+        public static final int ID_PLACE_LIST   = 6;
+        public static final int ID_SETTINGS     = 7;
+        public static final int ID_ABOUT        = 8;
     }
 
     private final Object[][] fragmentClasses = {
             {FragmentIds.ID_PROFILE, getClassName(FragmentProfile.class.toString())},
             {FragmentIds.ID_MESSAGES, getClassName(FragmentMessages.class.toString())},
+            {FragmentIds.ID_FIND_USERS, getClassName(FragmentFindUsers.class.toString())},
             {FragmentIds.ID_FRIENDS_LIST, getClassName(FragmentFriendsList.class.toString())},
             {FragmentIds.ID_MAPS, getClassName(FragmentMaps.class.toString())},
             {FragmentIds.ID_PLACE_LIST, getClassName(FragmentPlaceList.class.toString())},

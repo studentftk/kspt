@@ -2,6 +2,7 @@ package com.example.izual.studentftk;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +15,7 @@ import com.example.izual.studentftk.Common.Utils;
 import com.example.izual.studentftk.Friends.Friends;
 import com.example.izual.studentftk.Friends.FriendsStruct;
 import com.example.izual.studentftk.Friends.ParseFriends;
+import com.example.izual.studentftk.Network.ImageResourceLoader;
 import com.example.izual.studentftk.Network.RequestBuilder.FriendRequest;
 import com.example.izual.studentftk.Network.RequestBuilder.ManyUsersRequest;
 import com.example.izual.studentftk.Network.RequestExecutor;
@@ -40,6 +42,9 @@ public class FragmentFriendsList extends Fragment {
 
     private final String ATTRIBUTE_NAME = "name";
     private final String ATTRIBUTE_IMAGE = "image";
+
+    private final int AvatarWidth = 64;
+    private final int AvatarHeight = 64;
 
     private ListView listFriends;
     private TextView friendsCountMessage;
@@ -105,24 +110,30 @@ public class FragmentFriendsList extends Fragment {
                 try {
                     ArrayList<FriendsStruct> friends =
                             ParseFriends.Parse(executor.GetTask().getData());
-                    friendsCountMessage.setText("У вас " + friends.size() + " друзей");
+                    friendsCountMessage.setText("У вас " + friends.size() + " " +
+                            Utils.AdaptToNumeric(friends.size(), "друг", "друга", "друзей"));
                     Friends.List.put(socialToken, friends);
                     UsersInformationLoader loader =
                             new UsersInformationLoader(getActivity(), connectionTimeout);
                     Collection<UserStruct> friends_users = loader
                             .GetUsersInformation(Friends.getIds(ProfileInformation.socialToken),
                                     ManyUsersRequest.DataType.TYPE_SOCIAL_ID);
+                    HashMap<String, UserStruct> socialIds = new HashMap<String, UserStruct>();
+                    for (final UserStruct friend: friends_users){
+                        if(!socialIds.keySet().contains(friend.SocialID)) {
+                            socialIds.put(friend.SocialID, friend);
+                        }
+                    }
                     adapter.notifyDataSetInvalidated();
                     data.clear();
-                    HashSet<String> socialIds = new HashSet<String>();
-                    for (final UserStruct friend: friends_users){
-                        if(!socialIds.contains(friend.SocialID)) {
-                            Map<String, Object> container = new HashMap<String, Object>();
-                            container.put(ATTRIBUTE_NAME, friend.Name + " " + friend.Surname);
-                            container.put(ATTRIBUTE_IMAGE, ProfileInformation.Photo);
-                            data.add(container);
-                            socialIds.add(friend.SocialID);
-                        }
+                    ImageResourceLoader imgLoader = new ImageResourceLoader(getActivity(),
+                            connectionTimeout);
+                    for (final String socialId: socialIds.keySet()){
+                        final UserStruct friend = socialIds.get(socialId);
+                        Map<String, Object> container = new HashMap<String, Object>();
+                        container.put(ATTRIBUTE_NAME, friend.Name + " " + friend.Surname);
+                        container.put(ATTRIBUTE_IMAGE, imgLoader.Load(friend.Photo));
+                        data.add(container);
                     }
                     adapter.notifyDataSetChanged();
                 } catch (Exception e) {

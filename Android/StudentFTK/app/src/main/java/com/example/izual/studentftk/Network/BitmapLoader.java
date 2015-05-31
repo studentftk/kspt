@@ -15,12 +15,12 @@ import java.net.URL;
 /**
  * Created by oglandx on 23.05.2015.
  */
-public class BitmapLoader {
-    private BitmapLoader() {}
+public class BitmapLoader extends AbstractAndroidLoader {
+    public BitmapLoader(final Activity activity, int connectionTimeout) {
+        super(activity, connectionTimeout);
+    }
 
-    public final int connectionTimeout = 1000;
-
-    public static Bitmap LoadBitmap(URL url) {
+    private Bitmap LoadBitmap(URL url) {
         Bitmap bitmap = null;
         try {
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -29,15 +29,17 @@ public class BitmapLoader {
             InputStream input = connection.getInputStream();
             bitmap = BitmapFactory.decodeStream(input);
         }
-        catch (IOException e) {
+        catch (Exception e) {
             e.printStackTrace();
+            Error(e.getMessage());
         }
         finally {
+            ShowError();
             return bitmap;
         }
     }
 
-    private static class BitmapLoadTask implements Runnable{
+    private class BitmapLoadTask implements Runnable{
         private Bitmap data = null;
         private boolean isDataReady = false;
         private final URL url;
@@ -55,8 +57,7 @@ public class BitmapLoader {
         }
     }
 
-    public static Bitmap GetBitmapFromURL(final Activity activity,
-                                          final String src, final int width, int height){
+    public Bitmap GetBitmapFromURL(final String src, final int width, int height){
         try {
             URL url = new URL(src);
             BitmapLoadTask task = new BitmapLoadTask(url);

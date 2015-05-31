@@ -3,6 +3,7 @@ package com.example.izual.studentftk.Users;
 import android.app.Activity;
 
 import com.example.izual.studentftk.Common.ProfileInformation;
+import com.example.izual.studentftk.Network.AbstractAndroidLoader;
 import com.example.izual.studentftk.Network.RequestBuilder.ManyUsersRequest;
 import com.example.izual.studentftk.Network.RequestExecutor;
 import com.example.izual.studentftk.Common.Utils;
@@ -14,13 +15,10 @@ import java.util.Collection;
 /**
  * Created by oglandx on 19.05.2015.
  */
-public class UsersInformationLoader {
-    private final Activity activity;
-    private int connectionTimeout;
+public class UsersInformationLoader extends AbstractAndroidLoader {
 
     public UsersInformationLoader(final Activity activity, int connectionTimeout){
-        this.activity = activity;
-        this.connectionTimeout = connectionTimeout;
+        super(activity, connectionTimeout);
     }
 
     public Collection<UserStruct> GetUsersInformation(final ArrayList<String> IDs,
