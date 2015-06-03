@@ -10,6 +10,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
+import com.example.izual.studentftk.Common.Settings;
 import com.example.izual.studentftk.Common.Utils;
 import com.example.izual.studentftk.FragmentManagement.FragmentPlacesCallbacks;
 import com.example.izual.studentftk.Network.RequestBuilder.PlacesRequest;
@@ -31,7 +32,7 @@ public class FragmentPlaceList extends Fragment{
     // имена атрибутов для Map
     final String ATTRIBUTE_NAME_TEXT = "text";
     private ListView listPlaces;
-    private final int connectionTimeout = 1000;
+    private final int connectionTimeout = Settings.connectionTimeout;
     final Activity activity = getActivity();
     private FragmentPlacesCallbacks mCallbacks;
 

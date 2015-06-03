@@ -16,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.os.Message;
 
+import com.example.izual.studentftk.Common.Settings;
 import com.example.izual.studentftk.Common.Utils;
 import com.example.izual.studentftk.Like.LikeApiAnswer;
 import com.example.izual.studentftk.Like.ParseLike;
@@ -49,7 +50,7 @@ public class FragmentPlacePage extends Fragment {
     TextView PlaceAdres;
     int id_places;
     final String ATTRIBUTE_vkId = "vkId"; //разобраться с ID
-    private final int connectionTimeout = 1000;
+    private final int connectionTimeout = Settings.connectionTimeout;
     final Activity activity = getActivity();
 
     public void onCreate(Bundle savedInstanceState) {super.onCreate(savedInstanceState);}

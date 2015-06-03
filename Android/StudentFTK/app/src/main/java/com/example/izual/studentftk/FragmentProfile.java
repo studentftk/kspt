@@ -14,6 +14,7 @@ import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
+import com.example.izual.studentftk.Common.Settings;
 import com.example.izual.studentftk.Network.BitmapLoader;
 import com.example.izual.studentftk.Common.Utils;
 import com.example.izual.studentftk.Network.NetworkUtils;
@@ -51,7 +52,7 @@ public class FragmentProfile extends Fragment {
     Button btnDeleteFriend;
     View viewProfile;
     TextView PersonName;
-    private final int connectionTimeout = 1000;
+    private final int connectionTimeout = Settings.connectionTimeout;
     final Activity activity = getActivity();
     
     @Override

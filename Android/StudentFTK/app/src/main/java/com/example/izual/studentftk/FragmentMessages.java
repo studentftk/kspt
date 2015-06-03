@@ -19,6 +19,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
+import com.example.izual.studentftk.Common.Settings;
 import com.example.izual.studentftk.Common.Utils;
 import com.example.izual.studentftk.Messages.MessageStruct;
 import com.example.izual.studentftk.Messages.MsgControl;
@@ -45,7 +46,7 @@ public class FragmentMessages extends Fragment {
     private Button btnSendMessage;
     private EditText txtMessageEdit;
     private String current_name = "Admin";
-    private final int connectionTimeout = 1000;
+    private final int connectionTimeout = Settings.connectionTimeout;
     private final int REQUEST_CODE_FRIENDS = 1;
     private long updatePeriod = 4000;
     private Timer updateTimer;

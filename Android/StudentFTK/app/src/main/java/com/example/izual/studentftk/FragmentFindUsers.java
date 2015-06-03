@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.example.izual.studentftk.Common.AvatarSimpleAdapter;
 import com.example.izual.studentftk.Common.ProfileInformation;
+import com.example.izual.studentftk.Common.Settings;
 import com.example.izual.studentftk.Common.Utils;
 import com.example.izual.studentftk.Friends.FriendsManagement;
 import com.example.izual.studentftk.Network.RequestBuilder.FindUsersRequest;
@@ -37,7 +38,7 @@ public class FragmentFindUsers extends Fragment {
     private ListView list_friends = null;
     private TextView found_count = null;
     private EditText edit_name = null;
-    int connectionTimeout = 1000;
+    int connectionTimeout = Settings.connectionTimeout;
     private SimpleAdapter adapter = null;
     private ArrayList<Map<String, Object>> data = new ArrayList<Map<String, Object>>();
 
