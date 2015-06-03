@@ -3,6 +3,8 @@ package com.example.izual.studentftk.Network;
 import android.app.Activity;
 import android.graphics.drawable.Drawable;
 
+import com.example.izual.studentftk.Users.Users;
+
 import java.io.InputStream;
 import java.net.URL;
 
@@ -36,6 +38,14 @@ public class ImageResourceLoader extends AbstractAndroidLoader {
                 Error(e.toString());
             }
         }
+    }
+
+    public Drawable GetCachedOrLoad(final String url){
+        Users.Init();
+        if(Users.Photos.get(url) == null){
+            Users.Photos.put(url, this.Load(url));
+        }
+        return Users.Photos.get(url);
     }
 
     public Drawable Load(final String url){

@@ -22,7 +22,6 @@
                 android:id="@+id/imgFriendsListAvatar"
                 android:layout_gravity="center"
                 android:adjustViewBounds="true"
-                android:background="@drawable/ic_druzya"
                 android:contentDescription="@string/app_name" />
         </FrameLayout>
 

@@ -16,7 +16,7 @@
             android:layout_row="0"
             android:layout_column="0">
 
-            <ImageButton
+            <ImageView
                 android:layout_width="66dp"
                 android:layout_height="69dp"
                 android:id="@+id/imgAvatarSearch"
@@ -32,14 +32,6 @@
             android:layout_row="0"
             android:layout_column="6"
             android:layout_gravity="left|center_vertical" />
-
-        <Button
-            android:layout_width="76dp"
-            android:layout_height="59dp"
-            android:text="Add"
-            android:id="@+id/btnAddSearch"
-            android:layout_row="0"
-            android:layout_column="17" />
 
     </GridLayout>
 </LinearLayout>

@@ -102,6 +102,7 @@ public class FragmentMessages extends Fragment {
         ArrayList<String> msg_text = new ArrayList<String>();
         final ArrayList<String> msg_time = new ArrayList<String>();
         ArrayList<String> msg_name = new ArrayList<String>();
+        ArrayList<String> msg_img = new ArrayList<String>();
 
         if(ProfileInformation.Name != null){
             current_name = ProfileInformation.Name;
@@ -109,7 +110,7 @@ public class FragmentMessages extends Fragment {
 
         /* Создаём адаптер и привязываем его к списку */
         sAdapter = MsgControl.InitFramework(msgList, getActivity(),
-                msg_text, msg_time, msg_name);
+                msg_text, msg_time, msg_name, msg_img);
         listMessages.setAdapter(sAdapter);
 
         /* Обработчик нажатия на кнопку отправления */
@@ -139,10 +140,13 @@ public class FragmentMessages extends Fragment {
 
     /* Добавляет сообщение в список сообщений */
     private void AddMessage(ArrayList<Map<String, Object>> msgList,
-                            String msg_text, String msg_time, String msg_name){
+                            final String msg_text,
+                            final String msg_time,
+                            final String msg_name,
+                            final String msg_img){
         if(msgList != null){
             sAdapter.notifyDataSetInvalidated();
-            MsgControl.AddMessageToList(msgList, msg_text, msg_time, msg_name);
+            MsgControl.AddMessageToList(msgList, msg_text, msg_time, msg_name, msg_img);
             sAdapter.notifyDataSetChanged();
         }
         listMessages.smoothScrollByOffset(listMessages.getMaxScrollAmount());
@@ -235,14 +239,16 @@ public class FragmentMessages extends Fragment {
                             msgList.clear();
                             for (MessageStruct msg : parsed) {
                                 String userName = msg.Source;
+                                String avatar = null;
                                 UserInformationLoader loader = new UserInformationLoader(
                                         getActivity(), connectionTimeout);
                                 UserStruct user = loader.GetUserInformation(msg.Source);
                                 if (user != null) {
                                     userName = user.Name;
+                                    avatar = user.Photo;
                                 }
                                 AddMessage(msgList, msg.Message,
-                                        MsgControl.RoundToSeconds(msg.SendTime), userName);
+                                     MsgControl.RoundToSeconds(msg.SendTime), userName, avatar);
                             }
                             sAdapter.notifyDataSetChanged();
                         }

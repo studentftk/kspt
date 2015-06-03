@@ -3,6 +3,7 @@ package com.example.izual.studentftk.Messages;
 import android.app.Activity;
 import android.widget.SimpleAdapter;
 
+import com.example.izual.studentftk.Common.AvatarSimpleAdapter;
 import com.example.izual.studentftk.R;
 
 import java.util.ArrayList;
@@ -27,12 +28,14 @@ public class MsgControl {
     public final static int DATE_DAY_AND_TIME = 3;
 
     // упаковывает сообщение в нужную структуру
-    private static Map<String, Object> PackMessage(String msg_text, String msg_time, String msg_name){
-        int img = R.drawable.ic_friends;
+    private static Map<String, Object> PackMessage(final String msg_text,
+                                                   final String msg_time,
+                                                   final String msg_name,
+                                                   final String msg_img){
         Map<String, Object> msg_pack = new HashMap<String, Object>();
         msg_pack.put(ATTRIBUTE_NAME_TEXT, msg_text);
         msg_pack.put(ATTRIBUTE_NAME_TIME, msg_time);
-        msg_pack.put(ATTRIBUTE_NAME_IMAGE, img);
+        msg_pack.put(ATTRIBUTE_NAME_IMAGE, msg_img);
         msg_pack.put(ATTRIBUTE_NAME_NAME, msg_name);
         return msg_pack;
     }
@@ -43,9 +46,12 @@ public class MsgControl {
      * @param msg_text текст сообщения
      * @param msg_time время отправки сообщения
      */
-    public static void AddMessageToList(ArrayList<Map<String, Object>> msgList,
-                                    String msg_text, String msg_time, String msg_name){
-        msgList.add(PackMessage(msg_text, msg_time, msg_name));
+    public static void AddMessageToList(final ArrayList<Map<String, Object>> msgList,
+                                        final String msg_text,
+                                        final String msg_time,
+                                        final String msg_name,
+                                        final String msg_img){
+        msgList.add(PackMessage(msg_text, msg_time, msg_name, msg_img));
     }
 
     /**
@@ -54,7 +60,7 @@ public class MsgControl {
      * @param activity активити, на котором отображаются сообщения
      * @return адаптер
      */
-    public static SimpleAdapter CreateAdapter(ArrayList<Map<String, Object>> msgList,
+    public static AvatarSimpleAdapter CreateAdapter(ArrayList<Map<String, Object>> msgList,
                                                                                 Activity activity){
         // массив имен атрибутов, из которых будут читаться данные
         String[] from = { ATTRIBUTE_NAME_TEXT, ATTRIBUTE_NAME_TIME,
@@ -62,7 +68,7 @@ public class MsgControl {
         // массив ID View-компонентов, в которые будут вставлять данные
         int[] to = { R.id.tvMessage, R.id.tvDate, R.id.ivImg , R.id.tvName};
 
-        return new SimpleAdapter( activity, msgList, R.layout.item_message, from, to);
+        return new AvatarSimpleAdapter( activity, msgList, R.layout.item_message, from, to);
     }
 
     /**
@@ -73,14 +79,18 @@ public class MsgControl {
      * @param msg_time список времён отправки сообщений
      * @return адаптер
      */
-    public static SimpleAdapter InitFramework(ArrayList<Map<String, Object>> msgList,
-                       Activity activity, ArrayList<String> msg_text,
-                            ArrayList<String> msg_time, ArrayList<String> msg_name){
+    public static AvatarSimpleAdapter InitFramework(ArrayList<Map<String, Object>> msgList,
+                                              final Activity activity,
+                                              final ArrayList<String> msg_text,
+                                              final ArrayList<String> msg_time,
+                                              final ArrayList<String> msg_name,
+                                              final ArrayList<String> msg_img){
         if(msgList == null){
             return null;
         }
         for (int i = 0; i < msg_text.size(); i++) {
-            AddMessageToList(msgList, msg_text.get(i), msg_time.get(i), msg_name.get(i));
+            AddMessageToList(msgList, msg_text.get(i), msg_time.get(i),
+                    msg_name.get(i), msg_img.get(i));
         }
 
         return CreateAdapter(msgList, activity);

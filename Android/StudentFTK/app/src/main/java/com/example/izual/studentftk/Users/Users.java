@@ -1,9 +1,14 @@
 package com.example.izual.studentftk.Users;
 
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by oglandx on 27.12.2014.
@@ -12,12 +17,18 @@ public class Users {
     private Users(){}
 
     public static Map<String, UserStruct> List; //id -> UserStruct
-    public static Map<String, Bitmap> Photos;   //SocialId -> Bitmap
+    public static ArrayList<UserStruct> SearchCache;
+    public static Map<String, Drawable> Photos;   // -> Bitmap
 
     public static void Init(){
         if(List == null){
             List = new HashMap<String, UserStruct>();
-            Photos = new HashMap<String, Bitmap>();
+        }
+        if(SearchCache == null){
+            SearchCache = new ArrayList<UserStruct>();
+        }
+        if(Photos == null){
+            Photos = new HashMap<String, Drawable>();
         }
     }
 

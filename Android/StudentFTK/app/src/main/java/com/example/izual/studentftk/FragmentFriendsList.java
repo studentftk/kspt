@@ -2,7 +2,6 @@ package com.example.izual.studentftk;
 
 import android.app.Activity;
 import android.app.Fragment;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +12,7 @@ import android.widget.TextView;
 
 import com.example.izual.studentftk.Common.Utils;
 import com.example.izual.studentftk.Friends.Friends;
+import com.example.izual.studentftk.Common.AvatarSimpleAdapter;
 import com.example.izual.studentftk.Friends.FriendsStruct;
 import com.example.izual.studentftk.Friends.ParseFriends;
 import com.example.izual.studentftk.Network.ImageResourceLoader;
@@ -28,7 +28,6 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 
 /**
@@ -48,7 +47,7 @@ public class FragmentFriendsList extends Fragment {
 
     private ListView listFriends;
     private TextView friendsCountMessage;
-    private SimpleAdapter adapter = null;
+    private AvatarSimpleAdapter adapter = null;
     private ArrayList<Map<String, Object>> data = null;
 
     @Override
@@ -72,7 +71,7 @@ public class FragmentFriendsList extends Fragment {
         if (adapter == null) {
             String[] from = {ATTRIBUTE_NAME, ATTRIBUTE_IMAGE};
             int[] to = {R.id.txtFriendsListName, R.id.imgFriendsListAvatar};
-            adapter = new SimpleAdapter(getActivity(), data, R.layout.item_friends_list, from, to);
+            adapter = new AvatarSimpleAdapter(getActivity(), data, R.layout.item_friends_list, from, to);
         }
         return adapter;
     }
@@ -132,7 +131,7 @@ public class FragmentFriendsList extends Fragment {
                         final UserStruct friend = socialIds.get(socialId);
                         Map<String, Object> container = new HashMap<String, Object>();
                         container.put(ATTRIBUTE_NAME, friend.Name + " " + friend.Surname);
-                        container.put(ATTRIBUTE_IMAGE, imgLoader.Load(friend.Photo));
+                        container.put(ATTRIBUTE_IMAGE, friend.Photo);
                         data.add(container);
                     }
                     adapter.notifyDataSetChanged();

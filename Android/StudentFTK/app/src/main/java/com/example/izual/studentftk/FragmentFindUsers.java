@@ -7,16 +7,21 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
+import com.example.izual.studentftk.Common.AvatarSimpleAdapter;
 import com.example.izual.studentftk.Common.ProfileInformation;
 import com.example.izual.studentftk.Common.Utils;
+import com.example.izual.studentftk.Friends.FriendsManagement;
 import com.example.izual.studentftk.Network.RequestBuilder.FindUsersRequest;
+import com.example.izual.studentftk.Network.RequestBuilder.FriendRequest;
 import com.example.izual.studentftk.Users.UserStruct;
+import com.example.izual.studentftk.Users.Users;
 import com.example.izual.studentftk.Users.UsersFinder;
 
 import java.net.URI;
@@ -35,8 +40,6 @@ public class FragmentFindUsers extends Fragment {
     int connectionTimeout = 1000;
     private SimpleAdapter adapter = null;
     private ArrayList<Map<String, Object>> data = new ArrayList<Map<String, Object>>();
-
-    public final String Name = "Имя";
 
     public static FragmentFindUsers newInstance() {
         FragmentFindUsers fragment = new FragmentFindUsers();
@@ -64,17 +67,16 @@ public class FragmentFindUsers extends Fragment {
 
     public SimpleAdapter getAdapter(){
         if (adapter == null) {
-            String[] from = {"name", "avatar", "isfriend"};
-            int[] to = {R.id.txtNameSearch, R.id.imgAvatarSearch, R.id.btnAddSearch};
-            adapter = new SimpleAdapter(getActivity(), data, R.layout.item_search, from, to);
-            if(adapter != null) {
-                list_friends.setAdapter(adapter);
-            }
+            String[] from = {"name", "avatar"};
+            int[] to = {R.id.txtNameSearch, R.id.imgAvatarSearch,};
+            adapter = new AvatarSimpleAdapter(getActivity(), data, R.layout.item_search, from, to);
+            list_friends.setAdapter(adapter);
         }
         return adapter;
     }
 
     public void InitSearchUsers(){
+        Users.Init();
         edit_name.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
@@ -84,11 +86,12 @@ public class FragmentFindUsers extends Fragment {
                     data.clear();
                     Collection<UserStruct> found = FindUsers(edit_name.getText().toString());
                     if (found != null && found.size() > 0) {
+                        Users.SearchCache.clear();
+                        Users.SearchCache.addAll(found);
                         for (UserStruct user : found) {
                             Map<String, Object> container = new HashMap<String, Object>();
                             container.put("name", user.Name + " " + user.Surname);
                             container.put("avatar", user.Photo);
-                            container.put("isfriend", true);
                             data.add(container);
                         }
                         found_count.setText("Найдено " + found.size() + " " +
@@ -100,6 +103,31 @@ public class FragmentFindUsers extends Fragment {
                     return true;
                 }
                 return false;
+            }
+        });
+        list_friends.setClickable(true);
+        list_friends.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                if (Users.SearchCache.size() > 0 && id < Integer.MAX_VALUE && id > Integer.MIN_VALUE) {
+                    UserStruct user = Users.SearchCache.get((int) id);
+                    FriendsManagement manager =
+                            new FriendsManagement(getActivity(), connectionTimeout);
+                    manager.ManageFriend(user.SocialID, FriendRequest.Operations.del);
+                    return true;
+                }
+                return false;
+            }
+        });
+        list_friends.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if (Users.SearchCache.size() > 0 && id < Integer.MAX_VALUE && id > Integer.MIN_VALUE) {
+                    UserStruct user = Users.SearchCache.get((int) id);
+                    FriendsManagement manager =
+                            new FriendsManagement(getActivity(), connectionTimeout);
+                    manager.ManageFriend(user.SocialID, FriendRequest.Operations.add);
+                }
             }
         });
     }

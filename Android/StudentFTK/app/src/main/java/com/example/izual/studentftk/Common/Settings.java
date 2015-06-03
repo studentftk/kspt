@@ -10,4 +10,5 @@ public class Settings {
     //public final static String SITE_NAME = "192.168.1.148";
     public final static String FULL_SITE_NAME = "https://" + SITE_NAME + "/";
     public final static boolean DEBUG = false;
+    public final static int connectionTimeout = 1000;
 }
