@@ -26,7 +26,7 @@ public class AvatarSimpleAdapter extends SimpleAdapter {
     }
 
     @Override
-    public void setViewImage(@NonNull ImageView v, String value) {
+    public void setViewImage(ImageView v, String value) {
         ImageResourceLoader loader =
                     new ImageResourceLoader((Activity)context, Settings.connectionTimeout);
         v.setImageDrawable(loader.GetCachedOrLoad(value));
