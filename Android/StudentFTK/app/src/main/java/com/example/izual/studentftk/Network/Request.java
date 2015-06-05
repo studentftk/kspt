@@ -12,6 +12,7 @@ public class Request {
         public static final String Places = "places";
 		public static final String Friends = "friends";
         public static final String SingleFriend = "SingleFriend";
+        public static final String Checkin = "Checkin";
 
     }
 

@@ -16,10 +16,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.os.Message;
 
+import com.example.izual.studentftk.Common.ProfileInformation;
 import com.example.izual.studentftk.Common.Settings;
 import com.example.izual.studentftk.Common.Utils;
 import com.example.izual.studentftk.Like.LikeApiAnswer;
 import com.example.izual.studentftk.Like.ParseLike;
+import com.example.izual.studentftk.Network.RequestBuilder.CheckinRequest;
 import com.example.izual.studentftk.Network.RequestBuilder.LikeRequest;
 import com.example.izual.studentftk.Network.RequestExecutor;
 
@@ -103,6 +105,9 @@ public class FragmentPlacePage extends Fragment {
                 String time = calendar.getTime().toString();
                 Places.add("Вы были здесь " + time.substring(1, 16));
                 refresh(Places);
+                final String idPlace = Integer.toString(id_places);
+                final String socialToken = ProfileInformation.socialToken; // TODO: Get social token
+                SendCheckin(idPlace, socialToken);
                 Toast toast = Toast.makeText(getActivity(),
                         "Вы зачекинились: "+ com.example.izual.studentftk.Places.Places.List.get("teachCorp").get(id_places).Title , Toast.LENGTH_SHORT);
                 toast.show();
@@ -115,8 +120,15 @@ public class FragmentPlacePage extends Fragment {
         likeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Calendar calendar = Calendar.getInstance();
+                String time = calendar.getTime().toString();
                 final String idPlace = Integer.toString(id_places);
-                SendLike(idPlace, ATTRIBUTE_vkId);
+                final String socialToken = ProfileInformation.socialToken; // TODO: Get social token
+                SendLike(idPlace, socialToken);
+                Toast toast = Toast.makeText(getActivity(),
+                        "Вы поставили лайк: "+ com.example.izual.studentftk.Places.Places.List.get("teachCorp").get(id_places).Title , Toast.LENGTH_SHORT);
+                toast.show();
+
             }
         });
         //---------------------------End---------------------
@@ -126,35 +138,17 @@ public class FragmentPlacePage extends Fragment {
         return viewPlacePage;
     }
 
-    private void SendLike(final String id_places,final String ATTRIBUTE_vkId) {
-        // надо int в string сконвертировать
-        URI uri = LikeRequest.BuildRequestGet(id_places, ATTRIBUTE_vkId);
-
-        RequestExecutor executor = new RequestExecutor(getActivity(),
-                uri, connectionTimeout);
-        try {
-            executor.GetThread().join();
-        } catch (InterruptedException e) {
-            errorHandler(e.toString());
-            return;
-        }
-        if (executor.GetTask().isError()) {
-            errorHandler(executor.GetTask().getErrorReason());
-            return;
-        }
-        if (executor.GetTask().isDataReady()) {
-            try {
-                String answer = executor.GetTask().getData();
-                LikeApiAnswer likeApiAnswer = ParseLike.ParseAnswerFromLikeApi(answer);
-                if (likeApiAnswer.httpCode != 200) {
-                    // TODO: log this fact
-                }
-            } catch (Exception e) {
-                errorHandler(e.toString());
-                return;
-            }
-        }
+    // <-- TODO: refact
+    private void SendLike(final String id_places, final String socialToken) {
+        URI uri = LikeRequest.BuildRequestGet(id_places, socialToken);
+        RequestExecutor executor = new RequestExecutor(getActivity(), uri, connectionTimeout);
     }
+
+    private void SendCheckin(final String id_places, final String socialToken) {
+        URI uri = CheckinRequest.BuildCheckinRequest(id_places, socialToken);
+        RequestExecutor executor = new RequestExecutor(getActivity(), uri, connectionTimeout);
+    }
+    // --/>
 
     // TODO: DISCUSS: place method to base class
     private void errorHandler(String errorReason) {
