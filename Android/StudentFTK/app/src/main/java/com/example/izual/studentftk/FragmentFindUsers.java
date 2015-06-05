@@ -1,5 +1,6 @@
 package com.example.izual.studentftk;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.view.KeyEvent;
@@ -90,9 +91,13 @@ public class FragmentFindUsers extends Fragment {
                         Users.SearchCache.clear();
                         Users.SearchCache.addAll(found);
                         for (UserStruct user : found) {
+                            if(Users.GetBySocialId("vk", user.SocialID) == null){
+                                Users.List.put(user.ID, user);
+                            }
                             Map<String, Object> container = new HashMap<String, Object>();
                             container.put("name", user.Name + " " + user.Surname);
                             container.put("avatar", user.Photo);
+                            container.put("socialId", user.SocialID);
                             data.add(container);
                         }
                         found_count.setText("Найдено " + found.size() + " " +
@@ -110,25 +115,8 @@ public class FragmentFindUsers extends Fragment {
         list_friends.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                if (Users.SearchCache.size() > 0 && id < Integer.MAX_VALUE && id > Integer.MIN_VALUE) {
-                    UserStruct user = Users.SearchCache.get((int) id);
-                    FriendsManagement manager =
-                            new FriendsManagement(getActivity(), connectionTimeout);
-                    manager.ManageFriend(user.SocialID, FriendRequest.Operations.del);
-                    return true;
-                }
+                Utils.ShowError(getActivity(), "Не баг, а фича", true);
                 return false;
-            }
-        });
-        list_friends.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (Users.SearchCache.size() > 0 && id < Integer.MAX_VALUE && id > Integer.MIN_VALUE) {
-                    UserStruct user = Users.SearchCache.get((int) id);
-                    FriendsManagement manager =
-                            new FriendsManagement(getActivity(), connectionTimeout);
-                    manager.ManageFriend(user.SocialID, FriendRequest.Operations.add);
-                }
             }
         });
     }
@@ -167,6 +155,16 @@ public class FragmentFindUsers extends Fragment {
     public void onResume(){
         super.onResume();
         getAdapter();
+        Users.Current = null;
+        list_friends.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                final String socialId = (String)data.get(position).get("socialId");
+                Users.Current = Users.GetBySocialId("vk", socialId);
+                Intent intent = new Intent(getActivity(), PageUserActivity.class);
+                getActivity().startActivity(intent);
+            }
+        });
     }
 
 }

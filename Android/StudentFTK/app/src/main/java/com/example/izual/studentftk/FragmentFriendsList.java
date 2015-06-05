@@ -2,10 +2,12 @@ package com.example.izual.studentftk;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
@@ -65,6 +67,10 @@ public class FragmentFriendsList extends Fragment {
         listFriends = (ListView) viewFriendsList.findViewById(R.id.list_friends);
         friendsCountMessage = (TextView) viewFriendsList.findViewById(R.id.txtFriendsCount);
         data = new ArrayList<Map<String, Object>>();
+        if(ProfileInformation.socialToken != null){
+            listFriends.setAdapter(getAdapter());
+            LoadFriendsInformation(ProfileInformation.socialToken);
+        }
         return viewFriendsList;
     }
 
@@ -82,8 +88,17 @@ public class FragmentFriendsList extends Fragment {
         super.onResume();
         if(ProfileInformation.socialToken != null) {
             listFriends.setAdapter(getAdapter());
-            LoadFriendsInformation(ProfileInformation.socialToken);
         }
+        Users.Current = null;
+        listFriends.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                final String socialId = (String)data.get(position).get("socialId");
+                Users.Current = Users.GetBySocialId("vk", socialId);
+                Intent intent = new Intent(getActivity(), PageUserActivity.class);
+                getActivity().startActivity(intent);
+            }
+        });
     }
 
     private void LoadFriendsInformation (final String socialToken){
@@ -126,13 +141,12 @@ public class FragmentFriendsList extends Fragment {
                     }
                     adapter.notifyDataSetInvalidated();
                     data.clear();
-                    ImageResourceLoader imgLoader = new ImageResourceLoader(getActivity(),
-                            connectionTimeout);
                     for (final String socialId: socialIds.keySet()){
                         final UserStruct friend = socialIds.get(socialId);
                         Map<String, Object> container = new HashMap<String, Object>();
                         container.put(ATTRIBUTE_NAME, friend.Name + " " + friend.Surname);
                         container.put(ATTRIBUTE_IMAGE, friend.Photo);
+                        container.put("socialId", socialId);
                         data.add(container);
                     }
                     adapter.notifyDataSetChanged();

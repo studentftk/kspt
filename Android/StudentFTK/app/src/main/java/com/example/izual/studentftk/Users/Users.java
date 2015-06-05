@@ -19,6 +19,7 @@ public class Users {
     public static Map<String, UserStruct> List; //id -> UserStruct
     public static ArrayList<UserStruct> SearchCache;
     public static Map<String, Drawable> Photos;   // -> Bitmap
+    public static UserStruct Current = null;
 
     public static void Init(){
         if(List == null){
@@ -41,4 +42,6 @@ public class Users {
         }
         return null;
     }
+
+
 }

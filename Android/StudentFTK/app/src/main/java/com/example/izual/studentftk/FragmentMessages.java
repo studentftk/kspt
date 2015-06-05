@@ -9,6 +9,7 @@ import java.util.TimerTask;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -54,6 +55,8 @@ public class FragmentMessages extends Fragment {
     private long updaterReinitDelay = 200;
     private final long TIMER_ONCE = -1;
     private boolean timerFirstTime = true;
+    private boolean scroll = true;
+    private int prevMessagesCount = 0;
 
     // структура, содержащая сообщения в удобном виде
     private static ArrayList<Map<String, Object>> msgList;
@@ -104,6 +107,7 @@ public class FragmentMessages extends Fragment {
         final ArrayList<String> msg_time = new ArrayList<String>();
         ArrayList<String> msg_name = new ArrayList<String>();
         ArrayList<String> msg_img = new ArrayList<String>();
+        ArrayList<String> msg_ids = new ArrayList<String>();
 
         if(ProfileInformation.Name != null){
             current_name = ProfileInformation.Name;
@@ -111,7 +115,7 @@ public class FragmentMessages extends Fragment {
 
         /* Создаём адаптер и привязываем его к списку */
         sAdapter = MsgControl.InitFramework(msgList, getActivity(),
-                msg_text, msg_time, msg_name, msg_img);
+                msg_ids, msg_text, msg_time, msg_name, msg_img);
         listMessages.setAdapter(sAdapter);
 
         /* Обработчик нажатия на кнопку отправления */
@@ -137,17 +141,29 @@ public class FragmentMessages extends Fragment {
                 listMessages.smoothScrollByOffset(listMessages.getMaxScrollAmount());
             }
         });
+
+        listMessages.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id){
+                final String userId = (String) msgList.get(position).get("source");
+                Users.Current = Users.List.get(userId);
+                Intent intent = new Intent(getActivity(), PageUserActivity.class);
+                getActivity().startActivity(intent);
+                return false;
+            }
+        });
     }
 
     /* Добавляет сообщение в список сообщений */
     private void AddMessage(ArrayList<Map<String, Object>> msgList,
+                            final String msg_src,
                             final String msg_text,
                             final String msg_time,
                             final String msg_name,
                             final String msg_img){
         if(msgList != null){
             sAdapter.notifyDataSetInvalidated();
-            MsgControl.AddMessageToList(msgList, msg_text, msg_time, msg_name, msg_img);
+            MsgControl.AddMessageToList(msgList, msg_src, msg_text, msg_time, msg_name, msg_img);
             sAdapter.notifyDataSetChanged();
         }
         listMessages.smoothScrollByOffset(listMessages.getMaxScrollAmount());
@@ -228,6 +244,7 @@ public class FragmentMessages extends Fragment {
         /* Updater.UpdateUI() Производит обновление пользовательского интерфейса*/
         private void UpdateUI(final boolean isError, final String errorReason,
                               final ArrayList<MessageStruct> parsed){
+            scroll = false;
             FragmentMessages.this.getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -248,10 +265,14 @@ public class FragmentMessages extends Fragment {
                                     userName = user.Name;
                                     avatar = user.Photo;
                                 }
-                                AddMessage(msgList, msg.Message,
+                                AddMessage(msgList, msg.Source, msg.Message,
                                      MsgControl.RoundToSeconds(msg.SendTime), userName, avatar);
                             }
                             sAdapter.notifyDataSetChanged();
+                            if (msgList.size() > prevMessagesCount){
+                                scroll = true;
+                            }
+                            prevMessagesCount = msgList.size();
                         }
                         else{
                             return;
@@ -263,7 +284,9 @@ public class FragmentMessages extends Fragment {
                             listMessages.setSelection(listMessages.getCount() - 1);
                         }
                         else{
-                            listMessages.smoothScrollByOffset(listMessages.getMaxScrollAmount());
+                            if(scroll) {
+                                listMessages.smoothScrollByOffset(listMessages.getMaxScrollAmount());
+                            }
                         }
                     }
                 }

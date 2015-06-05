@@ -17,7 +17,6 @@
         <item>Настройки</item>
         <item>О проекте</item>
     </string-array>
-
     <string-array name="items_piaces">
         <item>Главное здание</item>
         <item>Корпуса</item>
@@ -26,7 +25,6 @@
         <item>Красоты</item>
         <item>Другое</item>
     </string-array>
-
     <string-array name="items_fragment">
         <item>Абрамов Антон</item>
         <item>Бусаров Влад</item>
@@ -36,7 +34,11 @@
         <item>Сухинин Александр</item>
         <item>Улитин Александр</item>
     </string-array>
-    items_fragment
-    <string name="title_activity_maps">Map</string>
+    items_fragment            <string name="title_activity_maps">Map</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_upa">upa</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="title_activity_page_user">PageUserActivity</string>
+    <string name="full_division_name">ИКНТ КСПТ</string>
 
 </resources>

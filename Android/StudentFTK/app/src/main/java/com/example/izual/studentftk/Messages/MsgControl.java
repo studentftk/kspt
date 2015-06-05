@@ -17,6 +17,7 @@ import java.util.Map;
 public class MsgControl {
 
     // имена атрибутов для Map
+    public final static String ATTRIBUTE_NAME_ID = "source";
     public final static String ATTRIBUTE_NAME_TEXT = "text";
     public final static String ATTRIBUTE_NAME_TIME = "time";
     public final static String ATTRIBUTE_NAME_IMAGE = "image";
@@ -28,11 +29,13 @@ public class MsgControl {
     public final static int DATE_DAY_AND_TIME = 3;
 
     // упаковывает сообщение в нужную структуру
-    private static Map<String, Object> PackMessage(final String msg_text,
+    private static Map<String, Object> PackMessage(final String msg_src,
+                                                   final String msg_text,
                                                    final String msg_time,
                                                    final String msg_name,
                                                    final String msg_img){
         Map<String, Object> msg_pack = new HashMap<String, Object>();
+        msg_pack.put(ATTRIBUTE_NAME_ID, msg_src);
         msg_pack.put(ATTRIBUTE_NAME_TEXT, msg_text);
         msg_pack.put(ATTRIBUTE_NAME_TIME, msg_time);
         msg_pack.put(ATTRIBUTE_NAME_IMAGE, msg_img);
@@ -47,11 +50,12 @@ public class MsgControl {
      * @param msg_time время отправки сообщения
      */
     public static void AddMessageToList(final ArrayList<Map<String, Object>> msgList,
+                                        final String msg_src,
                                         final String msg_text,
                                         final String msg_time,
                                         final String msg_name,
                                         final String msg_img){
-        msgList.add(PackMessage(msg_text, msg_time, msg_name, msg_img));
+        msgList.add(PackMessage(msg_src, msg_text, msg_time, msg_name, msg_img));
     }
 
     /**
@@ -81,6 +85,7 @@ public class MsgControl {
      */
     public static AvatarSimpleAdapter InitFramework(ArrayList<Map<String, Object>> msgList,
                                               final Activity activity,
+                                              final ArrayList<String> msg_ids,
                                               final ArrayList<String> msg_text,
                                               final ArrayList<String> msg_time,
                                               final ArrayList<String> msg_name,
@@ -89,7 +94,7 @@ public class MsgControl {
             return null;
         }
         for (int i = 0; i < msg_text.size(); i++) {
-            AddMessageToList(msgList, msg_text.get(i), msg_time.get(i),
+            AddMessageToList(msgList, msg_ids.get(i), msg_text.get(i), msg_time.get(i),
                     msg_name.get(i), msg_img.get(i));
         }
 
