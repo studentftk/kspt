@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
@@ -48,10 +49,9 @@ public class FragmentProfile extends Fragment {
     String[] Places = { "9-ый корпус вчера в 18:00", "Главное здание вчера в 13:00", "9-ый корпус 26.12 в 10:00", "9-ый корпус 25.12 в 12:00"};
     ImageView m_Photo;
     ListView PlacesList;
-    Button btnAddFriend;
-    Button btnDeleteFriend;
     View viewProfile;
     TextView PersonName;
+    ProgressBar progressProfile;
     private final int connectionTimeout = Settings.connectionTimeout;
     final Activity activity = getActivity();
     
@@ -64,6 +64,10 @@ public class FragmentProfile extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         viewProfile = inflater.inflate(R.layout.fragment_profile, container, false);
+        progressProfile = (ProgressBar)viewProfile.findViewById(R.id.progressProfileLoad);
+        progressProfile.setVisibility(View.VISIBLE);
+        PersonName = (TextView)viewProfile.findViewById(R.id.personname);
+        PersonName.setVisibility(View.INVISIBLE);
         int attempts = 3;
         boolean logged_in = false;
         while(!ProfileInformation.valid && --attempts != 0) {
@@ -84,7 +88,10 @@ public class FragmentProfile extends Fragment {
                 }
             }
         }
-        PersonName = (TextView)viewProfile.findViewById(R.id.personname);
+        if(ProfileInformation.valid){
+            progressProfile.setVisibility(View.INVISIBLE);
+            PersonName.setVisibility(View.VISIBLE);
+        }
         PersonName.setText(ProfileInformation.Name + " " + ProfileInformation.Surname);
         m_Photo = (ImageView)viewProfile.findViewById(R.id.photoJen);
         m_Photo.setImageBitmap(ProfileInformation.Photo);
@@ -109,13 +116,6 @@ public class FragmentProfile extends Fragment {
             );
             PlacesList.setAdapter(adapter);
         }
-
-        btnAddFriend = (Button) viewProfile.findViewById(R.id.btnAddFriend);
-        btnDeleteFriend = (Button) viewProfile.findViewById(R.id.btnDeleteFriend);
-
-        btnAddFriend.setVisibility(View.INVISIBLE);
-        btnDeleteFriend.setVisibility(View.INVISIBLE);
-
         return viewProfile;
     }
 
@@ -266,9 +266,11 @@ public class FragmentProfile extends Fragment {
 
             if(ProfileInformation.Name !=null && ProfileInformation.Photo != null) {
                 PersonName = (TextView) viewProfile.findViewById(R.id.personname);
-                PersonName.setText(ProfileInformation.Surname + " " + ProfileInformation.Name);
+                PersonName.setText(ProfileInformation.Name + " " + ProfileInformation.Surname);
+                PersonName.setVisibility(View.VISIBLE);
                 m_Photo = (ImageView)viewProfile.findViewById(R.id.photoJen);
                 m_Photo.setImageBitmap(ProfileInformation.Photo);
+                progressProfile.setVisibility(View.INVISIBLE);
             }
         }
     }

@@ -11,7 +11,7 @@
         <LinearLayout
             android:id="@+id/container"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="180dp"
             android:background="#495a4a">
             <FrameLayout
                 android:id="@+id/photocont"
@@ -47,7 +47,7 @@
                     android:textColor="#FFFFFF"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:text="ИИТУ КСПТ"
+                    android:text="ИКНТ КСПТ"
                     android:textSize="@dimen/activity_horizontal_margin"
                     android:gravity="center_horizontal"/>
 
@@ -58,26 +58,14 @@
                     android:text="Студент группы 53501/3"
                     android:textSize="@dimen/activity_horizontal_margin"
                     android:gravity="center_horizontal"/>
-                <Button
-                    android:id="@+id/btnAddFriend"
-                    android:textColor="#FFFFFF"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:text="Добавить в друзья"
-                    android:gravity="center_horizontal"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
-                    android:layout_gravity="center_horizontal"/>
-                <Button
-                    android:id="@+id/btnDeleteFriend"
-                    android:textColor="#FFFFFF"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:text="Удалить из друзей"
-                    android:gravity="center_horizontal"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
-                    android:layout_gravity="center_horizontal"/>
+
+                <ProgressBar
+                    style="?android:attr/progressBarStyleLarge"
+                    android:layout_width="97dp"
+                    android:layout_height="97dp"
+                    android:id="@+id/progressProfileLoad"
+                    android:layout_gravity="center_horizontal"
+                    android:indeterminate="true" />
 
             </LinearLayout>
         </LinearLayout>
